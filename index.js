@@ -64,18 +64,20 @@ app.get('/initiatebot', function(request, response) {
   /*console.log(request.query);
   console.log(request.query['Body']);*/
   const context = {};
-client.converse('my-user-session-45', 'what\'s the weather?', {}, (error, data) => {
+client.converse('abc123', 'what\'s the weather?', {}, (error, data) => {
   if (error) {
     console.log('Oops! Got an error: ' + error);
   } else {
-    console.log('Yay, got Wit.ai merge response: ' + JSON.stringify(data));
+    console.log('Yay, got Wit.ai merge response: ');
+    console.log(data);
   }
 });
-client.converse('my-user-session-45', {}, (error, data) => {
+client.converse('abc123', (error, data) => {
   if (error) {
     console.log('Oops! Got an error: ' + error);
   } else {
-    console.log('Yay, got Wit.ai msg response: ' + JSON.stringify(data));
+    console.log('Yay, got Wit.ai msg response: ');
+    console.log(data);
  
 
   }
