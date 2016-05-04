@@ -14,6 +14,10 @@ app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
+app.get('/initiatebot', function(request, response) {
+  console.log("bot initiated");
+});
+
 app.get('/cool', function(request,response) {
   response.send(cool());
 });
