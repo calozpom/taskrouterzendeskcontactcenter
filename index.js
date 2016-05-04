@@ -1,13 +1,13 @@
 var cool = require('cool-ascii-faces');
 var req = require('request');
 var express = require('express');
+var bodyParser = require('body-parser');
 var app = express();
 
 app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
-app.use(express.bodyParser());
-
+app.use( bodyParser.json() ); 
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
