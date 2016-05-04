@@ -75,7 +75,7 @@ client.converse(user, 'what\'s the weather?', {}, (error, data) => {
     console.log('Yay, got Wit.ai merge response: ');
     console.log(data);
     console.log("requesting follow up");
-client.converse(user, (error, data) => {
+client.converse(user, null, (error, data) => {
   if (error) {
     console.log('Oops! Got an error: ' + error);
   } else {
