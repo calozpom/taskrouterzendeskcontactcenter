@@ -68,14 +68,18 @@ client.converse('my-user-session-42', 'what\'s the weather?', {}, (error, data) 
   if (error) {
     console.log('Oops! Got an error: ' + error);
   } else {
-    console.log('Yay, got Wit.ai response: ');
+    console.log('Yay, got Wit.ai merge response: ');
   }
 });
 client.converse('my-user-session-42', {}, (error, data) => {
   if (error) {
     console.log('Oops! Got an error: ' + error);
   } else {
-    console.log('Yay, got Wit.ai response: ' + data['msg']);
+    console.log('Yay, got Wit.ai msg response: ' + data['msg']);
+    console.log(data);
+    console.log(data[msg]);
+    console.log(data['msg']);
+
   }
 });
 response.sendStatus(200);
