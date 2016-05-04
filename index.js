@@ -34,7 +34,7 @@ app.post('/botresponse', function(request, response) {
   console.log(request);
   console.log("RESPONSE=========================");
   console.log(response);
-  console.log(request.body)
+  console.log(request.body);
 });
 
 app.get('/cool', function(request,response) {
