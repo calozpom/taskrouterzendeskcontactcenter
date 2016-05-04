@@ -61,10 +61,17 @@ app.get('/', function(request, response) {
 app.get('/initiatebot', function(request, response) {
   var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   console.log("bot initiated");
-  console.log(request.query);
-  console.log(request.query['Body']);
+  /*console.log(request.query);
+  console.log(request.query['Body']);*/
   const context = {};
 client.converse('my-user-session-42', 'what\'s the weather?', {}, (error, data) => {
+  if (error) {
+    console.log('Oops! Got an error: ' + error);
+  } else {
+    console.log('Yay, got Wit.ai response: ' + JSON.stringify(data));
+  }
+});
+client.converse('my-user-session-42', {}, (error, data) => {
   if (error) {
     console.log('Oops! Got an error: ' + error);
   } else {
