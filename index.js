@@ -30,11 +30,9 @@ app.get('/initiatebot', function(request, response) {
 
 app.post('/botresponse', function(request, response) {
   console.log("bot replied");
-  console.log("REQUEST=========================");
-  console.log(request);
-  console.log("RESPONSE=========================");
-  console.log(response);
+
   console.log(request.body);
+  console.log(request.body.text);
 });
 
 app.get('/cool', function(request,response) {
