@@ -6,6 +6,8 @@ var app = express();
 app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
+app.use(express.bodyParser());
+
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
@@ -32,6 +34,7 @@ app.post('/botresponse', function(request, response) {
   console.log(request);
   console.log("RESPONSE=========================");
   console.log(response);
+  console.log(request.body)
 });
 
 app.get('/cool', function(request,response) {
