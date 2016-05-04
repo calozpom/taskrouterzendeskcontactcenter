@@ -19,7 +19,7 @@ const Logger = require('node-wit').Logger;
 const levels = require('node-wit').logLevels;
 const Wit = require('node-wit').Wit;
 const logger = new Logger(levels.DEBUG);
-const client = new Wit(token, "JUFYXEJC6KRMQX6EVVL4OKNLN7BP5JDF");
+const client = new Wit("JUFYXEJC6KRMQX6EVVL4OKNLN7BP5JDF",actions,logger);
 
 
 app.set('port', (process.env.PORT || 5000));
