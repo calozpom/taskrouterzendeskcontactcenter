@@ -71,6 +71,8 @@ client.converse('my-user-session-42', 'what\'s the weather?', {}, (error, data) 
     console.log('Yay, got Wit.ai response: ' + JSON.stringify(data));
   }
 });
+response.sendStatus(200);
+
 
   /*req
   .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:'al',text:request.query['Body']})
