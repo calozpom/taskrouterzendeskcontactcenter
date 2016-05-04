@@ -21,6 +21,8 @@ app.get('/initiatebot', function(request, response) {
   var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   console.log("bot initiated");
   console.log(request.query);
+  console.log(request.query['Body']);
+
   req
   .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:'al',text:'hi'})
   .on('response', function(response) {
