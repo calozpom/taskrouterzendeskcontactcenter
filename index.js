@@ -26,6 +26,11 @@ app.get('/initiatebot', function(request, response) {
   })
 });
 
+app.get('/botresponse', function(request, response) {
+  console.log("bot replied");
+  console.log(response);
+});
+
 app.get('/cool', function(request,response) {
   response.send(cool());
 });
