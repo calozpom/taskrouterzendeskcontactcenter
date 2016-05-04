@@ -46,6 +46,18 @@ const client = new Wit("JUFYXEJC6KRMQX6EVVL4OKNLN7BP5JDF",actions,logger);
 
 function epicRandomString(b){for(var a=(Math.random()*eval("1e"+~~(50*Math.random()+50))).toString(36).split(""),c=3;c<a.length;c++)c==~~(Math.random()*c)+1&&a[c].match(/[a-z]/)&&(a[c]=a[c].toUpperCase());a=a.join("");a=a.substr(~~(Math.random()*~~(a.length/3)),~~(Math.random()*(a.length-~~(a.length/3*2)+1))+~~(a.length/3*2));if(24>b)return b?a.substr(a,b):a;a=a.substr(a,b);if(a.length==b)return a;for(;a.length<b;)a+=epicRandomString();return a.substr(0,b)};
 
+function askFollowUp(){
+	client.converse(user, null, (error, data) => {
+  if (error) {
+    console.log('Oops! Got an error: ' + error);
+  } else {
+    console.log('Yay, got Wit.ai msg response: ');
+    console.log(data);
+}
+ 
+});
+}
+
 app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
@@ -94,17 +106,6 @@ response.sendStatus(200);
 */
 });
 
-function askFollowUp(){
-	client.converse(user, null, (error, data) => {
-  if (error) {
-    console.log('Oops! Got an error: ' + error);
-  } else {
-    console.log('Yay, got Wit.ai msg response: ');
-    console.log(data);
-}
- 
-});
-}
 
 app.post('/botresponse', function(request, response) {
   console.log("bot replied");
