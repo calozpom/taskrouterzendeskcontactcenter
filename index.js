@@ -41,7 +41,7 @@ app.get('/initiatebot', function(request, response) {
   console.log(request.query);
   console.log(request.query['Body']);
   const context = {};
-client.message(request.query['Body'], context, (error, data) => {
+client.message(request.query['Body'], context, cb(error, data) => {
   if (error) {
     console.log('Oops! Got an error: ' + error);
   } else {
