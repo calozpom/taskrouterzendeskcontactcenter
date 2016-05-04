@@ -71,7 +71,7 @@ client.converse('my-user-session-42', 'what\'s the weather?', {}, (error, data) 
     console.log('Yay, got Wit.ai merge response: ');
   }
 });
-client.converse('my-user-session-42', {}, (error, data) => {
+client.converse('my-user-session-43', {}, (error, data) => {
   if (error) {
     console.log('Oops! Got an error: ' + error);
   } else {
