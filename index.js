@@ -80,8 +80,7 @@ client.converse(user, 'what\'s the weather?', {}, (error, data) => {
 
   }
 });
-  }
-});
+ 
 
 response.sendStatus(200);
 
@@ -102,6 +101,9 @@ function askFollowUp(){
   } else {
     console.log('Yay, got Wit.ai msg response: ');
     console.log(data);
+}
+ 
+});
 }
 
 app.post('/botresponse', function(request, response) {
