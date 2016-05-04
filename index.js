@@ -1,5 +1,5 @@
 var cool = require('cool-ascii-faces');
-var req = require('requests');
+var req = require('request');
 var express = require('express');
 var app = express();
 
@@ -16,9 +16,14 @@ app.get('/', function(request, response) {
 });
 
 app.get('/initiatebot', function(request, response) {
+  var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   console.log("bot initiated");
-  console.log(request);
-
+  req
+  .get('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).qs({user_id:'al',text:'hi'})
+  .on('response', function(response) {
+    console.log(response.statusCode) 
+    console.log(response.headers) 
+  })
 });
 
 app.get('/cool', function(request,response) {
