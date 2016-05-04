@@ -26,9 +26,9 @@ app.get('/initiatebot', function(request, response) {
   })
 });
 
-app.get('/botresponse', function(request, response) {
+app.post('/botresponse', function(request, response) {
   console.log("bot replied");
-  console.log(response);
+  console.log(request.body);
 });
 
 app.get('/cool', function(request,response) {
