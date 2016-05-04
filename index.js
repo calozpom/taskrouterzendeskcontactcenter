@@ -1,4 +1,5 @@
 var cool = require('cool-ascii-faces');
+var req = require('requests');
 var express = require('express');
 var app = express();
 
@@ -16,6 +17,8 @@ app.get('/', function(request, response) {
 
 app.get('/initiatebot', function(request, response) {
   console.log("bot initiated");
+  console.log(request);
+
 });
 
 app.get('/cool', function(request,response) {
