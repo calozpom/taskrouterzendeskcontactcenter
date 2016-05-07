@@ -74,6 +74,10 @@ app.get('/', function(request, response) {
 app.get('/outboundsip', function(request, response) {
   console.log(request.query);
   console.log(request.query['Called']);
+  var calledStr=request.query['Called'];
+  var calledArray=calledStr..split(/:|@/);
+  var calledNumber=calledArray[1];
+  console.log(calledNumber);
   response.sendStatus(200);
 
   });
