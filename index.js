@@ -72,7 +72,7 @@ app.get('/', function(request, response) {
 });
 
 app.get('/dashboard', function(request, response) {
-  response.render('pages/dashboard');
+  response.render('pages/dashboard', {token: "test"});
 });
 
 app.get('/outboundsip', function(request, response) {
