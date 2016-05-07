@@ -88,7 +88,7 @@ app.get('/', function(request, response) {
 });
 
 app.get('/dashboard', function(request, response) {
-  response.render('pages/dashboard', {token: "test"});
+  response.render('pages/dashboard', {'token': token});
 });
 
 app.get('/outboundsip', function(request, response) {
