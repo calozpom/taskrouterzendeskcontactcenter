@@ -16,7 +16,8 @@
     "express": "4.13.3",
     "node-wit": "^3.2.2",
     "request": "2.72.0",
-    "requests": "0.1.7"
+    "requests": "0.1.7",
+    "twilio": "^2.9.1"
   },
   "repository": {
     "type": "git",

@@ -2,6 +2,22 @@ var cool = require('cool-ascii-faces');
 var req = require('request');
 var express = require('express');
 var bodyParser = require('body-parser');
+var twilio = require('twilio');
+
+var accountSid = "AC36a9938f19a9480c595e857f2f1af7dd";
+var authToken = "264a2e58db9f0ccc58a3003c2c472164";
+var workspaceSid = "WS056355824815f89c7cc46e5d8cacaf20";
+var workerSid = "WKc9fb44a68905d751dded01581d3fe50c";
+
+var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
+capability.allowActivityUpdates();
+capability.allowReservationUpdates();
+ 
+// By default, tokens are good for one hour.
+// Override this default timeout by specifiying a new value (in seconds).
+// For example, to generate a token good for 8 hours:
+ 
+var token = capability.generateToken(28800);  // 60 * 60 * 8
 var app = express();
 const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&
