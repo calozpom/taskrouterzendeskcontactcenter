@@ -80,7 +80,7 @@ app.get('/outboundsip', function(request, response) {
   console.log(calledNumber);
   var responseText ="<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
   responseText += "<Response>";
-  responseText += "<Dial>"
+  responseText += "<Dial callerId=\"4159660660\">"
   responseText += calledNumber;
   responseText += "</Dial></Response>";
   console.log(responseText);
