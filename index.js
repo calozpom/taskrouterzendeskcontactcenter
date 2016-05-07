@@ -73,6 +73,7 @@ app.get('/', function(request, response) {
 
 app.get('/outboundsip', function(request, response) {
   console.log(request.query);
+  console.log(request.query['Called']);
   response.sendStatus(200);
 
   });
