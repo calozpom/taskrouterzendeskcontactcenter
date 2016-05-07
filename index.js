@@ -71,15 +71,55 @@ app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
+app.get('/outboundsip', function(request, response) {
+  console.log(request.query);
+  }
+
 app.get('/initiatebot', function(request, response) {
   var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
+  req
+  .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:'al',text:request.query['Body']})
+  .on('response', function(response) {
+    console.log(response.statusCode) 
+    console.log(response.headers) 
+  })
+  /*
   var user=epicRandomString(10);
   console.log("bot initiated");
   console.log("using user ID "+user);
   /*console.log(request.query);
   console.log(request.query['Body']);*/
+  /*
   const context = {};
   console.log("asking the first question");
+  client.runActions(
+        sessionId, // the user's current session
+        msg, // the user's message 
+        sessions[sessionId].context, // the user's current session state
+        (error, context) => {
+          if (error) {
+            console.log('Oops! Got an error from Wit:', error);
+          } else {
+            // Our bot did everything it has to do.
+            // Now it's waiting for further messages to proceed.
+            console.log('Waiting for futher messages.');
+
+            // Based on the session state, you might want to reset the session.
+            // This depends heavily on the business logic of your bot.
+            // Example:
+            // if (context['done']) {
+            //   delete sessions[sessionId];
+            // }
+
+            // Updating the user's current session state
+            sessions[sessionId].context = context;
+          }
+        }
+      );
+
+
+
+
 client.converse(user, 'what\'s the weather?', {}, (error, data) => {
   if (error) {
     console.log('Oops! Got an error: ' + error);
@@ -93,7 +133,7 @@ client.converse(user, 'what\'s the weather?', {}, (error, data) => {
   }
   askFollowUp(user);
 });
- 
+ */
 
 response.sendStatus(200);
 
