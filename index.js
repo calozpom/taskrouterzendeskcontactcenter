@@ -73,7 +73,9 @@ app.get('/', function(request, response) {
 
 app.get('/outboundsip', function(request, response) {
   console.log(request.query);
-  }
+  response.sendStatus(200);
+
+  });
 
 app.get('/initiatebot', function(request, response) {
   var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
