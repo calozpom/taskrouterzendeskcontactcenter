@@ -78,7 +78,13 @@ app.get('/outboundsip', function(request, response) {
   var calledArray=calledStr.split(/:|@/);
   var calledNumber=calledArray[1];
   console.log(calledNumber);
-  response.sendStatus(200);
+  var responseText ="<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+  responseText += "<Response>";
+  responseText += "<Dial>"
+  responseText += calledNumber;
+  responseText += "</Dial></Response>";
+  console.log(responseText);
+  response.send(responseText);
 
   });
 
