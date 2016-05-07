@@ -17,7 +17,7 @@ capability.allowReservationUpdates();
 // Override this default timeout by specifiying a new value (in seconds).
 // For example, to generate a token good for 8 hours:
  
-var token = capability.generateToken(28800);  // 60 * 60 * 8
+var token = capability.generateToken();  // 60 * 60 * 8
 var app = express();
 const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&
