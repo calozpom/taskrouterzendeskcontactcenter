@@ -71,6 +71,10 @@ app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
+app.get('/dashboard', function(request, response) {
+  response.render('pages/dashboard');
+});
+
 app.get('/outboundsip', function(request, response) {
   console.log(request.query);
   console.log(request.query['Called']);
