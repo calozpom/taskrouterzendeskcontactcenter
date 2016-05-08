@@ -10,6 +10,8 @@ var workspaceSid = "WS056355824815f89c7cc46e5d8cacaf20";
 var workerSid = "WKc9fb44a68905d751dded01581d3fe50c";
 
 var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
+var client = TwilioTaskRouterClient(account_sid, auth_token)
+
 capability.allowActivityUpdates();
 capability.allowReservationUpdates();
  
@@ -19,7 +21,7 @@ capability.allowReservationUpdates();
  
 var token = capability.generate();  // 60 * 60 * 8
 var app = express();
-const firstEntityValue = (entities, entity) => {
+/*const firstEntityValue = (entities, entity) => {
   const val = entities && entities[entity] &&
     Array.isArray(entities[entity]) &&
     entities[entity].length > 0 &&
@@ -59,7 +61,7 @@ const levels = require('node-wit').logLevels;
 const Wit = require('node-wit').Wit;
 const logger = new Logger(levels.DEBUG);
 const client = new Wit("JUFYXEJC6KRMQX6EVVL4OKNLN7BP5JDF",actions,logger);
-
+*/
 function epicRandomString(b){for(var a=(Math.random()*eval("1e"+~~(50*Math.random()+50))).toString(36).split(""),c=3;c<a.length;c++)c==~~(Math.random()*c)+1&&a[c].match(/[a-z]/)&&(a[c]=a[c].toUpperCase());a=a.join("");a=a.substr(~~(Math.random()*~~(a.length/3)),~~(Math.random()*(a.length-~~(a.length/3*2)+1))+~~(a.length/3*2));if(24>b)return b?a.substr(a,b):a;a=a.substr(a,b);if(a.length==b)return a;for(;a.length<b;)a+=epicRandomString();return a.substr(0,b)};
 
 function askFollowUp(user){
@@ -109,6 +111,14 @@ app.get('/outboundsip', function(request, response) {
   });
 
 app.get('/initiatebot', function(request, response) {
+
+client.workspace.tasks.get({"AssignmentStatus":"pending", "EvaluateTaskAttributes":"('message_from' == 'Messenger:981592588622900'"}, function(err, data) {
+    if(!err) {
+        data.tasks.forEach(function(task) {
+            console.log(task.attributes);
+        })
+    }
+});
   var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   req
   .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:'al',text:request.query['Body']})
