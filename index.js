@@ -114,15 +114,15 @@ app.get('/initiatebot', function(request, response) {
   console.log("trying to get pending tasks");
   client.workspace.tasks.get({"AssignmentStatus":"pending"}, function(err, data) {
     if(!err) {
-        console.log("found a task. Trying to list attributes")
+        console.log("found a task. Trying to list attributes");
         data.tasks.forEach(function(task) {
             console.log(task.attributes);
         })
     }
-    console.log("trying to get tasks from messenger")
+    console.log("trying to get tasks from messenger");
 client.workspace.tasks.get({"AssignmentStatus":"pending", "EvaluateTaskAttributes":"('message_from' == 'Messenger:981592588622900'"}, function(err, data) {
     if(!err) {
-        console.log("found a task. Trying to list attributes")
+        console.log("found a task. Trying to list attributes");
         data.tasks.forEach(function(task) {
             console.log(task.attributes);
         })
