@@ -10,7 +10,7 @@ var workspaceSid = "WS056355824815f89c7cc46e5d8cacaf20";
 var workerSid = "WKc9fb44a68905d751dded01581d3fe50c";
 
 var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
-var client = TwilioTaskRouterClient(account_sid, auth_token)
+var client = new twilio.TwilioTaskRouterClient(account_sid, auth_token)
 
 capability.allowActivityUpdates();
 capability.allowReservationUpdates();
@@ -118,6 +118,7 @@ client.workspace.tasks.get({"AssignmentStatus":"pending", "EvaluateTaskAttribute
             console.log(task.attributes);
         })
     }
+
 });
   var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   req
