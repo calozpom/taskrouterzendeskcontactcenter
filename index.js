@@ -119,6 +119,7 @@ app.get('/initiatebot', function(request, response) {
             console.log(task.attributes);
         })
     }
+  });
     console.log("trying to get tasks from messenger");
 client.workspace.tasks.get({"AssignmentStatus":"pending", "EvaluateTaskAttributes":"('message_from' == 'Messenger:981592588622900'"}, function(err, data) {
     if(!err) {
@@ -136,7 +137,28 @@ client.workspace.tasks.get({"AssignmentStatus":"pending", "EvaluateTaskAttribute
     console.log(response.statusCode) 
     console.log(response.headers) 
   })
-  /*
+ 
+
+response.sendStatus(200);
+
+
+
+});
+
+
+app.post('/botresponse', function(request, response) {
+  console.log("bot replied");
+
+  console.log(request.body);
+  console.log(request.body.text);
+});
+
+
+app.listen(app.get('port'), function() {
+  console.log('Node app is running on port', app.get('port'));
+});
+
+ /*
   var user=epicRandomString(10);
   console.log("bot initiated");
   console.log("using user ID "+user);
@@ -188,29 +210,10 @@ client.converse(user, 'what\'s the weather?', {}, (error, data) => {
 });
  */
 
-response.sendStatus(200);
-
-
-  /*req
+   /*req
   .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:'al',text:request.query['Body']})
   .on('response', function(response) {
     console.log(response.statusCode) 
     console.log(response.headers) 
   })
 */
-});
-
-
-app.post('/botresponse', function(request, response) {
-  console.log("bot replied");
-
-  console.log(request.body);
-  console.log(request.body.text);
-});
-
-
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
-});
-
-
