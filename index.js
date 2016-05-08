@@ -10,7 +10,7 @@ var workspaceSid = "WS056355824815f89c7cc46e5d8cacaf20";
 var workerSid = "WKc9fb44a68905d751dded01581d3fe50c";
 
 var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
-var client = new twilio.TwilioTaskRouterClient(account_sid, auth_token)
+var client = new twilio.TwilioTaskRouterClient(accountSid, authToken)
 
 capability.allowActivityUpdates();
 capability.allowReservationUpdates();
