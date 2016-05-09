@@ -120,16 +120,19 @@ app.get('/initiatebot', function(request, response) {
   //    send message to meya with from set to task SID
   console.log("received new message as follows:");
   console.log(request.query['Body']); // message content
-  console.log(request.query);
-  console.log(request.query['From']);
+  console.log(request.query['From']); // sender ID
 
-  console.log("trying to get pending tasks");
 
-  console.log("trying to get tasks from messenger");
-  client.workspace.tasks.get({"EvaluateTaskAttributes":"('message_from' == 'Messenger:981592588622900'"}, function(err, data) {
+  console.log("checking for any existing task from this user");
+  var queryString = "\"EvaluateTaskAttributes\":\"('message_from' == '" + request.query['From'] + "')\"";
+  console.log("using the following task evaluation " + queryString);
+
+  client.workspace.tasks.get({queryString}, function(err, data) {
     if(!err) {
-      console.log("found a task. Trying to list attributes");
+      console.log("found an existing task from that user. Seeing if it is still active. Trying to list attributes");
       data.tasks.forEach(function(task) {
+        console.log("entered for loop");
+        console.log(task.assignmentStatus);
         console.log(task.attributes);
       })
     }
