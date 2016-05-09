@@ -119,7 +119,10 @@ app.get('/initiatebot', function(request, response) {
   // if task is not bot_qualified
   //    send message to meya with from set to task SID
   console.log("received new message as follows:");
-  console.log(request.query['Body']);
+  console.log(request.query['Body']); // message content
+  console.log(request.query);
+  console.log(request.query['From']);
+
   console.log("trying to get pending tasks");
 
   console.log("trying to get tasks from messenger");
