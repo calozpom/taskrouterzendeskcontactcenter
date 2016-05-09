@@ -14,11 +14,11 @@ var client = new twilio.TaskRouterClient(accountSid, authToken,workspaceSid)
 
 capability.allowActivityUpdates();
 capability.allowReservationUpdates();
- 
+
 // By default, tokens are good for one hour.
 // Override this default timeout by specifiying a new value (in seconds).
 // For example, to generate a token good for 8 hours:
- 
+
 var token = capability.generate();  // 60 * 60 * 8
 var app = express();
 /*const firstEntityValue = (entities, entity) => {
@@ -66,14 +66,14 @@ function epicRandomString(b){for(var a=(Math.random()*eval("1e"+~~(50*Math.rando
 
 function askFollowUp(user){
 	client.converse(user, null, (error, data) => {
-  if (error) {
-    console.log('Oops! Got an error: ' + error);
-  } else {
-    console.log('Yay, got Wit.ai msg response: ');
-    console.log(data);
-}
- 
-});
+    if (error) {
+      console.log('Oops! Got an error: ' + error);
+    } else {
+      console.log('Yay, got Wit.ai msg response: ');
+      console.log(data);
+    }
+
+  });
 }
 
 app.set('port', (process.env.PORT || 5000));
@@ -108,28 +108,30 @@ app.get('/outboundsip', function(request, response) {
   console.log(responseText);
   response.send(responseText);
 
-  });
+});
 
 app.get('/initiatebot', function(request, response) {
+  // desired behavior
+  // - evaluate whether there is already a task from this messenger
+  // if no - create a task and get task sid
+  // if yes, get task sid 
+  // add message to firebase entry for task sid
+  // if task is not bot_qualified
+  //    send message to meya with from set to task SID
+  console.log("received new message as follows:");
+  console.log(request.query['Body']);
   console.log("trying to get pending tasks");
-  client.workspace.tasks.get({"AssignmentStatus":"pending"}, function(err, data) {
+
+  console.log("trying to get tasks from messenger");
+  client.workspace.tasks.get({"EvaluateTaskAttributes":"('message_from' == 'Messenger:981592588622900'"}, function(err, data) {
     if(!err) {
-        console.log("found a task. Trying to list attributes");
-        data.tasks.forEach(function(task) {
-            console.log(task.attributes);
-        })
-    }
-  });
-    console.log("trying to get tasks from messenger");
-client.workspace.tasks.get({"AssignmentStatus":"pending", "EvaluateTaskAttributes":"('message_from' == 'Messenger:981592588622900'"}, function(err, data) {
-    if(!err) {
-        console.log("found a task. Trying to list attributes");
-        data.tasks.forEach(function(task) {
-            console.log(task.attributes);
-        })
+      console.log("found a task. Trying to list attributes");
+      data.tasks.forEach(function(task) {
+        console.log(task.attributes);
+      })
     }
 
-});
+  });
   var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   req
   .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:'al',text:request.query['Body']})
@@ -137,9 +139,9 @@ client.workspace.tasks.get({"AssignmentStatus":"pending", "EvaluateTaskAttribute
     console.log(response.statusCode) 
     console.log(response.headers) 
   })
- 
 
-response.sendStatus(200);
+
+  response.sendStatus(200);
 
 
 
@@ -147,6 +149,18 @@ response.sendStatus(200);
 
 
 app.post('/botresponse', function(request, response) {
+    // desired behavior
+  // - receive bot response
+  // parse task SID out from bot response
+  // add response to firebase index by task SID
+  // lookup from URI from task SID
+  // send response back to customer
+  // 
+  // if yes, get task sid 
+  // add message to firebase entry for task sid
+  // if task is not bot_qualified
+  //    send message to meya with from set to task SID
+  
   console.log("bot replied");
 
   console.log(request.body);
@@ -208,7 +222,7 @@ client.converse(user, 'what\'s the weather?', {}, (error, data) => {
   }
   askFollowUp(user);
 });
- */
+*/
 
    /*req
   .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:'al',text:request.query['Body']})
