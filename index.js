@@ -130,6 +130,7 @@ app.get('/initiatebot', function(request, response) {
   client.workspace.tasks.get({queryString}, function(err, data) {
     if(!err) {
       console.log("found an existing task from that user. Seeing if it is still active. Trying to list attributes");
+      console.log(data);
       data.tasks.forEach(function(task) {
         console.log("entered for loop");
         console.log(task.assignmentStatus);
