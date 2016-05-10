@@ -45,6 +45,8 @@ app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
 app.use( bodyParser.json() ); 
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+
 
 // views is directory for all template files
 app.set('views', __dirname + '/views');
@@ -233,7 +235,7 @@ app.post('/botresponse', function(request, response) {
 
 app.post('/eventstream', function(request, response) {
   console.log("NEW EVENT");
- console.log(request.query);
+ console.log(request.body);
 });
 
 app.get('/sendsms', function(request, response) {
