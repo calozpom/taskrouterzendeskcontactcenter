@@ -171,8 +171,6 @@ app.get('/initiatebot', function(request, response) {
         console.log(newTask);
          var newTask =client.workspace.tasks.create({workflowSid: "WW4d526c9041d73060ca46d4011cf34b33", attributes: '{"type":"support"}'});
          console.log(newTask);
-         
-​
          req
         .post('https://taskrouter.twilio.com/v1/Workspaces/'+workspaceSid+'/Tasks').auth(accountSid,authToken).form({WorkflowSid:"WW4d526c9041d73060ca46d4011cf34b33",Attributes:{}})
       .on('response', function(response) {
@@ -180,14 +178,10 @@ app.get('/initiatebot', function(request, response) {
         console.log(response.statusCode); 
         console.log("headers:");
         console.log(response.headers);
-
         console.log("response.body");
         console.log(response.body);
         //console.log(response);
-
       })
-
-
       var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
       req
       .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:'al',text:request.query['Body']})
