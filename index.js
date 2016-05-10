@@ -191,7 +191,9 @@ app.post('/botresponse', function(request, response) {
   console.log("bot replied");
 
   console.log(request.body);
+  console.log(request.body.user_id);
   console.log(request.body.text);
+  response.send('');
 });
 
 
