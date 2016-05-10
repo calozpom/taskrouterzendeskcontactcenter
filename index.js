@@ -168,6 +168,9 @@ app.post('/initiatebot', function(request, response) {
   //    send message to meya with from set to task SID
   console.log("received new message as follows:");
   console.log(request.body.AddOns);
+  var addOnsData = JSON.parse(request.body.AddOns);
+  var friendlyName_first = addOnsData['whitepages_pro_caller_identity']['result']['results']['belongs_to']['names']['first_name'];
+  console.log(friendlyName_first);
 
 
   console.log("checking for any existing task from this user");
