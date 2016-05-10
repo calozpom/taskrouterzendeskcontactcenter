@@ -159,10 +159,10 @@ app.get('/initiatebot', function(request, response) {
         console.log("want to create a new task with these attributes");
         console.log(attributesJson);
         var attributesString=JSON.stringify(attributesJson);
-        var newTask =client.workspace.tasks.create({
-          workflowSid: "WW4d526c9041d73060ca46d4011cf34b33",
-          attributes: attributesJson
-        });
+        var taskCreationJson = {};
+        taskCreationJson['workflowSid']="WW4d526c9041d73060ca46d4011cf34b33";
+        taskCreationJson['attributes']=attributesJson;
+        var newTask =client.workspace.tasks.create(taskCreationJson);
         console.log("created a new task");
         console.log(newTask);
 
