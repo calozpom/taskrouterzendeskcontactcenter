@@ -231,6 +231,11 @@ app.post('/botresponse', function(request, response) {
   response.send('');
 });
 
+app.get('/eventstream', function(request, response) {
+  console.log("NEW EVENT");
+ console.log(request.query);
+});
+
 app.get('/sendsms', function(request, response) {
   console.log(request.query);
   console.log(request.query.to);
