@@ -167,7 +167,7 @@ app.post('/initiatebot', function(request, response) {
   // if task is not bot_qualified
   //    send message to meya with from set to task SID
   console.log("received new message as follows:");
-  console.log(request.body.AddOns.results);
+  console.log(request.body.AddOns);
 
 
   console.log("checking for any existing task from this user");
