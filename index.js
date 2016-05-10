@@ -208,8 +208,8 @@ app.post('/botresponse', function(request, response) {
       console.log("attempting to send the response");
        smsclient.sendMessage({
 
-    to:task.attributes.message_from, // Any number Twilio can deliver to
-    from: task.attributes.message_to, // A number you bought from Twilio and can use for outbound communication
+    to:attrib.message_from, // Any number Twilio can deliver to
+    from: attrib.message_to, // A number you bought from Twilio and can use for outbound communication
     body: request.body.text // body of the SMS message
 
 }, function(err, responseData) { //this function is executed when a response is received from Twilio
