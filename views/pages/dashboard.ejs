@@ -522,7 +522,7 @@
     }
    function sendSMS(from, to, body) {
         $.ajax({ 
-          url: 'sendSMS.php',
+          url: 'sendSMS',
           data: {'from': from, 'to':to, 'body':body},
           type: 'post',
           success: function(output) {
