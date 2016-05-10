@@ -44,7 +44,6 @@ function askFollowUp(user){
 app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
-app.use(bodyParser);
 app.use( bodyParser.json() ); 
 
 // views is directory for all template files
@@ -232,11 +231,11 @@ app.post('/botresponse', function(request, response) {
   response.send('');
 });
 
-app.post('/sendsms', function(request, response) {
-  console.log(request);
-  console.log(request.body.message_to);
-  console.log(request.body.message_from);
-  console.log(request.body.text);
+app.get('/sendsms', function(request, response) {
+  console.log(request.query);
+  console.log(request.query.to);
+  console.log(request.query.from);
+  console.log(request.query.body);
   smsclient.sendMessage({
 
     to:request.body.message_to, // Any number Twilio can deliver to
