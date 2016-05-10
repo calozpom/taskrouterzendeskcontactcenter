@@ -92,8 +92,7 @@ app.get('/initiatebot', function(request, response) {
   var queryJson={};
   queryJson['EvaluateTaskAttributes']="(message_from=\"" + request.query['From'] + "\")";
   var queryString = "{'EvaluateTaskAttributes':'(message_from=\"" + request.query['From'] + "\")'}";
-  console.log("using the following task evaluation " + queryString);
-  console.log(queryJson);
+
   var foundTask=0;
   var taskConversationSid="";
   //note the following call is async
@@ -115,8 +114,7 @@ app.get('/initiatebot', function(request, response) {
 
       if (!foundTask) {
         console.log("did not find an existing active task for this messenger");
-        var newTask =client.workspace.tasks.create({Attributes:{}});
-        console.log(newTask);
+        
         var attributesJson = {};
         //{"message_from":"+14152791216","message_body":"Test message over here","message_to":"+18552226811","message_sid":"SM749eb6d22149847222325fa65d33a608"}
         attributesJson['message_from']=request.query['From'];
@@ -160,8 +158,7 @@ function updateConversation(taskSid,request) {
   req
   .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:taskSid,text:request.query['Body']})
   .on('response', function(response) {
-    console.log(response.statusCode) 
-    console.log(response.headers) 
+
   })
 }
 
@@ -199,13 +196,7 @@ app.post('/botresponse', function(request, response) {
   console.log("trying to get the details for this task with sid " + request.body.user_id);
   client.workspace.tasks(request.body.user_id).get(function(err, task) {
     var attrib=JSON.parse(task.attributes);
-    console.log("====FOUND THE TASK====");
-      console.log(attrib);
-      console.log("FROM");
-      console.log(attrib["message_from"]);
-      console.log("TO");
-     console.log(attrib.message_to);
-      console.log("attempting to send the response");
+  
        smsclient.sendMessage({
 
     to:attrib.message_from, // Any number Twilio can deliver to
