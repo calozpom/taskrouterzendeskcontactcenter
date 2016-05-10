@@ -196,8 +196,11 @@ app.post('/botresponse', function(request, response) {
   
   console.log("bot replied");
   myFirebase.child(request.body.user_id).push({'from':'MeyaBot', 'message':request.body.text});
+  console.log("trying to get the details for this task with sid " + request.body.user_id);
   client.workspace.tasks(request.body.user_id).get(function(err, task) {
+    console.log("====FOUND THE TASK====");
       console.log(task.attributes);
+      console.log("attempting to send the response");
        smsclient.sendMessage({
 
     to:task.attributes.message_from, // Any number Twilio can deliver to
@@ -215,6 +218,9 @@ app.post('/botresponse', function(request, response) {
         console.log(responseData.from); // outputs "+14506667788"
         console.log(responseData.body); // outputs "word to your mother."
 
+    }
+    else{
+      console.log("there was an error");
     }
 });
 
