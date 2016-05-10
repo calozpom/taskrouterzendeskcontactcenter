@@ -218,7 +218,8 @@ client.workspace.tasks.list(function(err, data) {
     if(!err) {
       console.log(data);
       data.tasks.forEach(function(task) {
-        task.delete();
+        client.workspace.tasks(task.sid).delete()
+        //task.delete();
       })
     }
   })
