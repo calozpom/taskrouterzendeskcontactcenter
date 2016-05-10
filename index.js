@@ -158,6 +158,81 @@ app.get('/initiatebot', function(request, response) {
 
 });
 
+app.post('/initiatebot', function(request, response) {
+  // desired behavior
+  // - evaluate whether there is already a task from this messenger
+  // if no - create a task and get task sid
+  // if yes, get task sid 
+  // add message to firebase entry for task sid
+  // if task is not bot_qualified
+  //    send message to meya with from set to task SID
+  console.log("received new message as follows:");
+  console.log(request.body);
+
+
+  console.log("checking for any existing task from this user");
+  var queryJson={};
+  queryJson['EvaluateTaskAttributes']="(message_from=\"" + request.query['From'] + "\")";
+  var queryString = "{'EvaluateTaskAttributes':'(message_from=\"" + request.query['From'] + "\")'}";
+
+  var foundTask=0;
+  var taskConversationSid="";
+  //note the following call is async
+  client.workspace.tasks.get(queryJson, function(err, data) {
+    if(!err) {
+      data.tasks.forEach(function(task) {
+        if (task.assignmentStatus == "pending" ||
+          task.assignmentStatus == "reserved" ||
+          task.assignmentStatus == "assigned") {
+          foundTask=1;
+        console.log("found an existing task from that user which is still active. Trying to list attributes");
+        console.log(task.attributes);
+        taskConversationSid = task.sid;
+        console.log("will use this existing task sid for this conversation " + taskConversationSid);
+        updateConversation(taskConversationSid,request);
+      }
+    });
+
+      if (!foundTask) {
+        console.log("did not find an existing active task for this messenger");
+        
+        var attributesJson = {};
+        //{"message_from":"+14152791216","message_body":"Test message over here","message_to":"+18552226811","message_sid":"SM749eb6d22149847222325fa65d33a608"}
+        attributesJson['message_from']=request.query['From'];
+        attributesJson['message_body']=request.query['Body'];
+        attributesJson['message_to']=request.query['To'];
+        attributesJson['message_sid']=request.query['MessageSid'];
+        console.log("want to create a new task with these attributes");
+        console.log(attributesJson);
+        var attributesString=JSON.stringify(attributesJson);
+
+        var options = { method: 'POST',
+        url: 'https://taskrouter.twilio.com/v1/Workspaces/'+workspaceSid+'/Tasks',
+        auth: {username: accountSid, password: authToken},
+        form: 
+        { WorkflowSid: 'WW4d526c9041d73060ca46d4011cf34b33',
+        Attributes: attributesString
+      } 
+    };
+    req(options, function (error, response, body) {
+      if (error) throw new Error(error);
+          //console.log(body);
+          var newTaskResponse = JSON.parse(body);
+          console.log("created a new tasks with Sid "+newTaskResponse.sid);
+          updateConversation(newTaskResponse.sid,request);
+
+        });
+  }
+}
+});
+
+
+  response.send('');
+
+
+
+});
+
 function updateConversation(taskSid,request) {
   myFirebase.child(taskSid).push({'from':request.query['From'], 'message':request.query['Body']});
   //TODO: need to add an if statement here and only post to meya if bot_qualified is not true
