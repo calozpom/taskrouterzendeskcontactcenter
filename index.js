@@ -232,7 +232,7 @@ app.post('/botresponse', function(request, response) {
 });
 
 app.post('/sendsms', function(request, response) {
-  console.log(request.body);
+  console.log(request);
   console.log(request.body.message_to);
   console.log(request.body.message_from);
   console.log(request.body.text);
