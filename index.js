@@ -178,7 +178,7 @@ app.get('/initiatebot', function(request, response) {
         console.log(response.headers);
         console.log(response);
 
-      }
+      })
 
 
       var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
