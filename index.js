@@ -238,9 +238,9 @@ app.get('/sendsms', function(request, response) {
   console.log(request.query.body);
   smsclient.sendMessage({
 
-    to:request.body.message_to, // Any number Twilio can deliver to
-    from: request.body.message_from, // A number you bought from Twilio and can use for outbound communication
-    body: request.body.text // body of the SMS message
+    to:request.query.to, // Any number Twilio can deliver to
+    from: request.query.from, // A number you bought from Twilio and can use for outbound communication
+    body: request.query.body // body of the SMS message
 
 }, function(err, responseData) { //this function is executed when a response is received from Twilio
 
