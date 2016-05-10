@@ -129,6 +129,7 @@ app.get('/initiatebot', function(request, response) {
   var foundTask=0;
   var taskConversationSid="";
   client.workspace.tasks.get({queryString}, function(err, data) {
+    console.log("is this what is async?");
     if(!err) {
       console.log(data);
       data.tasks.forEach(function(task) {
@@ -138,7 +139,7 @@ app.get('/initiatebot', function(request, response) {
           foundTask=1;
           console.log("found an existing task from that user which is still active. Trying to list attributes");
           console.log(task.attributes);
-          taskConversationSid = task.Sid;
+          taskConversationSid = task.sid;
           console.log("will use this existing task sid for this conversation " + taskConversationSid);
 
         }
