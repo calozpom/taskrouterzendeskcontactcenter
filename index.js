@@ -238,7 +238,7 @@ app.post('/eventstream', function(request, response) {
   console.log("NEW EVENT");
  console.log(request.body);
  console.log("updating firebase eventstream for task sid " +request.body.TaskSid);
- evenstream.child(request.body.TaskSid).push({'update':request.body});
+ eventstream.child(request.body.TaskSid).push({'update':request.body});
 
 });
 
