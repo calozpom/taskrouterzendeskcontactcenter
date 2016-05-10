@@ -172,6 +172,8 @@ app.get('/initiatebot', function(request, response) {
         var newTask =client.workspace.tasks.create({workflowSid: "WW4d526c9041d73060ca46d4011cf34b33", attributes: '{"type":"support"}'});
         console.log(newTask);
         var options = { method: 'POST',
+                        url: 'https://taskrouter.twilio.com/v1/Workspaces/'+workspaceSid+'/Tasks',
+                        auth: {username: accountSid, password: authToken},
                          form: 
                              { WorkflowSid: 'WW4d526c9041d73060ca46d4011cf34b33',
                                Attributes: '{"message_from":"+14152791216","message_body":"Hdhdhdh","message_to":"+18448384268","message_sid":"SM592568fd01c79b3feb1e2a7087f2e9f8"}' 
