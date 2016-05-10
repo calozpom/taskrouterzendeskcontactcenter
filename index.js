@@ -124,12 +124,12 @@ app.get('/initiatebot', function(request, response) {
 
 
   console.log("checking for any existing task from this user");
-  var queryString = "\"EvaluateTaskAttributes\":\"(message_from == '" + request.query['From'] + "')\"";
+  var queryString = "{\"EvaluateTaskAttributes\":\"(message_from='" + request.query['From'] + "')\"}";
   console.log("using the following task evaluation " + queryString);
   var foundTask=0;
   var taskConversationSid="";
   //note the following call is async
-  client.workspace.tasks.get({queryString}, function(err, data) {
+  client.workspace.tasks.get(queryString, function(err, data) {
     if(!err) {
       console.log(data);
       data.tasks.forEach(function(task) {
