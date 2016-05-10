@@ -21,47 +21,7 @@ capability.allowReservationUpdates();
 
 var token = capability.generate();  // 60 * 60 * 8
 var app = express();
-/*const firstEntityValue = (entities, entity) => {
-  const val = entities && entities[entity] &&
-    Array.isArray(entities[entity]) &&
-    entities[entity].length > 0 &&
-    entities[entity][0].value
-  ;
-  if (!val) {
-    return null;
-  }
-  return typeof val === 'object' ? val.value : val;
-};
 
-const actions = {
-  say(sessionId, context, message, cb) {
-    console.log(message);
-    cb();
-  },
-  merge(sessionId, context, entities, message, cb) {
-    // Retrieve the location entity and store it into a context field
-    const loc = firstEntityValue(entities, 'location');
-    if (loc) {
-      context.loc = loc;
-    }
-    cb(context);
-  },
-  error(sessionId, context, error) {
-    console.log(error.message);
-  },
-  ['fetch-weather'](sessionId, context, cb) {
-    // Here should go the api call, e.g.:
-    // context.forecast = apiCall(context.loc)
-    context.forecast = 'sunny';
-    cb(context);
-  },
-};
-const Logger = require('node-wit').Logger;
-const levels = require('node-wit').logLevels;
-const Wit = require('node-wit').Wit;
-const logger = new Logger(levels.DEBUG);
-const client = new Wit("JUFYXEJC6KRMQX6EVVL4OKNLN7BP5JDF",actions,logger);
-*/
 function epicRandomString(b){for(var a=(Math.random()*eval("1e"+~~(50*Math.random()+50))).toString(36).split(""),c=3;c<a.length;c++)c==~~(Math.random()*c)+1&&a[c].match(/[a-z]/)&&(a[c]=a[c].toUpperCase());a=a.join("");a=a.substr(~~(Math.random()*~~(a.length/3)),~~(Math.random()*(a.length-~~(a.length/3*2)+1))+~~(a.length/3*2));if(24>b)return b?a.substr(a,b):a;a=a.substr(a,b);if(a.length==b)return a;for(;a.length<b;)a+=epicRandomString();return a.substr(0,b)};
 
 function askFollowUp(user){
@@ -144,7 +104,7 @@ app.get('/initiatebot', function(request, response) {
         console.log(task.attributes);
         taskConversationSid = task.sid;
         console.log("will use this existing task sid for this conversation " + taskConversationSid);
-
+        updateConversation(taskConversationSid,request);
       }
     });
 
@@ -161,54 +121,26 @@ app.get('/initiatebot', function(request, response) {
         console.log("want to create a new task with these attributes");
         console.log(attributesJson);
         var attributesString=JSON.stringify(attributesJson);
-        /*var taskCreationJson = {};
-        //taskCreationJson['workflow_sid']="WW4d526c9041d73060ca46d4011cf34b33";
-        taskCreationJson['attributes']=attributesJson;
-        console.log(taskCreationJson);
-        var newTask =client.workspace.tasks.create(attributesJson);
-        console.log(newTask);
-        var newTask =client.workspace.tasks.create(JSON.stringify(attributesJson));
-        console.log(newTask);
-        var newTask =client.workspace.tasks.create({workflowSid: "WW4d526c9041d73060ca46d4011cf34b33", attributes: '{"type":"support"}'});
-        console.log(newTask);
-        */
+       
         var options = { method: 'POST',
-                        url: 'https://taskrouter.twilio.com/v1/Workspaces/'+workspaceSid+'/Tasks',
-                        auth: {username: accountSid, password: authToken},
-                         form: 
-                             { WorkflowSid: 'WW4d526c9041d73060ca46d4011cf34b33',
-                               Attributes: attributesString
-                             } 
-                        };
-         req(options, function (error, response, body) {
-          if (error) throw new Error(error);
-          console.log("============");
-          console.log(body);
+        url: 'https://taskrouter.twilio.com/v1/Workspaces/'+workspaceSid+'/Tasks',
+        auth: {username: accountSid, password: authToken},
+        form: 
+        { WorkflowSid: 'WW4d526c9041d73060ca46d4011cf34b33',
+        Attributes: attributesString
+      } 
+    };
+    req(options, function (error, response, body) {
+      if (error) throw new Error(error);
+          //console.log(body);
           var newTaskResponse = JSON.parse(body);
-          console.log(newTaskResponse.sid);
-          });
-         
-        req
-        .post('https://taskrouter.twilio.com/v1/Workspaces/'+workspaceSid+'/Tasks').auth(accountSid,authToken).form({WorkflowSid:"WW4d526c9041d73060ca46d4011cf34b33",Attributes:{}})
-        .on('response', function(response) {
-          console.log("status code:");
-          console.log(response.statusCode); 
-          console.log("headers:");
-          console.log(response.headers);
-          console.log("response.body");
-          console.log(response.body);
-        //console.log(response);
-      })
-        var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
-        req
-        .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:'al',text:request.query['Body']})
-        .on('response', function(response) {
-          console.log(response.statusCode) 
-          console.log(response.headers) 
-        })
-      }
-    }
-  });
+          console.log("created a new tasks with Sid "+newTaskResponse.sid);
+          updateConversation(newTaskResponse.sid,request);
+
+        });
+  }
+}
+});
 
 
 response.send('');
@@ -217,8 +149,18 @@ response.send('');
 
 });
 
+function updateConversation(taskSid,request) {
+var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
+    req
+    .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:taskSid,text:request.query['Body']})
+    .on('response', function(response) {
+      console.log(response.statusCode) 
+      console.log(response.headers) 
+    })
+}
+
 app.get('/deletealltasks', function(request,response) {
-client.workspace.tasks.list(function(err, data) {
+  client.workspace.tasks.list(function(err, data) {
     if(!err) {
       console.log(data);
       data.tasks.forEach(function(task) {
@@ -228,9 +170,9 @@ client.workspace.tasks.list(function(err, data) {
       })
     }
   })
-response.send('all tasks deleted');
+  response.send('all tasks deleted');
         //client.workspace.tasks.delete()
-});
+      });
 
 
 app.post('/botresponse', function(request, response) {
@@ -315,4 +257,58 @@ client.converse(user, 'what\'s the weather?', {}, (error, data) => {
     console.log(response.statusCode) 
     console.log(response.headers) 
   })
+*/
+ /*var taskCreationJson = {};
+        //taskCreationJson['workflow_sid']="WW4d526c9041d73060ca46d4011cf34b33";
+        taskCreationJson['attributes']=attributesJson;
+        console.log(taskCreationJson);
+        var newTask =client.workspace.tasks.create(attributesJson);
+        console.log(newTask);
+        var newTask =client.workspace.tasks.create(JSON.stringify(attributesJson));
+        console.log(newTask);
+        var newTask =client.workspace.tasks.create({workflowSid: "WW4d526c9041d73060ca46d4011cf34b33", attributes: '{"type":"support"}'});
+        console.log(newTask);
+        */
+
+
+        /*const firstEntityValue = (entities, entity) => {
+  const val = entities && entities[entity] &&
+    Array.isArray(entities[entity]) &&
+    entities[entity].length > 0 &&
+    entities[entity][0].value
+  ;
+  if (!val) {
+    return null;
+  }
+  return typeof val === 'object' ? val.value : val;
+};
+
+const actions = {
+  say(sessionId, context, message, cb) {
+    console.log(message);
+    cb();
+  },
+  merge(sessionId, context, entities, message, cb) {
+    // Retrieve the location entity and store it into a context field
+    const loc = firstEntityValue(entities, 'location');
+    if (loc) {
+      context.loc = loc;
+    }
+    cb(context);
+  },
+  error(sessionId, context, error) {
+    console.log(error.message);
+  },
+  ['fetch-weather'](sessionId, context, cb) {
+    // Here should go the api call, e.g.:
+    // context.forecast = apiCall(context.loc)
+    context.forecast = 'sunny';
+    cb(context);
+  },
+};
+const Logger = require('node-wit').Logger;
+const levels = require('node-wit').logLevels;
+const Wit = require('node-wit').Wit;
+const logger = new Logger(levels.DEBUG);
+const client = new Wit("JUFYXEJC6KRMQX6EVVL4OKNLN7BP5JDF",actions,logger);
 */
