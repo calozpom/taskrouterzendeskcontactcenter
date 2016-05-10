@@ -129,7 +129,7 @@ app.get('/initiatebot', function(request, response) {
   var foundTask=0;
   var taskConversationSid="";
   //note the following call is async
-  client.workspace.tasks.get(queryString, function(err, data) {
+  client.tasks.get(queryString, function(err, data) {
     if(!err) {
       console.log(data);
       data.tasks.forEach(function(task) {
