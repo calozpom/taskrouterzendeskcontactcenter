@@ -180,7 +180,7 @@ app.get('/initiatebot', function(request, response) {
         console.log(response.statusCode); 
         console.log("headers:");
         console.log(response.headers);
-b
+
         console.log("response.body");
         console.log(response.body);
         //console.log(response);
