@@ -152,17 +152,17 @@ app.get('/initiatebot', function(request, response) {
         console.log("did not find an existing active task for this messenger");
         var attributesJson = {};
         //{"message_from":"+14152791216","message_body":"Test message over here","message_to":"+18552226811","message_sid":"SM749eb6d22149847222325fa65d33a608"}
-        attributesJson['message_from']=request.query['From'];
-        attributesJson['message_body']=request.query['Body'];
-        attributesJson['message_to']=request.query['To'];
-        attributesJson['message_sid']=request.query['MessageSid'];
+        attributesJson['\'message_from\'']=request.query['From'];
+        attributesJson['\'message_body\'']=request.query['Body'];
+        attributesJson['\'message_to\'']=request.query['To'];
+        attributesJson['\'message_sid\'']=request.query['MessageSid'];
         console.log("want to create a new task with these attributes");
         console.log(attributesJson);
         var attributesString=JSON.stringify(attributesJson);
         var taskCreationJson = {};
         //taskCreationJson['workflow_sid']="WW4d526c9041d73060ca46d4011cf34b33";
         taskCreationJson['attributes']=attributesJson;
-        console.log(JSON.stringify(taskCreationJson));
+        console.log(taskCreationJson);
         var newTask =client.workspace.tasks.create(JSON.stringify(taskCreationJson));
         console.log("created a new task");
         console.log(newTask);
