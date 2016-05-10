@@ -134,18 +134,17 @@ app.get('/initiatebot', function(request, response) {
       console.log(data);
       data.tasks.forEach(function(task) {
         if (task.assignmentStatus == "pending" ||
-            task.assignmentStatus == "reserved" ||
-            task.assignmentStatus == "assigned") {
+          task.assignmentStatus == "reserved" ||
+          task.assignmentStatus == "assigned") {
           foundTask=1;
-          console.log("found an existing task from that user which is still active. Trying to list attributes");
-          console.log(task.attributes);
-          taskConversationSid = task.sid;
-          console.log("will use this existing task sid for this conversation " + taskConversationSid);
+        console.log("found an existing task from that user which is still active. Trying to list attributes");
+        console.log(task.attributes);
+        taskConversationSid = task.sid;
+        console.log("will use this existing task sid for this conversation " + taskConversationSid);
 
-        }
-      });
-    }
-      });
+      }
+    });
+      
       if (!foundTask) {
         console.log("did not find an existing active task for this messenger");
         var attributes = {};
@@ -162,20 +161,22 @@ app.get('/initiatebot', function(request, response) {
         });
         console.log("created a new task");
         console.log(newTask);
+        
+      }
+
       
+      var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
+      req
+      .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:'al',text:request.query['Body']})
+      .on('response', function(response) {
+        console.log(response.statusCode) 
+        console.log(response.headers) 
+      })
     }
-
-  
-  var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
-  req
-  .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:'al',text:request.query['Body']})
-  .on('response', function(response) {
-    console.log(response.statusCode) 
-    console.log(response.headers) 
-  })
+  });
 
 
-  response.sendStatus(200);
+response.sendStatus(200);
 
 
 
