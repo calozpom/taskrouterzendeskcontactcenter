@@ -169,29 +169,40 @@ app.get('/initiatebot', function(request, response) {
         console.log(newTask);
         var newTask =client.workspace.tasks.create(JSON.stringify(attributesJson));
         console.log(newTask);
-         var newTask =client.workspace.tasks.create({workflowSid: "WW4d526c9041d73060ca46d4011cf34b33", attributes: '{"type":"support"}'});
-         console.log(newTask);
-         req
+        var newTask =client.workspace.tasks.create({workflowSid: "WW4d526c9041d73060ca46d4011cf34b33", attributes: '{"type":"support"}'});
+        console.log(newTask);
+        var options = { method: 'POST',
+                         form: 
+                             { WorkflowSid: 'WW4d526c9041d73060ca46d4011cf34b33',
+                               Attributes: '{"message_from":"+14152791216","message_body":"Hdhdhdh","message_to":"+18448384268","message_sid":"SM592568fd01c79b3feb1e2a7087f2e9f8"}' 
+                             } 
+                        };
+         req(options, function (error, response, body) {
+          if (error) throw new Error(error);
+          console.log("============");
+          console.log(body);
+          });
+        req
         .post('https://taskrouter.twilio.com/v1/Workspaces/'+workspaceSid+'/Tasks').auth(accountSid,authToken).form({WorkflowSid:"WW4d526c9041d73060ca46d4011cf34b33",Attributes:{}})
-      .on('response', function(response) {
-        console.log("status code:");
-        console.log(response.statusCode); 
-        console.log("headers:");
-        console.log(response.headers);
-        console.log("response.body");
-        console.log(response.body);
+        .on('response', function(response) {
+          console.log("status code:");
+          console.log(response.statusCode); 
+          console.log("headers:");
+          console.log(response.headers);
+          console.log("response.body");
+          console.log(response.body);
         //console.log(response);
       })
-      var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
-      req
-      .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:'al',text:request.query['Body']})
-      .on('response', function(response) {
-        console.log(response.statusCode) 
-        console.log(response.headers) 
-      })
+        var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
+        req
+        .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:'al',text:request.query['Body']})
+        .on('response', function(response) {
+          console.log(response.statusCode) 
+          console.log(response.headers) 
+        })
+      }
     }
-  }
-});
+  });
 
 
 response.send('');
