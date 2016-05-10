@@ -172,8 +172,8 @@ app.post('/initiatebot', function(request, response) {
 
   console.log("checking for any existing task from this user");
   var queryJson={};
-  queryJson['EvaluateTaskAttributes']="(message_from=\"" + request.query['From'] + "\")";
-  var queryString = "{'EvaluateTaskAttributes':'(message_from=\"" + request.query['From'] + "\")'}";
+  queryJson['EvaluateTaskAttributes']="(message_from=\"" + request.body['From'] + "\")";
+  var queryString = "{'EvaluateTaskAttributes':'(message_from=\"" + request.body['From'] + "\")'}";
 
   var foundTask=0;
   var taskConversationSid="";
@@ -198,10 +198,10 @@ app.post('/initiatebot', function(request, response) {
         
         var attributesJson = {};
         //{"message_from":"+14152791216","message_body":"Test message over here","message_to":"+18552226811","message_sid":"SM749eb6d22149847222325fa65d33a608"}
-        attributesJson['message_from']=request.query['From'];
-        attributesJson['message_body']=request.query['Body'];
-        attributesJson['message_to']=request.query['To'];
-        attributesJson['message_sid']=request.query['MessageSid'];
+        attributesJson['message_from']=request.body['From'];
+        attributesJson['message_body']=request.body['Body'];
+        attributesJson['message_to']=request.body['To'];
+        attributesJson['message_sid']=request.body['MessageSid'];
         console.log("want to create a new task with these attributes");
         console.log(attributesJson);
         var attributesString=JSON.stringify(attributesJson);
