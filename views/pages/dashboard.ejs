@@ -428,6 +428,10 @@
                 htmlToAdd+="img/al.jpg";
 
             }
+            else if (childData['from'] == "MeyaBot") {
+                htmlToAdd+="img/meya.png";
+
+            }
             else {
                 htmlToAdd+=taskrouterGlobals[reservation.task.sid].profile_pic
 
@@ -435,6 +439,9 @@
             htmlToAdd +="' alt='profile' /></div></div> <div class='small-10 columns'><div class='message-desc'>";
             htmlToAdd += "<b><div class='messageName"+reservation.task.sid+"'>"
             if (childData['from'] == "me") {
+                htmlToAdd+=childData['from'];
+            }
+            else if (childData['from'] == "MeyaBot") {
                 htmlToAdd+=childData['from'];
             }
             else {

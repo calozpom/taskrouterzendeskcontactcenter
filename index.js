@@ -153,6 +153,7 @@ app.get('/initiatebot', function(request, response) {
 
 function updateConversation(taskSid,request) {
   myFirebase.child(taskSid).push({'from':request.query['From'], 'message':request.query['Body']});
+  //TODO: need to add an if statement here and only post to meya if bot_qualified is not true
   var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   req
   .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:taskSid,text:request.query['Body']})
