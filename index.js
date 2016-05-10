@@ -234,8 +234,12 @@ app.post('/botresponse', function(request, response) {
 });
 
 app.post('/eventstream', function(request, response) {
+  var eventstream = myFirebase.child("eventstream");
   console.log("NEW EVENT");
  console.log(request.body);
+ console.log("updating firebase eventstream for task sid " +request.body.TaskSid);
+ evenstream.child(request.body.TaskSid).push({'update':request.body});
+
 });
 
 app.get('/sendsms', function(request, response) {
