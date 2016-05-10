@@ -169,6 +169,8 @@ app.post('/initiatebot', function(request, response) {
   console.log("received new message as follows:");
   console.log(request.body.AddOns);
   var addOnsData = JSON.parse(request.body.AddOns);
+  console.log("did json parsing work?");
+  console.log(addOnsData);
   var friendlyName_first = addOnsData['whitepages_pro_caller_identity'];
   //['result']['results']['belongs_to']['names']['first_name'];
   console.log(friendlyName_first);
