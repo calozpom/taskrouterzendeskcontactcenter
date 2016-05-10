@@ -189,7 +189,7 @@ app.post('/initiatebot', function(request, response) {
         console.log(task.attributes);
         taskConversationSid = task.sid;
         console.log("will use this existing task sid for this conversation " + taskConversationSid);
-        updateConversation(taskConversationSid,request);
+        updateConversationPost(taskConversationSid,request);
       }
     });
 
@@ -219,7 +219,7 @@ app.post('/initiatebot', function(request, response) {
           //console.log(body);
           var newTaskResponse = JSON.parse(body);
           console.log("created a new tasks with Sid "+newTaskResponse.sid);
-          updateConversation(newTaskResponse.sid,request);
+          updateConversationPost(newTaskResponse.sid,request);
 
         });
   }
@@ -239,6 +239,18 @@ function updateConversation(taskSid,request) {
   var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   req
   .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:taskSid,text:request.query['Body']})
+  .on('response', function(response) {
+
+  })
+}
+
+
+function updateConversationPost(taskSid,request) {
+  myFirebase.child(taskSid).push({'from':request.body['From'], 'message':request.body['Body']});
+  //TODO: need to add an if statement here and only post to meya if bot_qualified is not true
+  var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
+  req
+  .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:taskSid,text:request.body['Body']})
   .on('response', function(response) {
 
   })
