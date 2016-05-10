@@ -174,13 +174,12 @@ app.get('/initiatebot', function(request, response) {
 
          req
         .post('https://taskrouter.twilio.com/v1/Workspaces/'+workspaceSid+'/Tasks').auth(accountSid,authToken).form({WorkflowSid:"WW4d526c9041d73060ca46d4011cf34b33",Attributes:{}})
-      .on('response', function(error, response, body) {
+      .on('response', function(response) {
         console.log("status code:");
         console.log(response.statusCode); 
         console.log("headers:");
         console.log(response.headers);
-        console.log("body");
-        console.log(body);
+
         console.log("response.body");
         console.log(response.body);
         //console.log(response);
