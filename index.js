@@ -198,14 +198,11 @@ app.post('/botresponse', function(request, response) {
   myFirebase.child(request.body.user_id).push({'from':'MeyaBot', 'message':request.body.text});
   client.workspace.tasks(request.body.user_id).get(function(err, task) {
       console.log(task.attributes);
-      
-  });   
-  //Send the response
-  smsclient.sendMessage({
+       smsclient.sendMessage({
 
-    to:'+16515556677', // Any number Twilio can deliver to
-    from: '+14506667788', // A number you bought from Twilio and can use for outbound communication
-    body: 'word to your mother.' // body of the SMS message
+    to:task.attributes.message_from, // Any number Twilio can deliver to
+    from: task.attributes.message_to, // A number you bought from Twilio and can use for outbound communication
+    body: request.body.text // body of the SMS message
 
 }, function(err, responseData) { //this function is executed when a response is received from Twilio
 
@@ -220,6 +217,10 @@ app.post('/botresponse', function(request, response) {
 
     }
 });
+
+  });   
+  //Send the response
+ 
 
   
   console.log(request.body);
