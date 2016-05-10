@@ -126,19 +126,45 @@ app.get('/initiatebot', function(request, response) {
   console.log("checking for any existing task from this user");
   var queryString = "\"EvaluateTaskAttributes\":\"('message_from' == '" + request.query['From'] + "')\"";
   console.log("using the following task evaluation " + queryString);
-
+  var foundTask=0;
+  var taskConversationSid="";
   client.workspace.tasks.get({queryString}, function(err, data) {
     if(!err) {
-      console.log("found an existing task from that user. Seeing if it is still active. Trying to list attributes");
       console.log(data);
       data.tasks.forEach(function(task) {
-        console.log("entered for loop");
-        console.log(task.assignmentStatus);
-        console.log(task.attributes);
-      })
+        if (task.assignmentStatus == "pending" ||
+            task.assignmentStatus == "reserved" ||
+            task.assignmentStatus == "assigned") {
+          foundTask=1;
+          console.log("found an existing task from that user which is still active. Trying to list attributes");
+          console.log(task.attributes);
+          taskConversationSid = task.Sid;
+          console.log("will use this existing task sid for this conversation " + taskConversationSid);
+
+        }
+      });
+    }
+      });
+      if (!foundTask) {
+        console.log("did not find an existing active task for this messenger");
+        var attributes = {};
+        //{"message_from":"+14152791216","message_body":"Test message over here","message_to":"+18552226811","message_sid":"SM749eb6d22149847222325fa65d33a608"}
+        attributes['message_from']=request.query['From'];
+        attributes['message_body']=request.query['Body'];
+        attributes['message_to']=request.query['To'];
+        attributes['message_sid']=request.query['MessageSid'];
+        console.log("want to create a new task with these attributes");
+        console.log(attributes);
+        var newTask =client.workspace.tasks.create({
+          workflowSid: "WW4d526c9041d73060ca46d4011cf34b33",
+          attributes: attributes
+        });
+        console.log("created a new task");
+        console.log(newTask);
+      }
     }
 
-  });
+  
   var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   req
   .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:'al',text:request.query['Body']})
