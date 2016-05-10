@@ -98,7 +98,6 @@ app.get('/initiatebot', function(request, response) {
   //note the following call is async
   client.workspace.tasks.get(queryJson, function(err, data) {
     if(!err) {
-      console.log(data);
       data.tasks.forEach(function(task) {
         if (task.assignmentStatus == "pending" ||
           task.assignmentStatus == "reserved" ||
