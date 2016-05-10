@@ -150,7 +150,7 @@ app.get('/initiatebot', function(request, response) {
 
       if (!foundTask) {
         console.log("did not find an existing active task for this messenger");
-        var newTask =client.workspace.tasks.create({});
+        var newTask =client.workspace.tasks.create();
         console.log(newTask);
         var attributesJson = {};
         //{"message_from":"+14152791216","message_body":"Test message over here","message_to":"+18552226811","message_sid":"SM749eb6d22149847222325fa65d33a608"}
