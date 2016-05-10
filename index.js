@@ -176,7 +176,7 @@ app.get('/initiatebot', function(request, response) {
                         auth: {username: accountSid, password: authToken},
                          form: 
                              { WorkflowSid: 'WW4d526c9041d73060ca46d4011cf34b33',
-                               Attributes: '{"message_from":"+14152791216","message_body":"Hdhdhdh","message_to":"+18448384268","message_sid":"SM592568fd01c79b3feb1e2a7087f2e9f8"}' 
+                               Attributes: attributesString
                              } 
                         };
          req(options, function (error, response, body) {
