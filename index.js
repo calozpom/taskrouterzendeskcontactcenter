@@ -198,12 +198,13 @@ app.post('/botresponse', function(request, response) {
   myFirebase.child(request.body.user_id).push({'from':'MeyaBot', 'message':request.body.text});
   console.log("trying to get the details for this task with sid " + request.body.user_id);
   client.workspace.tasks(request.body.user_id).get(function(err, task) {
+    var attrib=JSON.parse(task.attributes);
     console.log("====FOUND THE TASK====");
-      console.log(task.attributes);
+      console.log(attrib);
       console.log("FROM");
-      console.log(task.attributes["message_from"]);
+      console.log(attrib["message_from"]);
       console.log("TO");
-     console.log(task.attributes.message_to);
+     console.log(attrib.message_to);
       console.log("attempting to send the response");
        smsclient.sendMessage({
 
