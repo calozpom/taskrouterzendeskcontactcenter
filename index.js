@@ -161,7 +161,7 @@ app.get('/initiatebot', function(request, response) {
         console.log("want to create a new task with these attributes");
         console.log(attributesJson);
         var attributesString=JSON.stringify(attributesJson);
-        var taskCreationJson = {};
+        /*var taskCreationJson = {};
         //taskCreationJson['workflow_sid']="WW4d526c9041d73060ca46d4011cf34b33";
         taskCreationJson['attributes']=attributesJson;
         console.log(taskCreationJson);
@@ -171,6 +171,7 @@ app.get('/initiatebot', function(request, response) {
         console.log(newTask);
         var newTask =client.workspace.tasks.create({workflowSid: "WW4d526c9041d73060ca46d4011cf34b33", attributes: '{"type":"support"}'});
         console.log(newTask);
+        */
         var options = { method: 'POST',
                         url: 'https://taskrouter.twilio.com/v1/Workspaces/'+workspaceSid+'/Tasks',
                         auth: {username: accountSid, password: authToken},
@@ -184,6 +185,7 @@ app.get('/initiatebot', function(request, response) {
           console.log("============");
           console.log(body);
           });
+         console.log(body.sid);
         req
         .post('https://taskrouter.twilio.com/v1/Workspaces/'+workspaceSid+'/Tasks').auth(accountSid,authToken).form({WorkflowSid:"WW4d526c9041d73060ca46d4011cf34b33",Attributes:{}})
         .on('response', function(response) {
@@ -218,11 +220,13 @@ client.workspace.tasks.list(function(err, data) {
     if(!err) {
       console.log(data);
       data.tasks.forEach(function(task) {
-        client.workspace.tasks(task.sid).delete()
+        client.workspace.tasks(task.sid).delete();
+        console.log('deleted task ' +task.sid);
         //task.delete();
       })
     }
   })
+response.send('all tasks deleted');
         //client.workspace.tasks.delete()
 });
 
