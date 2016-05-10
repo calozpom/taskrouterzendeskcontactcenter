@@ -214,7 +214,7 @@ response.send('');
 });
 
 app.get('/deletealltasks', function(request,response) {
-client.workspace.tasks.get(queryJson, function(err, data) {
+client.workspace.tasks.list(function(err, data) {
     if(!err) {
       console.log(data);
       data.tasks.forEach(function(task) {
