@@ -200,6 +200,10 @@ app.post('/botresponse', function(request, response) {
   client.workspace.tasks(request.body.user_id).get(function(err, task) {
     console.log("====FOUND THE TASK====");
       console.log(task.attributes);
+      console.log("FROM");
+      console.log(task.attributes.message_from);
+      console.log("TO");
+     console.log(task.attributes.message_to);
       console.log("attempting to send the response");
        smsclient.sendMessage({
 
