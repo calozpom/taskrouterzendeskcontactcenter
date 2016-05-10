@@ -143,7 +143,7 @@
                 <section class="top-bar-section">
      <ul class="left">
       <li class="has-dropdown" id="status">
-        <a href="#">Online</a>
+        <a href="#">Loading...</a>
       <ul class="dropdown">
           <li><a href="#">Go offline</a></li>
           <li class="active"><a href="#">Go Busy</a></li>
@@ -524,7 +524,7 @@
         $.ajax({ 
           url: 'sendSMS',
           data: {'from': from, 'to':to, 'body':body},
-          type: 'post',
+          type: 'get',
           success: function(output) {
                       console.log("SMS sent OK");
 
