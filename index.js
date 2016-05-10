@@ -92,6 +92,7 @@ app.get('/initiatebot', function(request, response) {
   console.log("received new message as follows:");
   console.log(request.query['Body']); // message content
   console.log(request.query['From']); // sender ID
+  console.log(request.query);
 
 
   console.log("checking for any existing task from this user");
