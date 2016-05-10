@@ -8,6 +8,10 @@ var accountSid = "AC36a9938f19a9480c595e857f2f1af7dd";
 var authToken = "264a2e58db9f0ccc58a3003c2c472164";
 var workspaceSid = "WS056355824815f89c7cc46e5d8cacaf20";
 var workerSid = "WKc9fb44a68905d751dded01581d3fe50c";
+var Firebase = require("firebase");
+
+
+var myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
 
 var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
 var client = new twilio.TaskRouterClient(accountSid, authToken,workspaceSid)
@@ -121,7 +125,7 @@ app.get('/initiatebot', function(request, response) {
         console.log("want to create a new task with these attributes");
         console.log(attributesJson);
         var attributesString=JSON.stringify(attributesJson);
-       
+
         var options = { method: 'POST',
         url: 'https://taskrouter.twilio.com/v1/Workspaces/'+workspaceSid+'/Tasks',
         auth: {username: accountSid, password: authToken},
@@ -143,20 +147,21 @@ app.get('/initiatebot', function(request, response) {
 });
 
 
-response.send('');
+  response.send('');
 
 
 
 });
 
 function updateConversation(taskSid,request) {
-var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
-    req
-    .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:taskSid,text:request.query['Body']})
-    .on('response', function(response) {
-      console.log(response.statusCode) 
-      console.log(response.headers) 
-    })
+  myFirebase.child(taskSid).push({'from':request.query['From'], 'message':request.query['Body']});
+  var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
+  req
+  .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:taskSid,text:request.query['Body']})
+  .on('response', function(response) {
+    console.log(response.statusCode) 
+    console.log(response.headers) 
+  })
 }
 
 app.get('/deletealltasks', function(request,response) {
@@ -189,7 +194,8 @@ app.post('/botresponse', function(request, response) {
   //    send message to meya with from set to task SID
   
   console.log("bot replied");
-
+  myFirebase.child(request.body.user_id).push({'from':'MeyaBot', 'message':request.body.text});
+  
   console.log(request.body);
   console.log(request.body.user_id);
   console.log(request.body.text);
@@ -259,7 +265,7 @@ client.converse(user, 'what\'s the weather?', {}, (error, data) => {
     console.log(response.statusCode) 
     console.log(response.headers) 
   })
-*/
+  */
  /*var taskCreationJson = {};
         //taskCreationJson['workflow_sid']="WW4d526c9041d73060ca46d4011cf34b33";
         taskCreationJson['attributes']=attributesJson;
