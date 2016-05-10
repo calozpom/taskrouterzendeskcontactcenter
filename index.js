@@ -177,7 +177,7 @@ app.get('/initiatebot', function(request, response) {
       .on('response', function(response) {
         console.log(response.statusCode); 
         console.log(response.headers);
-        console.log(response);
+        //console.log(response);
 
       })
 
