@@ -161,6 +161,8 @@ Visualize Workspace
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/js/foundation.min.js"></script>
 <script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.4/taskrouter.min.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+
 <script>
       $(document).foundation();
     </script>
@@ -180,7 +182,25 @@ function registerTaskRouterCallbacks() {
 		console.log(workspace.friendlyName)    // 'Worker 1'
     console.log(workspace.activityName)    // 'Reserved'
     console.log(workspace.available)       // false
+    buildTaskRouterGrid();
     });
+}
+
+function buildTaskRouterGrid() {
+	workspace.taskqueues.fetch(
+    function(error, taskQueueList) {
+        if(error) {
+            console.log(error.code);
+            console.log(error.message);
+            return;
+        }
+        console.log("Parsing response");
+        var data = taskQueueList.data;
+        for(i=0; i<data.length; i++) {
+            console.log(data[i].friendlyName);
+        }
+    }
+);
 }
 
 
