@@ -265,10 +265,6 @@ function updateConversationPost(taskSid,request,friendlyName_first,friendlyName_
   myFirebase.child(taskSid).push({'from':request.body['From'], 'message':request.body['Body'], 'first':friendlyName_first,'last':friendlyName_last});
   //TODO: need to add an if statement here and only post to meya if bot_qualified is not true
    client.workspace.tasks(taskSid).get(function(err, task) {
-    console.log("checking if the task has been bot qualified");
-    console.log(task.attributes);
-    console.log("if test" + task.attributes.hasOwnProperty('bot_qualified')) 
-    console.log(task.attributes["bot_qualified"]);
     attr=JSON.parse(task.attributes);
     console.log(attr['bot_qualified']);
     if(!attr.hasOwnProperty('bot_qualified')) {
