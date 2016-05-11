@@ -56,7 +56,7 @@ Visualize Workspace
 </nav>
  
  
-<div class="row" id="rowone"><div>TEST</div>
+<div class="row" id="rowone" data-equalizer><div>TEST</div>
 
 
 
@@ -135,15 +135,15 @@ function buildTaskRouterGrid() {
         for(i=0; i<data.length; i++) {
         	console.log("entered loop");
         	var htmlToAdd = "";
-        	htmlToAdd += "<div class='large-3 columns'>";
+        	htmlToAdd += "<div class='large-3 columns' data-equalizer-watch>";
         	htmlToAdd += "<div class='panel'>";
         	htmlToAdd += "<h5>" + data[i].friendlyName + "</h5>";
-        	htmlToAdd += "test";
+        	htmlToAdd += "<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;";
         	htmlToAdd += "</div></div>";
         	console.log("current inner html is " + $("#rowone").html());
         	console.log("wanting to add this html " + htmlToAdd);
         	$("#rowone").html($("#rowone").html() + htmlToAdd);
-        	console.log("combined html is now " + $("#rowone").innerHTML);
+        	console.log("combined html is now " + $("#rowone").html());
             console.log(data[i].friendlyName);
         }
     }
