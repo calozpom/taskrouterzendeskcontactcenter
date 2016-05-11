@@ -124,7 +124,7 @@ function buildTaskRouterGrid() {
         console.log("Parsing response");
 
         var data = taskQueueList.data;
-        console.log("going to create " + taskQueueList.data.length + "columns");
+        console.log("going to create " + taskQueueList.data.length + " columns");
         var width=Math.floor(12/taskQueueList.data.length);
         if (width==0){
         	console.log("error - cannot create visualization for workspace with more than twelve queues");
