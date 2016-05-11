@@ -69,6 +69,7 @@ app.get('/dashboard', function(request, response) {
 });
 
 app.get('/visualize', function(request, response) {
+  response.setHeader('Cache-Control', 'no-cache');
   response.render('pages/visualize', {'token': workspacetoken});
 });
 
