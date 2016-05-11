@@ -195,7 +195,7 @@ app.post('/initiatebot', function(request, response) {
         console.log(task.attributes);
         taskConversationSid = task.sid;
         console.log("will use this existing task sid for this conversation " + taskConversationSid);
-        updateConversationPost(taskConversationSid,request);
+        updateConversationPost(taskConversationSid,request, friendlyName_first, friendlyName_last);
       }
     });
 
