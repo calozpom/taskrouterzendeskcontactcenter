@@ -262,14 +262,23 @@ function updateConversation(taskSid,request,friendlyName_first,friendlyName_last
 
 
 function updateConversationPost(taskSid,request,friendlyName_first,friendlyName_last) {
-  myFirebase.child(taskSid).push({'from':request.body['From'], 'message':request.body['Body']});
+  myFirebase.child(taskSid).push({'from':request.body['From'], 'message':request.body['Body'], , 'first':friendlyName_first,'last':friendlyName_last});
   //TODO: need to add an if statement here and only post to meya if bot_qualified is not true
-  var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
+   client.workspace.tasks(taskSid).get(function(err, task) {
+    if(!task.attributes.bot_qualified) {
+      console.log("this task is not yet bot qualified");
+        var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   req
   .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:taskSid,text:request.body['Body']})
   .on('response', function(response) {
 
   })
+
+  }
+  else{
+    console.log("this task is already bot qualified");
+    }
+  });
 }
 
 app.get('/deletealltasks', function(request,response) {
@@ -346,6 +355,7 @@ app.post('/eventstream', function(request, response) {
  console.log("received event");
  console.log(request.body); 
  eventstream.child(request.body.TaskSid).push({'update':request.body});
+ response.send('');
 });
 
 app.get('/sendsms', function(request, response) {
@@ -375,6 +385,8 @@ app.get('/sendsms', function(request, response) {
       console.log("there was an error");
     }
 });
+   response.send('');
+
 });
 
 
