@@ -125,8 +125,8 @@ function buildTaskRouterGrid() {
 
         var data = taskQueueList.data;
         console.log("going to create " + taskQueueList.data.length + "columns");
-        var width=Math.floor(12/taskQueueList.data);
-        if (width=0){
+        var width=Math.floor(12/taskQueueList.data.length);
+        if (width==0){
         	console.log("error - cannot create visualization for workspace with more than twelve queues");
         }
         console.log("going to use foundation grid width of " +width);
@@ -137,7 +137,10 @@ function buildTaskRouterGrid() {
         	htmlToAdd += "<h5>" + data[i].friendlyName + "</h5>";
         	htmlToAdd += "test";
         	htmlToAdd += "</div></div>";
+        	console.log("current inner html is " + $("#rowone").innerHTML);
+        	console.log("wanting to add this html " + htmlToAdd);
         	$("#rowone").innerHTML = $("#rowone").innerHTML + htmlToAdd;
+        	console.log("combined html is now " + $("#rowone").innerHTML);
             console.log(data[i].friendlyName);
         }
     }
