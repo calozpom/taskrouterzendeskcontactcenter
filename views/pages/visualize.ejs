@@ -145,7 +145,7 @@ Visualize Workspace
 <hr/>
 <div class="row">
 <div class="large-6 columns">
-<p>&copy; Copyright no one at all. Go to town.</p>
+<p>&copy; Al Cook | @calozpom | Twilio</p>
 </div>
 <div class="large-6 columns">
 <ul class="inline-list right">
@@ -163,7 +163,27 @@ Visualize Workspace
 <script>
       $(document).foundation();
     </script>
-<script>//<![CDATA[
+<script>
+window.onload = function() {
+	window.workspace = new Twilio.TaskRouter.Workspace("<%= token %>");
+	window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
+	window.taskrouterGlobals = {};
+	registerTaskRouterCallbacks();
+
+
+}
+
+function registerTaskRouterCallbacks() {
+	workspace.on("ready", function(workspace) {
+		console.log(workspace.sid)             // 'WKxxx'
+		console.log(workspace.friendlyName)    // 'Worker 1'
+    console.log(workspace.activityName)    // 'Reserved'
+    console.log(workspace.available)       // false
+    });
+}
+
+
+//<![CDATA[
 document.write('<script src="//' + (location.hostname || 'localhost') + ':35729/livereload.js?snipver=1"><\/script>')
 //]]></script>
 </body>

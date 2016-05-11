@@ -14,11 +14,17 @@ var Firebase = require("firebase");
 var myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
 
 var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
+var workspacecapability = new twilio.TaskRouterWorkspaceCapability(accountSid, authToken, workspaceSid);
+workspacecapability.allowFetchSubresources();
+workspacecapability.allowUpdatesSubresources();
+workspacecapability.allowDeletesSubresources();
+
 var client = new twilio.TaskRouterClient(accountSid, authToken,workspaceSid);
 var smsclient = new twilio.RestClient(accountSid, authToken);
 
 capability.allowActivityUpdates();
 capability.allowReservationUpdates();
+var workspacetoken = workspacecapability.generate();
 
 // By default, tokens are good for one hour.
 // Override this default timeout by specifiying a new value (in seconds).
@@ -61,7 +67,7 @@ app.get('/dashboard', function(request, response) {
 });
 
 app.get('/visualize', function(request, response) {
-  response.render('pages/visualize');
+  response.render('pages/visualize', {'token': workspacetoken});
 });
 
 app.get('/outboundsip', function(request, response) {
