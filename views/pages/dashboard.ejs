@@ -320,7 +320,8 @@
         newTask(reservation);     
         myFirebase.child(reservation.task.sid).on("value", function(dataSnapshot) {
          updateTask(reservation,dataSnapshot);
-        });
+         Foundation.Motion.animateIn($("#taskDiv"+reservation.task.sid), 'hinge-in-from-top');
+     });
       });
      
       worker.on("reservation.accepted", function(reservation) {
@@ -495,7 +496,8 @@
         htmlToAdd += "</div>";
 
         var divToAddTo=document.getElementById('addToThis');
-        divToAddTo.innerHTML = divToAddTo.innerHTML + htmlToAdd;   
+        divToAddTo.innerHTML = divToAddTo.innerHTML + htmlToAdd;
+        $("#taskDiv"+reservation.task.sid).hide();   
         var acceptButton1=document.getElementById('acceptTask'+reservation.task.sid);
         acceptButton1.onclick = function(){
             acceptTask(reservation);
