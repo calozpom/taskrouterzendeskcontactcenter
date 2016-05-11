@@ -114,6 +114,7 @@ function registerTaskRouterCallbacks() {
 }
 
 function buildTaskRouterGrid() {
+	console.log("building taskrouter grid");
 	workspace.taskqueues.fetch(
     function(error, taskQueueList) {
         if(error) {
@@ -130,7 +131,9 @@ function buildTaskRouterGrid() {
         	console.log("error - cannot create visualization for workspace with more than twelve queues");
         }
         console.log("going to use foundation grid width of " +width);
+        console.log("going to loop " + data.length + " times");
         for(i=0; i<data.length; i++) {
+        	console.log("entered loop");
         	var htmlToAdd = "";
         	htmlToAdd += "<div class='large-3 columns'>";
         	htmlToAdd += "<div class='panel'>";
