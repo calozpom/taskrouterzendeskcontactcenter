@@ -166,14 +166,15 @@ app.post('/initiatebot', function(request, response) {
   // add message to firebase entry for task sid
   // if task is not bot_qualified
   //    send message to meya with from set to task SID
-  console.log("received new message as follows:");
-  console.log(request.body.AddOns);
-  var addOnsData = JSON.parse(request.body.AddOns);
-  console.log("did json parsing work?");
-  console.log(addOnsData);
-  var friendlyName_first = addOnsData['results']['whitepages_pro_caller_identity']['result']['results'][0]['belongs_to'][0]['names'][0]['first_name'];
-  console.log(friendlyName_first);
-
+  var friendlyName_first ="";
+  var friendlyName_last="";
+  try {
+  
+    var addOnsData = JSON.parse(request.body.AddOns);
+    var friendlyName_first = addOnsData['results']['whitepages_pro_caller_identity']['result']['results'][0]['belongs_to'][0]['names'][0]['first_name'];
+    var friendlyName_last = addOnsData['results']['whitepages_pro_caller_identity']['result']['results'][0]['belongs_to'][0]['names'][0]['last_name'];
+  }
+  catch (err) {}
 
   console.log("checking for any existing task from this user");
   var queryJson={};
@@ -224,7 +225,7 @@ app.post('/initiatebot', function(request, response) {
           //console.log(body);
           var newTaskResponse = JSON.parse(body);
           console.log("created a new tasks with Sid "+newTaskResponse.sid);
-          updateConversationPost(newTaskResponse.sid,request);
+          updateConversationPost(newTaskResponse.sid,request, friendlyName_first, friendlyName_last);
 
         });
   }
@@ -238,15 +239,24 @@ app.post('/initiatebot', function(request, response) {
 
 });
 
-function updateConversation(taskSid,request) {
-  myFirebase.child(taskSid).push({'from':request.query['From'], 'message':request.query['Body']});
+function updateConversation(taskSid,request,friendlyName_first,friendlyName_last) {
+  myFirebase.child(taskSid).push({'from':request.query['From'], 'message':request.query['Body'], 'first':friendlyName_first,'last':friendlyName_last});
   //TODO: need to add an if statement here and only post to meya if bot_qualified is not true
-  var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
+  client.workspace.tasks(taskSid).get(function(err, task) {
+    if(!task.attributes.bot_qualified) {
+      console.log("this task is not yet bot qualified");
+        var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   req
   .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:taskSid,text:request.query['Body']})
   .on('response', function(response) {
 
   })
+  else{
+    console.log("this task is already bot qualified");
+    }
+  }
+  });
+
 }
 
 
