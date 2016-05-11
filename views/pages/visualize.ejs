@@ -11,6 +11,8 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/normalize.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/foundation.min.css">
 <link href='http://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/motion-ui/1.1.1/motion-ui.min.css" />
+
  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
 </head>
@@ -56,9 +58,9 @@ Visualize Workspace
  
 <div class="row"  id='rowone'>
 <div class="large-3 columns">
-<div class="panel">
+<div class="panel" id='test'>
 <h5>Panel Title</h5>
-<p>This is a three columns grid panel with an arbitrary height.</p>
+<p>This is a three columns grid panel with an arbitrary <a href='#' onClick="test('test')">height</a>a>.</p>
 </div>
 </div>
 
@@ -86,6 +88,7 @@ Visualize Workspace
 </footer>
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/js/foundation.min.js"></script>
+<script src="js/foundation/foundation.util.motion.js"></script>
 <script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.4/taskrouter.min.js"></script>
     <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
 
@@ -127,6 +130,12 @@ function buildTaskRouterGrid() {
         }
     }
 );
+}
+
+function test(divID) {
+	console.log("attempting to animate");
+	var elem = $("'#"+divID+"'");
+Foundation.Motion.animateOut(elem, fade-out);
 }
 
 
