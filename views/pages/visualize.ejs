@@ -140,9 +140,9 @@ function buildTaskRouterGrid() {
         	htmlToAdd += "<h5>" + data[i].friendlyName + "</h5>";
         	htmlToAdd += "test";
         	htmlToAdd += "</div></div>";
-        	console.log("current inner html is " + $("#rowone").innerHTML);
+        	console.log("current inner html is " + $("#rowone").html());
         	console.log("wanting to add this html " + htmlToAdd);
-        	$("#rowone").innerHTML = $("#rowone").innerHTML + htmlToAdd;
+        	$("#rowone").html($("#rowone").html() + htmlToAdd);
         	console.log("combined html is now " + $("#rowone").innerHTML);
             console.log(data[i].friendlyName);
         }
