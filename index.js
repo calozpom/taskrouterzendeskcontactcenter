@@ -54,9 +54,11 @@ app.use( bodyParser.json() );
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 
+
 // views is directory for all template files
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
+app.disable('view cache');
 
 app.get('/', function(request, response) {
   response.render('pages/index');
