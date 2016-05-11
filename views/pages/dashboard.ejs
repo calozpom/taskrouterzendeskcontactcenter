@@ -413,6 +413,7 @@
     }
     function getHTMLforTask(reservation,dataSnapshot) {
         var htmlToAdd ="";
+        console.log("getting html for task");
         
 
 
@@ -423,29 +424,36 @@
           snapshot.forEach(function(childSnapshot) {
             var childData = childSnapshot.val();
             htmlToAdd +="<div class='row'><div class='message-dashboard'><div class='small-2 columns'>";
-            htmlToAdd += "<div class='profilePic"+reservation.task.sid+"'><img src='";
+            
             if (childData['from'] == "me") {
+                htmlToAdd += "<div class='profilePicMe"+reservation.task.sid+"'><img src='";
                 htmlToAdd+="img/al.jpg";
+                htmlToAdd +="' alt='profile' /></div></div> <div class='small-10 columns'><div class='message-desc'>";
+                htmlToAdd += "<b><div class='messageNameMe"+reservation.task.sid+"'>"
+                htmlToAdd+=childData['from'];
+
 
             }
             else if (childData['from'] == "MeyaBot") {
+                htmlToAdd += "<div class='profilePicMeya"+reservation.task.sid+"'><img src='";
                 htmlToAdd+="img/meya.png";
+                htmlToAdd +="' alt='profile' /></div></div> <div class='small-10 columns'><div class='message-desc'>";
+                htmlToAdd += "<b><div class='messageNameMeya"+reservation.task.sid+"'>"
+                htmlToAdd+=childData['from'];
+
+
 
             }
             else {
+                htmlToAdd += "<div class='profilePicSender"+reservation.task.sid+"'><img src='";
                 htmlToAdd+=taskrouterGlobals[reservation.task.sid].profile_pic
-
-            }
-            htmlToAdd +="' alt='profile' /></div></div> <div class='small-10 columns'><div class='message-desc'>";
-            htmlToAdd += "<b><div class='messageName"+reservation.task.sid+"'>"
-            if (childData['from'] == "me") {
-                htmlToAdd+=childData['from'];
-            }
-            else if (childData['from'] == "MeyaBot") {
-                htmlToAdd+=childData['from'];
-            }
-            else {
+                htmlToAdd +="' alt='profile' /></div></div> <div class='small-10 columns'><div class='message-desc'>";
+                htmlToAdd += "<b><div class='messageNameSender"+reservation.task.sid+"'>"
                 htmlToAdd += taskrouterGlobals[reservation.task.sid].first_name;
+
+
+
+                
 
             }
             htmlToAdd+="</div></b>  "+ childData['message'] +"<span class='right green'>now</span>";
@@ -487,10 +495,10 @@
     function updateTaskTitle(sid, first_name, last_name,profile_pic) {
         titleDiv = document.getElementById('titleText'+sid);
         titleDiv.innerHTML = "Task: " + first_name + " " + last_name;
-        $('.messageName'+sid).each(function(i, obj) {
+        $('.messageNameSender'+sid).each(function(i, obj) {
             obj.innerHTML=first_name;
         });
-        $('.profilePic'+sid).each(function(i, obj) {
+        $('.profilePicSender'+sid).each(function(i, obj) {
             obj.innerHTML="<img src='"+profile_pic+"' alt='profile' />";
         });
 
