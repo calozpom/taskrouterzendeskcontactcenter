@@ -269,7 +269,9 @@ function updateConversationPost(taskSid,request,friendlyName_first,friendlyName_
     console.log(task.attributes);
     console.log("if test" + task.attributes.hasOwnProperty('bot_qualified')) 
     console.log(task.attributes["bot_qualified"]);
-    if(!task.attributes.hasOwnProperty('bot_qualified')) {
+    attr=JSON.loads(task.attributes);
+    console.log(attr['bot_qualified']);
+    if(!attr.hasOwnProperty('bot_qualified')) {
       console.log("this task is not yet bot qualified");
         var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   req
