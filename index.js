@@ -17,7 +17,7 @@ var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, wo
 var workspacecapability = new twilio.TaskRouterWorkspaceCapability(accountSid, authToken, workspaceSid);
 workspacecapability.allowFetchSubresources();
 workspacecapability.allowUpdatesSubresources();
-workspacecapability.allowDeletesSubresources();
+workspacecapability.allowDeleteSubresources();
 
 var client = new twilio.TaskRouterClient(accountSid, authToken,workspaceSid);
 var smsclient = new twilio.RestClient(accountSid, authToken);
