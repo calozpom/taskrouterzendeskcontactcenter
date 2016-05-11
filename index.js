@@ -343,6 +343,8 @@ app.post('/botresponse', function(request, response) {
 
 app.post('/eventstream', function(request, response) {
  var eventstream = myFirebase.child("eventstream");
+ console.log("received event");
+ console.log(request.body); 
  eventstream.child(request.body.TaskSid).push({'update':request.body});
 });
 
