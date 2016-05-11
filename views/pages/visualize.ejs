@@ -60,7 +60,7 @@ Visualize Workspace
 <div class="large-3 columns">
 <div class="panel" id='test'>
 <h5>Panel Title</h5>
-<p>This is a three columns grid panel with an arbitrary <a href='#' onClick="test('test')">height</a>a>.</p>
+<p>This is a three columns grid panel with an arbitrary <a href='#' onClick="test('test')">height</a>.</p>
 </div>
 </div>
 
@@ -88,7 +88,9 @@ Visualize Workspace
 </footer>
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/js/foundation.min.js"></script>
+<script src="js/foundation/foundation.core.js"></script>
 <script src="js/foundation/foundation.util.motion.js"></script>
+
 <script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.4/taskrouter.min.js"></script>
     <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
 
@@ -134,7 +136,7 @@ function buildTaskRouterGrid() {
 
 function test(divID) {
 	console.log("attempting to animate");
-	var elem = $("'#"+divID+"'");
+	var elem = $("#"+divID);
 Foundation.Motion.animateOut(elem, fade-out);
 }
 
