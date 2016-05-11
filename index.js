@@ -265,7 +265,7 @@ function updateConversationPost(taskSid,request,friendlyName_first,friendlyName_
   myFirebase.child(taskSid).push({'from':request.body['From'], 'message':request.body['Body'], 'first':friendlyName_first,'last':friendlyName_last});
   //TODO: need to add an if statement here and only post to meya if bot_qualified is not true
    client.workspace.tasks(taskSid).get(function(err, task) {
-    if(!task.attributes.bot_qualified) {
+    if(!task.attributes.hasOwnProperty('bot_qualified')) {
       console.log("this task is not yet bot qualified");
         var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   req
@@ -353,7 +353,7 @@ app.post('/botresponse', function(request, response) {
 app.post('/eventstream', function(request, response) {
  var eventstream = myFirebase.child("eventstream");
  console.log("received event");
- console.log(request.body); 
+ //console.log(request.body); 
  if (request.body.TaskSid) {
  eventstream.child(request.body.TaskSid).push({'update':request.body});
 }
