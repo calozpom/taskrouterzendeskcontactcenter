@@ -57,12 +57,7 @@ Visualize Workspace
  
  
 <div class="row"  id='rowone'>
-<div class="large-3 columns">
-<div class="panel" id='test'>
-<h5>Panel Title</h5>
-<p>This is a three columns grid panel with an arbitrary <a href='#' onClick="test('test')">height</a>.</p>
-</div>
-</div>
+
 
 
 </div>
@@ -127,8 +122,22 @@ function buildTaskRouterGrid() {
             return;
         }
         console.log("Parsing response");
+
         var data = taskQueueList.data;
+        console.log("going to create " + taskQueueList.data.length + "columns");
+        var width=Math.floor(12/taskQueueList.data);
+        if (width=0){
+        	console.log("error - cannot create visualization for workspace with more than twelve queues");
+        }
+        console.log("going to use foundation grid width of " +width);
         for(i=0; i<data.length; i++) {
+        	var htmlToAdd = "";
+        	htmlToAdd += "<div class='large-3 columns'>";
+        	htmlToAdd += "<div class='panel'>";
+        	htmlToAdd += "<h5>" + data[i].friendlyName + "</h5>";
+        	htmlToAdd += "test";
+        	htmlToAdd += "</div></div>";
+        	$("#rowone").innerHTML = $("#rowone").innerHTML + htmlToAdd;
             console.log(data[i].friendlyName);
         }
     }
