@@ -251,10 +251,11 @@ function updateConversation(taskSid,request,friendlyName_first,friendlyName_last
   .on('response', function(response) {
 
   })
+
+  }
   else{
     console.log("this task is already bot qualified");
     }
-  }
   });
 
 }
