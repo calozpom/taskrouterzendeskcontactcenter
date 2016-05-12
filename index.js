@@ -366,6 +366,7 @@ app.post('/eventstream', function(request, response) {
  console.log("received event");
  //console.log(request.body); 
  if (request.body.TaskSid) {
+  console.log(request.body.EventType);
  eventstream.child(request.body.TaskSid).push({'update':request.body});
 }
  response.send('');
