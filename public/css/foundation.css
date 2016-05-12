@@ -5110,7 +5110,8 @@ ul.pagination li {
 .info h4 {
   font-size: 16px;
   letter-spacing: 2px;
-  text-transform: uppercase; }
+  text-transform: uppercase;
+  font: bolder 0.875rem "Avenir Next"; }
 .info p {
   color: #717171;
   font-size: 16px;
