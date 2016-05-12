@@ -424,9 +424,9 @@
     function completeTask(reservation) {
         changeState("Idle");
         myFirebase.child(reservation.task.sid).remove();
-        var element = document.getElementById("taskDiv"+reservation.task.sid);
+        var element = $("#taskDiv"+reservation.task.sid);
         element.fadeOut(function(){
-            element.parentNode.removeChild(element);
+            element.remove();
         })
         
         /*Foundation.Motion.animateOut(element, 'hinge-out-from-bottom',function() {
