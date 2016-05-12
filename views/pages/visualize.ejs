@@ -133,8 +133,11 @@ function buildTaskRouterGrid() {
         		htmlToAdd += " end";
         	} 
         	htmlToAdd +="' data-equalizer-watch>";
-        	htmlToAdd += "<div class='panel'>";
-        	htmlToAdd += "<h5>" + data[i].friendlyName + "</h5>";
+        	htmlToAdd += "<div class='box'>";
+        	htmlToAdd += "<div class='box-icon'><span class='fi-telephone'></span></div>";
+        	htmlToAdd += "<div class='info'>";
+
+        	htmlToAdd += "<h4 class='text-center'>" + data[i].friendlyName + "</h4>";
         	htmlToAdd += "<div class='header panel'>";
       		htmlToAdd += "<div class='sign'>";
         	htmlToAdd += "<h1>example task!</h1>";
@@ -142,7 +145,7 @@ function buildTaskRouterGrid() {
       		htmlToAdd += "<p><span>Check out this task!</span> what a beautiful task.</p></div>";
 
         	htmlToAdd += "<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;";
-        	htmlToAdd += "</div></div>";
+        	htmlToAdd += "</div></div></div>";
         	console.log("current inner html is " + $("#rowone").html());
         	console.log("wanting to add this html " + htmlToAdd);
         	$("#rowone").html($("#rowone").html() + htmlToAdd);

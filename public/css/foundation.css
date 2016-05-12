@@ -5055,7 +5055,7 @@ ul.pagination li {
 .panel.radius {
   border-radius: 3px;
 }
-
+/* al's custom css */
 .header.panel {
   margin: 3rem auto;
   border: 2px solid #444;
@@ -5085,6 +5085,43 @@ ul.pagination li {
       font-size: 70%;
       text-align: center;
       line-height: 2rem; }
+.box {
+  border-radius: 3px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  padding: 10px 25px;
+  display: block;
+  margin-top: 60px; }
+
+.box-icon {
+  background-color: #569;
+  border-radius: 50%;
+  display: table;
+  height: 100px;
+  margin: 0 auto;
+  width: 100px;
+  margin-top: -61px;
+  font-size: 3rem; }
+  .box-icon span {
+    color: #fff;
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle; }
+
+.info h4 {
+  font-size: 26px;
+  letter-spacing: 2px;
+  text-transform: uppercase; }
+.info p {
+  color: #717171;
+  font-size: 16px;
+  padding-top: 10px; }
+.info a {
+  border-radius: 2px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  transition: all 0.5s ease 0s; }
+  .info a:hover {
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.16), 0 2px 5px 0 rgba(0, 0, 0, 0.12);
+    transition: all 0.5s ease 0s; }
 
 
 /* Pricing Tables */
