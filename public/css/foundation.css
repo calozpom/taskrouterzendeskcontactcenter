@@ -5096,9 +5096,9 @@ ul.pagination li {
   background-color: #569;
   border-radius: 50%;
   display: table;
-  height: 50px;
+  height: 100px;
   margin: 0 auto;
-  width: 50px;
+  width: 100px;
   margin-top: -61px;
   font-size: 3rem; }
   .box-icon span {
