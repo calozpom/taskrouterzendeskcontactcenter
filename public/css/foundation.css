@@ -5061,8 +5061,8 @@ ul.pagination li {
   border: 2px solid #444;
   background: #fff; }
   .header.panel p {
-    font: 1rem "Avenir Next";
-    padding: 1rem 2rem 2rem 2rem;
+    font: 1rem "Courier New";
+    padding: 0rem 0rem 0rem 0rem;
     margin-top: -1.25rem; }
     .header.panel p span {
       text-transform: lowercase;
