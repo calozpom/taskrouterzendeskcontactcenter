@@ -5065,7 +5065,7 @@ ul.pagination li {
     padding: 1rem 2rem 2rem 2rem;
     margin-top: -1.25rem; }
     .header.panel p span {
-      text-transform: uppercase;
+      text-transform: lowercase;
       letter-spacing: 1px;
       font-size: 75%;
       font-weight: bold; }
