@@ -383,6 +383,7 @@
       // Otherwise use the namespace value.
       this.global.namespace = ( namespace === undefined || /false/i.test(namespace) ) ? '' : namespace;
     },
+    /*
     transitionend: function($elem){
     var transitions = {
       'transition': 'transitionend',
@@ -406,7 +407,7 @@
       }, 1);
       return 'transitionend';
     }
-  },
+  },*/
 
     libs : {},
 
