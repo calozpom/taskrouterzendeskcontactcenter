@@ -329,6 +329,7 @@
         newTask(reservation);     
         myFirebase.child(reservation.task.sid).on("value", function(dataSnapshot) {
          updateTask(reservation,dataSnapshot);
+         $("#taskDiv"+reservation.task.sid).fadeIn();
          //Foundation.Motion.animateIn($("#taskDiv"+reservation.task.sid), 'hinge-in-from-top');
      });
       });
@@ -424,7 +425,10 @@
         changeState("Idle");
         myFirebase.child(reservation.task.sid).remove();
         var element = document.getElementById("taskDiv"+reservation.task.sid);
-        element.parentNode.removeChild(element);
+        element.fadeOut(function(){
+            element.parentNode.removeChild(element);
+        })
+        
         /*Foundation.Motion.animateOut(element, 'hinge-out-from-bottom',function() {
                     
 }
@@ -507,7 +511,7 @@
 
         var divToAddTo=document.getElementById('addToThis');
         divToAddTo.innerHTML = divToAddTo.innerHTML + htmlToAdd;
-        //$("#taskDiv"+reservation.task.sid).hide();   
+        $("#taskDiv"+reservation.task.sid).hide();   
         var acceptButton1=document.getElementById('acceptTask'+reservation.task.sid);
         acceptButton1.onclick = function(){
             acceptTask(reservation);
