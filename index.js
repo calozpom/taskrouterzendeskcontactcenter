@@ -366,8 +366,43 @@ app.post('/eventstream', function(request, response) {
  console.log("received event");
  //console.log(request.body); 
  if (request.body.TaskSid) {
-  console.log(request.body.EventType);
- eventstream.child(request.body.TaskSid).push({'update':request.body});
+  dataToSet={};
+  switch(request.body.EventType) {
+    case "task.deleted":
+    eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
+      break;
+    case "task-queue.entered":
+     dataToSet[attributes]=request.body.TaskAttributes;
+     dataToSet[sid]=request.body.TaskSid;
+     dataToSet[status]=request.body.TaskAssignmentStatus;
+     eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
+      break;
+    case "task-queue.timeout":
+        eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
+
+      break;
+    case "task-queue.moved":
+      eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
+
+      break;
+    case "task.canceled":
+      break;
+    case "task.completed":
+     dataToSet[attributes]=request.body.TaskAttributes;
+     dataToSet[sid]=request.body.TaskSid;
+     dataToSet[status]=request.body.TaskAssignmentStatus;
+     eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
+      break;
+    case "task.updated":
+     dataToSet[attributes]=request.body.TaskAttributes;
+     dataToSet[sid]=request.body.TaskSid;
+     dataToSet[status]=request.body.TaskAssignmentStatus;
+     eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
+      break;
+
+
+  }
+ //eventstream.child(request.body.TaskSid).push({'update':request.body});
 }
  response.send('');
 });
