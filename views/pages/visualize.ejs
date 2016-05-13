@@ -177,7 +177,11 @@ function updateTasks(queueSid,snapshot) {
             htmlToAdd += "</h1>";
       		htmlToAdd += "</div>";
       		htmlToAdd += "<p><span>" + childData['status'] + "</span>" + childData['attributes'] +" what a beautiful task.</p></div>";
+      		console.log("current html is " + queueColumn.html());
+      		console.log("wanting to add " + htmlToAdd);
       		queueColumn.html(queueColumn.html() + htmlToAdd);
+      		      		console.log("new html is " + queueColumn.html());
+
       	});
 
 
