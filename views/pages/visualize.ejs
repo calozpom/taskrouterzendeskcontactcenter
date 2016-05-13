@@ -142,7 +142,7 @@ function buildTaskRouterGrid() {
 
 
         	htmlToAdd += "<br />";
-        	htmlToAdd += "</div></div></div>";
+        	htmlToAdd += "</div></div>";
         	console.log("current inner html is " + $("#rowone").html());
         	console.log("wanting to add this html " + htmlToAdd);
         	$("#rowone").html($("#rowone").html() + htmlToAdd);
@@ -178,7 +178,8 @@ function updateTasks(queueSid,snapshot) {
       		htmlToAdd += "</div>";
       		htmlToAdd += "<p><span>" + childData['status'] + "</span><br />" + childData['attributes'] +" what a beautiful task.</p></div>";
       		console.log("current html is " + queueColumn.html());
-      		console.log(childData['attributes']['message_from']);
+      		var attr = JSON.parse(childData['attributes']);
+      		console.log(attr['message_from']);
       		console.log("wanting to add " + htmlToAdd);
       		queueColumn.html(queueColumn.html() + htmlToAdd);
       		      		console.log("new html is " + queueColumn.html());
