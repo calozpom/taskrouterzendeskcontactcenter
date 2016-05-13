@@ -177,7 +177,14 @@ function updateTasks(queueSid,snapshot) {
 
             htmlToAdd += "</h1>";
       		htmlToAdd += "</div>";
-      		htmlToAdd += "<p><span>" + childData['status'] + "</span><br />" + JSON.stringify(attr) +" what a beautiful task.</p></div>";
+      		htmlToAdd += "<p><span class='text-center'>" + childData['status'] + "</span><br />";
+      		for (var key in attr) {
+				  if (attr.hasOwnProperty(key)) {
+				  	htmlToAdd += key + ": " + attr[key] +"<br />";
+				  }
+				}
+
+			htmlToAdd += " </p></div>";
       		console.log("current html is " + queueColumn.html());
       		
       		console.log();
