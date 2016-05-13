@@ -177,7 +177,7 @@ function updateTasks(queueSid,snapshot) {
 
             htmlToAdd += "</h1>";
       		htmlToAdd += "</div>";
-      		htmlToAdd += "<p><span>" + childData['status'] + "</span><br />" + JSON.stringify(attr) +" what a beautiful task.</p></div>";
+      		htmlToAdd += "<p><span>" + childData['status'] + "</span><br /><pre>" + JSON.stringify(attr) +"</pre></p></div>";
       		console.log("current html is " + queueColumn.html());
       		
       		console.log();
