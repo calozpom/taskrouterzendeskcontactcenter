@@ -5073,7 +5073,7 @@ ul.pagination li {
       word-wrap: break-word }
   .header.panel .sign {
     background: #fff;
-    width: 150px;
+    width: 200px;
     height: 2.4rem;
     border: 2px solid #444;
     position: relative;
@@ -5086,7 +5086,7 @@ ul.pagination li {
       color: #666;
       font-size: 70%;
       text-align: center;
-      line-height: 0rem; 
+      line-height: 1rem; 
       word-wrap: break-word}
 .box {
   border-radius: 3px;
