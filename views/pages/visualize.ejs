@@ -134,14 +134,15 @@ function buildTaskRouterGrid() {
         		htmlToAdd += " end";
         	} 
         	htmlToAdd +="' data-equalizer-watch >";
-        	htmlToAdd += "<div class='box' id='queueColumn"+data[i].sid+"'>";
+        	htmlToAdd += "<div class='box'>";
         	htmlToAdd += "<div class='box-icon'><img src='img/taskrouter-icon_wb.png'></div>";
         	htmlToAdd += "<div class='info'>";
         	htmlToAdd += "<h4 class='text-center'>" + data[i].friendlyName + "</h4>";
+        	htmlToAdd += "<div id='queueColumn"+data[i].sid+"'>"
 
 
 
-        	htmlToAdd += "<br />";
+        	htmlToAdd += "<br /></div>";
         	htmlToAdd += "</div></div>";
         	console.log("current inner html is " + $("#rowone").html());
         	console.log("wanting to add this html " + htmlToAdd);
@@ -165,6 +166,7 @@ function buildTaskRouterGrid() {
 function updateTasks(queueSid,snapshot) {
 	console.log("update tasks method called for queue " + queueSid);
 	var queueColumn=$("#queueColumn"+queueSid);
+	queueColumn.html("");
 	snapshot.forEach(function(childSnapshot) {
             var childData = childSnapshot.val();
             var attr = JSON.parse(childData['attributes']);
