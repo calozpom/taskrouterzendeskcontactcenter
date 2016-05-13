@@ -173,7 +173,7 @@ function updateTasks(queueSid,snapshot) {
             htmlToAdd += "<div class='header panel'>";
       		htmlToAdd += "<div class='sign'>";
         	htmlToAdd += "<h1>";
-        	htmlToAdd += attr['message_from'];
+        	htmlToAdd += attr['message_from'].replace("Messenger:","Messenger: ");
 
             htmlToAdd += "</h1>";
       		htmlToAdd += "</div>";
