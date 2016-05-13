@@ -149,7 +149,7 @@ function buildTaskRouterGrid() {
         	console.log("combined html is now " + $("#rowone").html());
             console.log(data[i].friendlyName);
             eventstream.child(data[i].sid).on('value', function(dataSnapshot) {
-            	updateTasks(data[i].sid, dataSnapshot)
+            	updateTasks(data[i].sid, dataSnapshot);
 			});
         }
     }
