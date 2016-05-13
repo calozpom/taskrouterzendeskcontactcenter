@@ -148,7 +148,9 @@ function buildTaskRouterGrid() {
         	$("#rowone").html($("#rowone").html() + htmlToAdd);
         	console.log("combined html is now " + $("#rowone").html());
             console.log(data[i].friendlyName);
+            console.log("setting firebase callback for eventstream."+data[i].sid)
             eventstream.child(data[i].sid).on('value', function(dataSnapshot) {
+            	console.log("call back fired!! calling for " + this.sid);
             	updateTasks(this.sid, dataSnapshot);
 			},{sid: data[i].sid});
         }
@@ -161,9 +163,11 @@ function buildTaskRouterGrid() {
 }
 
 function updateTasks(queueSid,snapshot) {
+	console.log("update tasks method called for queue " + queueSid);
 	var queueColumn=$("#queueColumn"+queueSid);
 	snapshot.forEach(function(childSnapshot) {
             var childData = childSnapshot.val();
+            console.log(childData);
             var htmlToAdd="";
             htmlToAdd += "<div class='header panel'>";
       		htmlToAdd += "<div class='sign'>";
