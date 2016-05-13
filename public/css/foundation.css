@@ -5063,12 +5063,14 @@ ul.pagination li {
   .header.panel p {
     font: 1rem "Courier New";
     padding: 0rem 0rem 0rem 0rem;
-    margin-top: -1.75rem; }
+    margin-top: -1.75rem; 
+    word-wrap: break-word}
     .header.panel p span {
       text-transform: lowercase;
       letter-spacing: 1px;
       font-size: 75%;
-      font-weight: bold; }
+      font-weight: bold;
+      word-wrap: break-word }
   .header.panel .sign {
     background: #fff;
     width: 150px;
@@ -5084,7 +5086,8 @@ ul.pagination li {
       color: #666;
       font-size: 70%;
       text-align: center;
-      line-height: 2rem; }
+      line-height: 2rem; 
+      word-wrap: break-word}
 .box {
   border-radius: 3px;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
