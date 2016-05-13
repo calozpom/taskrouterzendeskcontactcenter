@@ -363,7 +363,7 @@ app.post('/botresponse', function(request, response) {
 
 app.post('/eventstream', function(request, response) {
  var eventstream = myFirebase.child("eventstream");
- console.log("received event");
+ console.log("received event " +request.body.EventType);
  //console.log(request.body); 
  if (request.body.TaskSid) {
   dataToSet={};
@@ -383,7 +383,6 @@ app.post('/eventstream', function(request, response) {
       break;
     case "task-queue.moved":
       eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
-
       break;
     case "task.canceled":
       break;
