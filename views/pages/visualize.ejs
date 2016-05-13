@@ -133,17 +133,13 @@ function buildTaskRouterGrid() {
         	if (i==(data.length-1)) {
         		htmlToAdd += " end";
         	} 
-        	htmlToAdd +="' data-equalizer-watch>";
+        	htmlToAdd +="' data-equalizer-watch id='queueColumn"+data[i].sid+"'>";
         	htmlToAdd += "<div class='box'>";
         	htmlToAdd += "<div class='box-icon'><img src='img/taskrouter-icon_wb.png'></div>";
         	htmlToAdd += "<div class='info'>";
-
         	htmlToAdd += "<h4 class='text-center'>" + data[i].friendlyName + "</h4>";
-        	htmlToAdd += "<div class='header panel'>";
-      		htmlToAdd += "<div class='sign'>";
-        	htmlToAdd += "<h1>example task!</h1>";
-      		htmlToAdd += "</div>";
-      		htmlToAdd += "<p><span>Check out this task!</span> what a beautiful task.</p></div>";
+
+
 
         	htmlToAdd += "<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;<br />&nbsp;";
         	htmlToAdd += "</div></div></div>";
@@ -152,10 +148,37 @@ function buildTaskRouterGrid() {
         	$("#rowone").html($("#rowone").html() + htmlToAdd);
         	console.log("combined html is now " + $("#rowone").html());
             console.log(data[i].friendlyName);
+            eventstream.child(data[i].sid).on('value', function(dataSnapshot) {
+            	updateTasks(data[i].sid, dataSnapshot)
+			});
         }
     }
 );
+	var eventstream = myFirebase.child("eventstream");
+	eventstream.once("value", function(snapshot) {
+
+	});
 }
+
+function updateTasks(queueSid,snapshot) {
+	var queueColumn=$("#queueColumn"+queueSid);
+	snapshot.forEach(function(childSnapshot) {
+            var childData = childSnapshot.val();
+            var htmlToAdd="";
+            htmlToAdd += "<div class='header panel'>";
+      		htmlToAdd += "<div class='sign'>";
+        	htmlToAdd += "<h1>";
+        	htmlToAdd += childData['sid'];
+
+            htmlToAdd += "</h1>";
+      		htmlToAdd += "</div>";
+      		htmlToAdd += "<p><span>" + childData['status'] + "</span>" + childData['attributes'] +" what a beautiful task.</p></div>";
+      		queueColumn.html(queueColumn.html() + htmlToAdd);
+
+
+}
+
+        	
 
 function test(divID) {
 	console.log("attempting to animate");
