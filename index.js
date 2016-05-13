@@ -372,9 +372,9 @@ app.post('/eventstream', function(request, response) {
     eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
       break;
     case "task-queue.entered":
-     dataToSet[attributes]=request.body.TaskAttributes;
-     dataToSet[sid]=request.body.TaskSid;
-     dataToSet[status]=request.body.TaskAssignmentStatus;
+     dataToSet['attributes']=request.body.TaskAttributes;
+     dataToSet['sid']=request.body.TaskSid;
+     dataToSet['status']=request.body.TaskAssignmentStatus;
      eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
       break;
     case "task-queue.timeout":
@@ -388,15 +388,15 @@ app.post('/eventstream', function(request, response) {
     case "task.canceled":
       break;
     case "task.completed":
-     dataToSet[attributes]=request.body.TaskAttributes;
-     dataToSet[sid]=request.body.TaskSid;
-     dataToSet[status]=request.body.TaskAssignmentStatus;
+     dataToSet['attributes']=request.body.TaskAttributes;
+     dataToSet['sid']=request.body.TaskSid;
+     dataToSet['status']=request.body.TaskAssignmentStatus;
      eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
       break;
     case "task.updated":
-     dataToSet[attributes]=request.body.TaskAttributes;
-     dataToSet[sid]=request.body.TaskSid;
-     dataToSet[status]=request.body.TaskAssignmentStatus;
+     dataToSet['attributes']=request.body.TaskAttributes;
+     dataToSet['sid']=request.body.TaskSid;
+     dataToSet['status']=request.body.TaskAssignmentStatus;
      eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
       break;
 
