@@ -5077,16 +5077,16 @@ ul.pagination li {
     height: 2.4rem;
     border: 2px solid #444;
     position: relative;
-    top: -2.5rem;
+    top: -2.0rem;
     margin: auto; }
     .header.panel .sign h1 {
       text-transform: uppercase;
       font: bolder 0.875rem "Avenir Next";
-      letter-spacing: 3px;
+      letter-spacing: 0px;
       color: #666;
       font-size: 70%;
       text-align: center;
-      line-height: 2rem; 
+      line-height: 0rem; 
       word-wrap: break-word}
 .box {
   border-radius: 3px;
