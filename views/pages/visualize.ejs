@@ -167,22 +167,23 @@ function updateTasks(queueSid,snapshot) {
 	var queueColumn=$("#queueColumn"+queueSid);
 	snapshot.forEach(function(childSnapshot) {
             var childData = childSnapshot.val();
+            var attr = JSON.parse(childData['attributes']);
             console.log(childData);
             var htmlToAdd="";
             htmlToAdd += "<div class='header panel'>";
       		htmlToAdd += "<div class='sign'>";
         	htmlToAdd += "<h1>";
-        	htmlToAdd += childData['sid'];
+        	htmlToAdd += attr['message_from'];
 
             htmlToAdd += "</h1>";
       		htmlToAdd += "</div>";
-      		htmlToAdd += "<p><span>" + childData['status'] + "</span><br />" + childData['attributes'] +" what a beautiful task.</p></div>";
+      		htmlToAdd += "<p><span>" + childData['status'] + "</span><br />" + attr +" what a beautiful task.</p></div>";
       		console.log("current html is " + queueColumn.html());
-      		var attr = JSON.parse(childData['attributes']);
-      		console.log(attr['message_from']);
+      		
+      		console.log();
       		console.log("wanting to add " + htmlToAdd);
       		queueColumn.html(queueColumn.html() + htmlToAdd);
-      		      		console.log("new html is " + queueColumn.html());
+      		console.log("new html is " + queueColumn.html());
 
       	});
 
