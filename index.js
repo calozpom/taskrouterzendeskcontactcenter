@@ -178,9 +178,9 @@ app.post('/initiatebot', function(request, response) {
   var friendlyName_first ="";
   var friendlyName_last="";
   try {
-  
+     console.log(request.body.AddOns);
     var addOnsData = JSON.parse(request.body.AddOns);
-    console.log(addOnsData);
+    //console.log(addOnsData);
     var friendlyName_first = addOnsData['results']['whitepages_pro_caller_identity']['result']['results'][0]['belongs_to'][0]['names'][0]['first_name'];
     var friendlyName_last = addOnsData['results']['whitepages_pro_caller_identity']['result']['results'][0]['belongs_to'][0]['names'][0]['last_name'];
   }
