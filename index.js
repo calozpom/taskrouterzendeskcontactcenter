@@ -304,6 +304,7 @@ app.get('/deletealltasks', function(request,response) {
       })
     }
   })
+  myFirebase.remove();
   response.send('all tasks deleted');
         //client.workspace.tasks.delete()
       });
