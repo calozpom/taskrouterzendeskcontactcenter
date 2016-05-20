@@ -168,6 +168,13 @@
           <li class="active"><a href="#">Voice<span class="label radius alert right">N</span></a></li>
         </ul>
       </li> 
+      <li class="has-dropdown">
+        <a href="#">Multitask Capacity</a>
+        <ul class="dropdown">
+          <li><a href="#" onClick='changeCapacity(1)'>Messaging: 1</a></li>
+          <li><a href="#" onClick='changeCapacity(2)'>Messaging: 2</a></li>
+        </ul>
+      </li> 
    
     </ul>
   </section>
@@ -589,6 +596,36 @@
         });
 
      
+    }
+
+    function updateCapacity(number) {
+        //https://taskrouter.twilio.com/v1/Workspaces/WorkspaceSid/Workers/WorkerSid/Channels/default -d Capacity=2 -u AccountSid:AuthToken
+        /*var options = { method: 'POST',
+        url: 'https://taskrouter.twilio.com/v1/Workspaces/<%= workspaceSid %>/Workers/'+worker.sid+'/Channels/default',
+        auth: {username: <%= accountSid %>, password: <%= authToken %>},
+        form: 
+            { Capacity: number
+          } 
+        };
+        console.log(options);*/
+        $.ajax({ 
+          url: 'https://taskrouter.twilio.com/v1/Workspaces/<%= workspaceSid %>/Workers/'+worker.sid+'/Channels/default',
+          data: {Capacity: number},
+          type: 'post',
+          username: <%= accountSid %>,
+          password: <%= authToken %>,
+          success: function(output) {
+                      console.log("updated capacity. Returned "+ output);
+
+                  }
+              });
+        /*req(options, function (error, response, body) {
+          if (error) throw new Error(error);
+              //console.log(body);
+              var capacityResponse = JSON.parse(body);
+              console.log("updated capacity. Returned "+ capacityResponse);
+
+            });*/
     }
 
 

@@ -65,7 +65,7 @@ app.get('/', function(request, response) {
 });
 
 app.get('/dashboard', function(request, response) {
-  response.render('pages/dashboard', {'token': token});
+  response.render('pages/dashboard', {'token': token, 'authToken': authToken, 'accountSid': accountSid, 'workspaceSid':workspaceSid});
 });
 
 app.get('/visualize', function(request, response) {
@@ -107,8 +107,6 @@ app.get('/initiatebot', function(request, response) {
   console.log("checking for any existing task from this user");
   var queryJson={};
   queryJson['EvaluateTaskAttributes']="(message_from=\"" + request.query['From'] + "\")";
-  var queryString = "{'EvaluateTaskAttributes':'(message_from=\"" + request.query['From'] + "\")'}";
-
   var foundTask=0;
   var taskConversationSid="";
   //note the following call is async
