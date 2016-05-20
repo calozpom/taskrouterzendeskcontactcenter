@@ -408,15 +408,15 @@ app.post('/eventstream', function(request, response) {
 
 app.get('/updateCapacity', function(request, response) {
     console.log("received request to update capacity ");
-    console.log(request.body);
-    console.log(request.body.capacity);
+    console.log(request.query);
+    console.log(request.query.capacity);
 
    //https://taskrouter.twilio.com/v1/Workspaces/WorkspaceSid/Workers/WorkerSid/Channels/default -d Capacity=2 -u AccountSid:AuthToken
         var options = { method: 'POST',
-        url: 'https://taskrouter.twilio.com/v1/Workspaces/' + workspaceSid +'/Workers/'+request.body.workerSid+'/Channels/default',
+        url: 'https://taskrouter.twilio.com/v1/Workspaces/' + workspaceSid +'/Workers/'+request.query.workerSid+'/Channels/default',
         auth: {username: accountSid, password: authToken},
         form: 
-            { Capacity: request.body.capacity
+            { Capacity: request.query.capacity
           } 
         };
         console.log(options);
