@@ -425,7 +425,7 @@ app.get('/updateCapacity', function(request, response) {
           if (error) throw new Error(error);
               //console.log(body);
               var capacityResponse = JSON.parse(body);
-              console.log("updated capacity. Returned "+ capacityResponse);
+              console.log("updated capacity. Returned "+ body);
 
             });
             response.send('');
