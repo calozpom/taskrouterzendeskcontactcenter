@@ -406,6 +406,31 @@ app.post('/eventstream', function(request, response) {
  response.send('');
 });
 
+app.get('/updateCapacity', function(request, response) {
+    console.log("received request to update capacity ");
+    console.log(request.body);
+    console.log(request.body.capacity);
+
+   //https://taskrouter.twilio.com/v1/Workspaces/WorkspaceSid/Workers/WorkerSid/Channels/default -d Capacity=2 -u AccountSid:AuthToken
+        var options = { method: 'POST',
+        url: 'https://taskrouter.twilio.com/v1/Workspaces/' + workspaceSid +'/Workers/'+request.body.workerSid+'/Channels/default',
+        auth: {username: accountSid, password: authToken},
+        form: 
+            { Capacity: request.body.capacity
+          } 
+        };
+        console.log(options);
+        
+        req(options, function (error, response, body) {
+          if (error) throw new Error(error);
+              //console.log(body);
+              var capacityResponse = JSON.parse(body);
+              console.log("updated capacity. Returned "+ capacityResponse);
+
+            });
+            response.send('');
+  });
+
 app.get('/sendsms', function(request, response) {
   console.log(request.query);
   console.log(request.query.to);

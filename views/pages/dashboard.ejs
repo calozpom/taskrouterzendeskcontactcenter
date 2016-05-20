@@ -599,33 +599,15 @@
     }
 
     function updateCapacity(number) {
-        //https://taskrouter.twilio.com/v1/Workspaces/WorkspaceSid/Workers/WorkerSid/Channels/default -d Capacity=2 -u AccountSid:AuthToken
-        /*var options = { method: 'POST',
-        url: 'https://taskrouter.twilio.com/v1/Workspaces/<%= workspaceSid %>/Workers/'+worker.sid+'/Channels/default',
-        auth: {username: <%= accountSid %>, password: <%= authToken %>},
-        form: 
-            { Capacity: number
-          } 
-        };
-        console.log(options);*/
-        $.ajax({ 
-          url: 'https://taskrouter.twilio.com/v1/Workspaces/<%= workspaceSid %>/Workers/'+worker.sid+'/Channels/default',
-          data: {Capacity: number},
-          type: 'post',
-          username: <%= accountSid %>,
-          password: <%= authToken %>,
+       $.ajax({ 
+          url: 'updateCapacity',
+          data: {'capacity': number, 'workerSid':worker.sid},
+          type: 'get',
           success: function(output) {
-                      console.log("updated capacity. Returned "+ output);
+                      console.log("received OK from request to update capacity");
 
                   }
-              });
-        /*req(options, function (error, response, body) {
-          if (error) throw new Error(error);
-              //console.log(body);
-              var capacityResponse = JSON.parse(body);
-              console.log("updated capacity. Returned "+ capacityResponse);
-
-            });*/
+});
     }
 
 
