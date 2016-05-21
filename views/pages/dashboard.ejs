@@ -171,8 +171,8 @@
       <li class="has-dropdown">
         <a href="#">Multitask Capacity</a>
         <ul class="dropdown">
-          <li><a href="#" onClick='updateCapacity(1)'>Messaging: 1</a></li>
-          <li><a href="#" onClick='updateCapacity(2)'>Messaging: 2</a></li>
+          <li><a href="#" onClick='updateCapacity(1, worker.sid)'>Messaging: 1</a></li>
+          <li><a href="#" onClick='updateCapacity(2, worker.sid)'>Messaging: 2</a></li>
         </ul>
       </li> 
    
@@ -598,10 +598,10 @@
      
     }
 
-    function updateCapacity(number) {
+    function updateCapacity(number, workerSid) {
        $.ajax({ 
           url: 'updateCapacity',
-          data: {'capacity': number, 'workerSid':worker.sid},
+          data: {'capacity': number, 'workerSid':workerSid},
           type: 'get',
           success: function(output) {
                       console.log("received OK from request to update capacity");
