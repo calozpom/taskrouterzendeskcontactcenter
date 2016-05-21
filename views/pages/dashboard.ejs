@@ -427,10 +427,10 @@
         $("#updateCapacityOne").bind("click", function() {
             console.log(worker);
           updateCapacity(1,worker.sid);
-          console.log("trying to bind click event for worker " + worker.sid)
+          console.log("trying to bind click event for worker " + worker.workerSid)
         });
         $("#updateCapacityTwo").bind("click", function() {
-          updateCapacity(2,worker.sid);
+          updateCapacity(2,worker.workerSid);
         });
         }
     function acceptTask(reservation) {
