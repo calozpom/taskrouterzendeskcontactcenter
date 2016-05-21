@@ -426,6 +426,21 @@ app.get('/updateCapacity', function(request, response) {
               //console.log(body);
               var capacityResponse = JSON.parse(body);
               console.log("updated capacity. Returned "+ body);
+              var tempOptions = { method: 'POST',
+              url: 'https://taskrouter.twilio.com/v1/Workspaces/' + workspaceSid +'/Workflows/WW4d526c9041d73060ca46d4011cf34b33',
+              auth: {username: accountSid, password: authToken},
+              form: 
+                  { ReEvaluateTasks: true
+                } 
+              };
+              req(tempOptions, function (error, response, body) {
+                if (error) throw new Error(error);
+              }
+              //temporary hack
+              // reevaluate tasks after update to trigger immediate push
+              // POST /v1/Workspaces/{WorkspaceSid}/Workflows/{WorkflowSid}
+
+
 
             });
             response.send('');
