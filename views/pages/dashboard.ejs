@@ -426,6 +426,7 @@
             }
         $("#updateCapacityOne").bind("click", function() {
           updateCapacity(1,worker.sid);
+          console.log("trying to bind click event for worker " + worker.sid)
         });
         $("#updateCapacityTwo").bind("click", function() {
           updateCapacity(2,worker.sid);
