@@ -171,8 +171,8 @@
       <li class="has-dropdown">
         <a href="#">Multitask Capacity</a>
         <ul class="dropdown">
-          <li><a href="#" onClick='updateCapacity(1, worker.sid)'>Messaging: 1</a></li>
-          <li><a href="#" onClick='updateCapacity(2, worker.sid)'>Messaging: 2</a></li>
+          <li><a href="#" id='updateCapacityOne'>Messaging: 1</a></li>
+          <li><a href="#" id='updateCapacityTwo'>Messaging: 2</a></li>
         </ul>
       </li> 
    
@@ -424,6 +424,12 @@
                     $("#status").html("<a href='#'>" + activityName + "</a><ul class='dropdown'><li><a href='#' onClick='changeState(\"Online\")'>Go online</a></li><li class='active'><a href='#' id='gobusy' onClick='changeState(\"Busy\")'>Go Busy</a></li></ul>");
 
             }
+        $("#updateCapacityOne").bind("click", function() {
+          updateCapacity(1,worker.sid);
+        });
+        $("#updateCapacityTwo").bind("click", function() {
+          updateCapacity(2,worker.sid);
+        });
         }
     function acceptTask(reservation) {
         reservation.accept();
