@@ -435,13 +435,14 @@ app.get('/updateCapacity', function(request, response) {
               };
               req(tempOptions, function (error, response, body) {
                 if (error) throw new Error(error);
-              }
+              
               //temporary hack
               // reevaluate tasks after update to trigger immediate push
               // POST /v1/Workspaces/{WorkspaceSid}/Workflows/{WorkflowSid}
 
 
 
+            });
             });
             response.send('');
   });
