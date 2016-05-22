@@ -278,6 +278,11 @@ function updateConversation(taskSid,request,friendlyName_first,friendlyName_last
 function updateConversationPost(taskSid,request,friendlyName_first,friendlyName_last) {
   myFirebase.child(taskSid).push({'from':request.body['From'], 'message':request.body['Body'], 'first':friendlyName_first,'last':friendlyName_last});
   //TODO: need to add an if statement here and only post to meya if bot_qualified is not true
+  meyaUserID['from']=request.body['From'];
+  meyaUserID['to']=request.body['To'];
+  meyaUserID['sid']=taskSid;
+  var meyaUserID_string = JSON.stringify(meyaUserID);
+  console.log("going to use this as meya user ID " + meyaUserID_string);
    client.workspace.tasks(taskSid).get(function(err, task) {
     attr=JSON.parse(task.attributes);
     console.log(attr['bot_qualified']);
@@ -285,7 +290,7 @@ function updateConversationPost(taskSid,request,friendlyName_first,friendlyName_
       console.log("this task is not yet bot qualified");
         var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   req
-  .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:taskSid,text:request.body['Body']})
+  .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:meyaUserID_string,text:request.body['Body']})
   .on('response', function(response) {
 
   })
