@@ -193,6 +193,9 @@ app.post('/initiatebot', function(request, response) {
         req
         .get('https://graph.facebook.com/v2.6/'+id+'?fields=first_name,last_name,profile_pic&access_token='+pageAccessToken)
         .on('response', function(error, response, body) {
+            console.log(error);
+            console.log(response);
+            console.log(body);
             console.log(JSON.stringify(body));
             console.log("got a response from facebook " + body);
             results['first_name'] = body['first_name'];
