@@ -192,13 +192,13 @@ app.post('/initiatebot', function(request, response) {
         var results = {};
         req
         .get('https://graph.facebook.com/v2.6/'+id+'?fields=first_name,last_name,profile_pic&access_token='+pageAccessToken)
-        .on('response', function(request, response) {
-            console.log(JSON.stringify(response));
-            console.log("got a response from facebook " + response);
-            results['first_name'] = response['first_name'];
-            results['last_name'] = response['last_name'];
-            results['full_name'] = response['first_name']+" "+response['last_name'];
-            results['profile_pic'] = response['profile_pic'];
+        .on('response', function(error, response, body) {
+            console.log(JSON.stringify(body));
+            console.log("got a response from facebook " + body);
+            results['first_name'] = body['first_name'];
+            results['last_name'] = body['last_name'];
+            results['full_name'] = body['first_name']+" "+body['last_name'];
+            results['profile_pic'] = body['profile_pic'];
             results['message_type'] = "facebook";
             console.log("response data is " + results);
             myFirebase.child("profiles").child(sid).set({'first_name':results['first_name'], 'last_name':results['last_name'], 'full_name':results['full_name'],'profile_pic':results['profile_pic'], 'message_type':results['message_type']});
