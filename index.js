@@ -175,7 +175,6 @@ app.post('/initiatebot', function(request, response) {
               }
               updateConversationPost(newTaskResponse.sid,request, friendlyName_first, friendlyName_last);
 
-
             });
       }
 }
@@ -194,6 +193,7 @@ app.post('/initiatebot', function(request, response) {
         req
         .get('https://graph.facebook.com/v2.6/'+id+'?fields=first_name,last_name,profile_pic&access_token='+pageAccessToken)
         .on('response', function(response) {
+            console.log(JSON.stringify(response));
             console.log("got a response from facebook " + response);
             results['first_name'] = response['first_name'];
             results['last_name'] = response['last_name'];
