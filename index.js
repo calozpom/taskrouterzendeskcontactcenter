@@ -249,13 +249,19 @@ app.post('/initiatebot', function(request, response) {
 
 function updateConversation(taskSid,request,friendlyName_first,friendlyName_last) {
   myFirebase.child(taskSid).push({'from':request.query['From'], 'message':request.query['Body'], 'first':friendlyName_first,'last':friendlyName_last});
-  //TODO: need to add an if statement here and only post to meya if bot_qualified is not true
+  var meyaUserID = {};
+  meyaUserID['from']=request.query['From'];
+  meyaUserID['to']=request.query['To'];
+  meyaUserID['sid']=taskSid;
+  var meyaUserID_string = JSON.stringify(meyaUserID);
+  console.log("going to use this as meya user ID " = meyaUserID_string);
+
   client.workspace.tasks(taskSid).get(function(err, task) {
     if(!task.attributes.bot_qualified) {
       console.log("this task is not yet bot qualified");
         var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   req
-  .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:taskSid,text:request.query['Body']})
+  .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:meyaUserID_string,text:request.query['Body']})
   .on('response', function(response) {
 
   })
@@ -324,15 +330,23 @@ app.post('/botresponse', function(request, response) {
   console.log("bot replied");
   myFirebase.child(request.body.user_id).push({'from':'MeyaBot', 'message':request.body.text});
   console.log("trying to get the details for this task with sid " + request.body.user_id);
-  client.workspace.tasks(request.body.user_id).get(function(err, task) {
-    var attrib=JSON.parse(task.attributes);
+  var meyaUserID = JSON.parse(request.body.user_id);
+  console.log("received message from bot originally from" + meyaUserID['from'])
+  smsclient.sendMessage({
+
+    to:meyaUserID['from'], // Any number Twilio can deliver to
+    from: meyaUserID['to'], // A number you bought from Twilio and can use for outbound communication
+    body: request.body.text // body of the SMS message
+
+  /*client.workspace.tasks(request.body.user_id).get(function(err, task) {
+   // var attrib=JSON.parse(task.attributes);
   
        smsclient.sendMessage({
 
     to:attrib.message_from, // Any number Twilio can deliver to
     from: attrib.message_to, // A number you bought from Twilio and can use for outbound communication
     body: request.body.text // body of the SMS message
-
+*/
 }, function(err, responseData) { //this function is executed when a response is received from Twilio
 
     if (!err) { // "err" is an error received during the request, if any
