@@ -284,6 +284,7 @@ function updateConversationPost(taskSid,request,friendlyName_first,friendlyName_
   meyaUserID['to']=request.body['To'];
   meyaUserID['sid']=taskSid;
   var meyaUserID_string = JSON.stringify(meyaUserID);
+  meyaUserID_string = request.body['From'] + "@@" + request.body['To'] + "@@" + taskSid;
   console.log("going to use this as meya user ID " + meyaUserID_string);
    client.workspace.tasks(taskSid).get(function(err, task) {
     attr=JSON.parse(task.attributes);
@@ -292,7 +293,7 @@ function updateConversationPost(taskSid,request,friendlyName_first,friendlyName_
       console.log("this task is not yet bot qualified");
         var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   req
-  .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:"{'value':'one')",text:request.body['Body']})
+  .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:meyaUserID_string,text:request.body['Body']})
   .on('response', function(response) {
 
   })
@@ -337,12 +338,13 @@ app.post('/botresponse', function(request, response) {
   console.log("bot replied");
   myFirebase.child(request.body.user_id).push({'from':'MeyaBot', 'message':request.body.text});
   console.log("trying to get the details for this task with sid " + request.body.user_id);
-  var meyaUserID = JSON.parse(request.body.user_id);
-  console.log("received message from bot originally from" + meyaUserID['from'])
+  //var meyaUserID = JSON.parse(request.body.user_id);
+  //console.log("received message from bot originally from" + meyaUserID['from'])
+  var meyaUserID = request.body.user_id.split("@@");
   smsclient.sendMessage({
 
-    to:meyaUserID['from'], // Any number Twilio can deliver to
-    from: meyaUserID['to'], // A number you bought from Twilio and can use for outbound communication
+    to:meyaUserID[0], // Any number Twilio can deliver to
+    from: meyaUserID[1], // A number you bought from Twilio and can use for outbound communication
     body: request.body.text // body of the SMS message
 
   /*client.workspace.tasks(request.body.user_id).get(function(err, task) {
