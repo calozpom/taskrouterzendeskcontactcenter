@@ -190,25 +190,19 @@ app.post('/initiatebot', function(request, response) {
  function getFacebookDetails(id,sid) {
         var pageAccessToken = "EAARTTxPnNhsBAKmoMUqeZA8dQkOAZBppHVWx2QOcZBZAs2hEKY6uHB938Lu0KUW9uFOXFpYdSsBlomLgbde3ZA2NZCFByS3IRlf4AwuJz6cQWZAb8D63bNgtuHywFBa71i4NzH5Qqe8bAH5ZBfZCRwebxMqZCs1okJ0qjkVWIAHoWNmwZDZD"
         var results = {};
-        $.ajax({ 
-          url: 'https://graph.facebook.com/v2.6/'+id+'?fields=first_name,last_name,profile_pic&access_token='+pageAccessToken,
-          type: 'get',
-          success: function(output) {
-                      console.log(output);
-                      console.log(output['first_name']);
-                      
-                      results['first_name'] = output['first_name'];
-                      results['last_name'] = output['last_name'];
-                      results['full_name'] = output['first_name']+" "+output['last_name'];
-                      results['profile_pic'] = output['profile_pic'];
-                      results['message_type'] = "facebook";
-                        
-                      myFirebase.child("profiles").child(sid).set({'first_name':results['first_name'], 'last_name':results['last_name'], 'full_name':results['full_name'],'profile_pic':results['profile_pic'], 'message_type':results['message_type']});
+        req
+        .get('https://graph.facebook.com/v2.6/'+id+'?fields=first_name,last_name,profile_pic&access_token='+pageAccessToken)
+        .on('response', function(response) {
+            results['first_name'] = response['first_name'];
+            results['last_name'] = response['last_name'];
+            results['full_name'] = response['first_name']+" "+response['last_name'];
+            results['profile_pic'] = response['profile_pic'];
+            results['message_type'] = "facebook";
+              
+            myFirebase.child("profiles").child(sid).set({'first_name':results['first_name'], 'last_name':results['last_name'], 'full_name':results['full_name'],'profile_pic':results['profile_pic'], 'message_type':results['message_type']});
+          })
 
-
-                  }
-
-        });
+        
      
     }
 
