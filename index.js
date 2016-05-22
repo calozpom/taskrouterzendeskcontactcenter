@@ -336,11 +336,11 @@ app.post('/botresponse', function(request, response) {
   //    send message to meya with from set to task SID
   
   console.log("bot replied");
-  myFirebase.child(request.body.user_id).push({'from':'MeyaBot', 'message':request.body.text});
   console.log("trying to get the details for this task with sid " + request.body.user_id);
   //var meyaUserID = JSON.parse(request.body.user_id);
   //console.log("received message from bot originally from" + meyaUserID['from'])
   var meyaUserID = request.body.user_id.split("@@");
+
   smsclient.sendMessage({
 
     to:meyaUserID[0], // Any number Twilio can deliver to
@@ -371,6 +371,8 @@ app.post('/botresponse', function(request, response) {
     else{
       console.log("there was an error");
     }
+      myFirebase.child(meyaUserID[2]).push({'from':'MeyaBot', 'message':request.body.text});
+
 //});
 
   });   
