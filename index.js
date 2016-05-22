@@ -198,19 +198,13 @@ app.post('/initiatebot', function(request, response) {
          var friendlyName_last="";
         req(options, function (error, response, body) {
           if (error) throw new Error(error);
-          console.log(body);
-          console.log(JSON.parse(body));
-            console.log(error);
-            console.log(response);
-            console.log(body);
-            console.log(JSON.stringify(body));
-            console.log("got a response from facebook " + body);
-            results['first_name'] = body['first_name'];
-            results['last_name'] = body['last_name'];
-            results['full_name'] = body['first_name']+" "+body['last_name'];
-            results['profile_pic'] = body['profile_pic'];
+          var bodyJSON=JSON.parse(body);
+            results['first_name'] = bodyJSON['first_name'];
+            results['last_name'] = bodyJSON['last_name'];
+            results['full_name'] = bodyJSON['first_name']+" "+body['last_name'];
+            results['profile_pic'] = bodyJSON['profile_pic'];
             results['message_type'] = "facebook";
-            console.log("response data is " + results);
+            console.log("response data is " + JSON.stringify(results));
             myFirebase.child("profiles").child(sid).set({'first_name':results['first_name'], 'last_name':results['last_name'], 'full_name':results['full_name'],'profile_pic':results['profile_pic'], 'message_type':results['message_type']});
           });
 
