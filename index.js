@@ -292,7 +292,7 @@ function updateConversationPost(taskSid,request,friendlyName_first,friendlyName_
       console.log("this task is not yet bot qualified");
         var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
   req
-  .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:meyaUserID_string,text:request.body['Body']})
+  .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:taskSid,text:request.body['Body']})
   .on('response', function(response) {
 
   })
