@@ -190,9 +190,16 @@ app.post('/initiatebot', function(request, response) {
  function getFacebookDetails(id,sid) {
         var pageAccessToken = "EAARTTxPnNhsBAKmoMUqeZA8dQkOAZBppHVWx2QOcZBZAs2hEKY6uHB938Lu0KUW9uFOXFpYdSsBlomLgbde3ZA2NZCFByS3IRlf4AwuJz6cQWZAb8D63bNgtuHywFBa71i4NzH5Qqe8bAH5ZBfZCRwebxMqZCs1okJ0qjkVWIAHoWNmwZDZD"
         var results = {};
-        req
-        .get('https://graph.facebook.com/v2.6/'+id+'?fields=first_name,last_name,profile_pic&access_token='+pageAccessToken)
-        .on('response', function(error, response, body) {
+        var options = { method: 'GET',
+        url: 'https://graph.facebook.com/v2.6/'+id+'?fields=first_name,last_name,profile_pic&access_token='+pageAccessToken,
+
+         };
+         var friendlyName_first ="";
+         var friendlyName_last="";
+        req(options, function (error, response, body) {
+          if (error) throw new Error(error);
+          console.log(body);
+          console.log(JSON.parse(body));
             console.log(error);
             console.log(response);
             console.log(body);
@@ -205,7 +212,7 @@ app.post('/initiatebot', function(request, response) {
             results['message_type'] = "facebook";
             console.log("response data is " + results);
             myFirebase.child("profiles").child(sid).set({'first_name':results['first_name'], 'last_name':results['last_name'], 'full_name':results['full_name'],'profile_pic':results['profile_pic'], 'message_type':results['message_type']});
-          })
+          });
 
         
      
