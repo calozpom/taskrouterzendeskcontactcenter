@@ -278,6 +278,8 @@ function updateConversation(taskSid,request,friendlyName_first,friendlyName_last
 function updateConversationPost(taskSid,request,friendlyName_first,friendlyName_last) {
   myFirebase.child(taskSid).push({'from':request.body['From'], 'message':request.body['Body'], 'first':friendlyName_first,'last':friendlyName_last});
   //TODO: need to add an if statement here and only post to meya if bot_qualified is not true
+  var meyaUserID = {};
+
   meyaUserID['from']=request.body['From'];
   meyaUserID['to']=request.body['To'];
   meyaUserID['sid']=taskSid;
