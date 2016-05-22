@@ -90,80 +90,7 @@ app.get('/outboundsip', function(request, response) {
 
 });
 
-app.get('/initiatebot', function(request, response) {
-  // desired behavior
-  // - evaluate whether there is already a task from this messenger
-  // if no - create a task and get task sid
-  // if yes, get task sid 
-  // add message to firebase entry for task sid
-  // if task is not bot_qualified
-  //    send message to meya with from set to task SID
-  console.log("received new message as follows:");
-  console.log(request.query['Body']); // message content
-  console.log(request.query['From']); // sender ID
-  console.log(request.query);
 
-
-  console.log("checking for any existing task from this user");
-  var queryJson={};
-  queryJson['EvaluateTaskAttributes']="(message_from=\"" + request.query['From'] + "\")";
-  var foundTask=0;
-  var taskConversationSid="";
-  //note the following call is async
-  client.workspace.tasks.get(queryJson, function(err, data) {
-    if(!err) {
-      data.tasks.forEach(function(task) {
-        if (task.assignmentStatus == "pending" ||
-          task.assignmentStatus == "reserved" ||
-          task.assignmentStatus == "assigned") {
-          foundTask=1;
-        console.log("found an existing task from that user which is still active. Trying to list attributes");
-        console.log(task.attributes);
-        taskConversationSid = task.sid;
-        console.log("will use this existing task sid for this conversation " + taskConversationSid);
-        updateConversation(taskConversationSid,request);
-      }
-    });
-
-      if (!foundTask) {
-        console.log("did not find an existing active task for this messenger");
-        
-        var attributesJson = {};
-        //{"message_from":"+14152791216","message_body":"Test message over here","message_to":"+18552226811","message_sid":"SM749eb6d22149847222325fa65d33a608"}
-        attributesJson['message_from']=request.query['From'];
-        attributesJson['message_body']=request.query['Body'];
-        attributesJson['message_to']=request.query['To'];
-        attributesJson['message_sid']=request.query['MessageSid'];
-        console.log("want to create a new task with these attributes");
-        console.log(attributesJson);
-        var attributesString=JSON.stringify(attributesJson);
-
-        var options = { method: 'POST',
-        url: 'https://taskrouter.twilio.com/v1/Workspaces/'+workspaceSid+'/Tasks',
-        auth: {username: accountSid, password: authToken},
-        form: 
-        { WorkflowSid: 'WW4d526c9041d73060ca46d4011cf34b33',
-        Attributes: attributesString
-      } 
-    };
-    req(options, function (error, response, body) {
-      if (error) throw new Error(error);
-          //console.log(body);
-          var newTaskResponse = JSON.parse(body);
-          console.log("created a new tasks with Sid "+newTaskResponse.sid);
-          updateConversation(newTaskResponse.sid,request);
-
-        });
-  }
-}
-});
-
-
-  response.send('');
-
-
-
-});
 
 app.post('/initiatebot', function(request, response) {
   // desired behavior
@@ -173,15 +100,7 @@ app.post('/initiatebot', function(request, response) {
   // add message to firebase entry for task sid
   // if task is not bot_qualified
   //    send message to meya with from set to task SID
-  var friendlyName_first ="";
-  var friendlyName_last="";
-  try {
-     console.log(request.body.AddOns);
-    var addOnsData = JSON.parse(request.body.AddOns);
-    //console.log(addOnsData);
-    var friendlyName_first = addOnsData['results']['whitepages_pro_caller_identity']['result']['results'][0]['belongs_to'][0]['names'][0]['first_name'];
-    var friendlyName_last = addOnsData['results']['whitepages_pro_caller_identity']['result']['results'][0]['belongs_to'][0]['names'][0]['last_name'];
-  }
+  
   catch (err) {}
 
   console.log("checking for any existing task from this user");
@@ -224,19 +143,39 @@ app.post('/initiatebot', function(request, response) {
         url: 'https://taskrouter.twilio.com/v1/Workspaces/'+workspaceSid+'/Tasks',
         auth: {username: accountSid, password: authToken},
         form: 
-        { WorkflowSid: 'WW4d526c9041d73060ca46d4011cf34b33',
-        Attributes: attributesString
-      } 
-    };
-    req(options, function (error, response, body) {
-      if (error) throw new Error(error);
-          //console.log(body);
-          var newTaskResponse = JSON.parse(body);
-          console.log("created a new tasks with Sid "+newTaskResponse.sid);
-          updateConversationPost(newTaskResponse.sid,request, friendlyName_first, friendlyName_last);
+          { WorkflowSid: 'WW4d526c9041d73060ca46d4011cf34b33',
+          Attributes: attributesString
+          } 
+         };
+        req(options, function (error, response, body) {
+          if (error) throw new Error(error);
+              //console.log(body);
+              var newTaskResponse = JSON.parse(body);
+              console.log("created a new tasks with Sid "+newTaskResponse.sid);
+              var id = request.body['From'];
+              if (id.substr(0,10) == "Messenger:") {
+                id = id.replace('Messenger:','');
+                getFacebookDetails(id, newTaskResponse.sid);
 
-        });
-  }
+              }
+              else {
+
+              var friendlyName_first ="";
+              var friendlyName_last="";
+              try {
+                console.log(request.body.AddOns);
+                var addOnsData = JSON.parse(request.body.AddOns);
+                console.log(addOnsData['results']);
+                //var friendlyName_first = addOnsData['results']['whitepages_pro_caller_identity']['result']['results'][0]['belongs_to'][0]['names'][0]['first_name'];
+                //var friendlyName_last = addOnsData['results']['whitepages_pro_caller_identity']['result']['results'][0]['belongs_to'][0]['names'][0]['last_name'];
+              }
+
+              }
+              updateConversationPost(newTaskResponse.sid,request, friendlyName_first, friendlyName_last);
+
+
+            });
+      }
 }
 });
 
@@ -247,32 +186,30 @@ app.post('/initiatebot', function(request, response) {
 
 });
 
-function updateConversation(taskSid,request,friendlyName_first,friendlyName_last) {
-  myFirebase.child(taskSid).push({'from':request.query['From'], 'message':request.query['Body'], 'first':friendlyName_first,'last':friendlyName_last});
-  var meyaUserID = {};
-  meyaUserID['from']=request.query['From'];
-  meyaUserID['to']=request.query['To'];
-  meyaUserID['sid']=taskSid;
-  var meyaUserID_string = JSON.stringify(meyaUserID);
-  console.log("going to use this as meya user ID " + meyaUserID_string);
+ function getFacebookDetails(id,sid) {
+        var pageAccessToken = "EAARTTxPnNhsBAKmoMUqeZA8dQkOAZBppHVWx2QOcZBZAs2hEKY6uHB938Lu0KUW9uFOXFpYdSsBlomLgbde3ZA2NZCFByS3IRlf4AwuJz6cQWZAb8D63bNgtuHywFBa71i4NzH5Qqe8bAH5ZBfZCRwebxMqZCs1okJ0qjkVWIAHoWNmwZDZD"
+        var results = {};
+        $.ajax({ 
+          url: 'https://graph.facebook.com/v2.6/'+id+'?fields=first_name,last_name,profile_pic&access_token='+pageAccessToken,
+          type: 'get',
+          success: function(output) {
+                      console.log(output);
+                      console.log(output['first_name']);
+                      
+                      results['first_name'] = output['first_name'];
+                      results['last_name'] = output['last_name'];
+                      results['full_name'] = output['first_name']+" "+output['last_name'];
+                      results['profile_pic'] = output['profile_pic'];
+                      results['message_type'] = "facebook";
+                        
+                      myFirebase.child("profiles").child(sid).set({'first_name':results['first_name'], 'last_name':results['last_name'], 'full_name':results['full_name'],'profile_pic':results['profile_pic'], 'message_type':results['message_type']});
 
-  client.workspace.tasks(taskSid).get(function(err, task) {
-    if(!task.attributes.bot_qualified) {
-      console.log("this task is not yet bot qualified");
-        var meyaAPIKey='i8UIv5TZJyETYAqfHjM2mn6XdxEdZ2MD';
-  req
-  .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({user_id:meyaUserID_string,text:request.query['Body']})
-  .on('response', function(response) {
 
-  })
+                  }
 
-  }
-  else{
-    console.log("this task is already bot qualified");
+        });
+     
     }
-  });
-
-}
 
 
 function updateConversationPost(taskSid,request,friendlyName_first,friendlyName_last) {
