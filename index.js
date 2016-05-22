@@ -101,7 +101,7 @@ app.post('/initiatebot', function(request, response) {
   // if task is not bot_qualified
   //    send message to meya with from set to task SID
   
-  catch (err) {}
+  
 
   console.log("checking for any existing task from this user");
   var queryJson={};
@@ -169,6 +169,7 @@ app.post('/initiatebot', function(request, response) {
                 //var friendlyName_first = addOnsData['results']['whitepages_pro_caller_identity']['result']['results'][0]['belongs_to'][0]['names'][0]['first_name'];
                 //var friendlyName_last = addOnsData['results']['whitepages_pro_caller_identity']['result']['results'][0]['belongs_to'][0]['names'][0]['last_name'];
               }
+              catch (err) {}
 
               }
               updateConversationPost(newTaskResponse.sid,request, friendlyName_first, friendlyName_last);
