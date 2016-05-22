@@ -147,6 +147,8 @@ app.post('/initiatebot', function(request, response) {
           Attributes: attributesString
           } 
          };
+         var friendlyName_first ="";
+         var friendlyName_last="";
         req(options, function (error, response, body) {
           if (error) throw new Error(error);
               //console.log(body);
@@ -160,8 +162,7 @@ app.post('/initiatebot', function(request, response) {
               }
               else {
 
-              var friendlyName_first ="";
-              var friendlyName_last="";
+              
               try {
                 console.log(request.body.AddOns);
                 var addOnsData = JSON.parse(request.body.AddOns);
@@ -193,12 +194,13 @@ app.post('/initiatebot', function(request, response) {
         req
         .get('https://graph.facebook.com/v2.6/'+id+'?fields=first_name,last_name,profile_pic&access_token='+pageAccessToken)
         .on('response', function(response) {
+            console.log("got a response from facebook " + response);
             results['first_name'] = response['first_name'];
             results['last_name'] = response['last_name'];
             results['full_name'] = response['first_name']+" "+response['last_name'];
             results['profile_pic'] = response['profile_pic'];
             results['message_type'] = "facebook";
-              
+            console.log("response data is " + results);
             myFirebase.child("profiles").child(sid).set({'first_name':results['first_name'], 'last_name':results['last_name'], 'full_name':results['full_name'],'profile_pic':results['profile_pic'], 'message_type':results['message_type']});
           })
 
