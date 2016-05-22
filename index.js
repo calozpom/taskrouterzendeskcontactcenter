@@ -254,7 +254,7 @@ function updateConversation(taskSid,request,friendlyName_first,friendlyName_last
   meyaUserID['to']=request.query['To'];
   meyaUserID['sid']=taskSid;
   var meyaUserID_string = JSON.stringify(meyaUserID);
-  console.log("going to use this as meya user ID " = meyaUserID_string);
+  console.log("going to use this as meya user ID " + meyaUserID_string);
 
   client.workspace.tasks(taskSid).get(function(err, task) {
     if(!task.attributes.bot_qualified) {
