@@ -362,7 +362,7 @@ app.post('/botresponse', function(request, response) {
     else{
       console.log("there was an error");
     }
-});
+//});
 
   });   
   //Send the response
