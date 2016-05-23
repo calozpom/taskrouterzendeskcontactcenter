@@ -343,7 +343,7 @@
      
       worker.on("reservation.accepted", function(reservation) {
         console.log("Reservation " + reservation.task.sid + " accepted!");
-        $("#task"+reservation.task.sid+"title").html("Task: " + taskrouterGlobals[reservation.task.sid].full_name + "<a href='#' id='completeTask"+reservation.task.sid+"'><span class='label radius success right'>Complete</span></a>");
+        $("#task"+reservation.task.sid+"title").html("Task: " + taskrouterGlobals[reservation.task.sid].full_name +  "<br /> " + taskrouterGlobals[reservation.task.sid]['address_street'] + ", " + taskrouterGlobals[reservation.task.sid]['address_city']"<a href='#' id='completeTask"+reservation.task.sid+"'><span class='label radius success right'>Complete</span></a>");
         var completeButton=document.getElementById('completeTask'+reservation.task.sid)
         completeButton.onclick = function(){
             completeTask(reservation);
@@ -538,7 +538,13 @@
     function updateTaskTitle(sid, snapshot) {
         childData = snapshot.val();
         titleDiv = document.getElementById('titleText'+sid);
-        titleDiv.innerHTML = "Task: " + childData['first_name'] + " " + childData['last_name'];
+        var titleText = "Task: " + childData['first_name'] + " " + childData['last_name'];
+        if (childData['address_street']) {
+            taskrouterGlobals[sid].address_street = childData['address_street'];
+            taskrouterGlobals[sid].address_city = childData['address_city'];
+            titleText += "<br /> " + childData['address_street'] + ", " + childData['address_city'];
+         }
+        titleDiv.innerHTML = ;
         $('.messageNameSender'+sid).each(function(i, obj) {
             obj.innerHTML=childData['first_name'];
         });
@@ -547,7 +553,8 @@
         });
         taskrouterGlobals[sid].first_name = childData['first_name'];
         taskrouterGlobals[sid].profile_pic = childData['profile_pic'];
-        taskrouterGlobals[sid].full_name = childData['first_name'] + " " + childData['last_name']
+        taskrouterGlobals[sid].full_name = childData['first_name'] + " " + childData['last_name'];
+        
 
     //test
 
