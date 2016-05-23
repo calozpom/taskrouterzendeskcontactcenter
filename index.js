@@ -105,6 +105,10 @@ app.post('/initiatebot', function(request, response) {
 
   console.log("checking for any existing task from this user");
   var queryJson={};
+  var friendlyName_first ="";
+ var friendlyName_last="";
+ var address_street = "";
+ var address_city = "";
   queryJson['EvaluateTaskAttributes']="(message_from=\"" + request.body['From'] + "\")";
   var queryString = "{'EvaluateTaskAttributes':'(message_from=\"" + request.body['From'] + "\")'}";
 
@@ -147,8 +151,7 @@ app.post('/initiatebot', function(request, response) {
           Attributes: attributesString
           } 
          };
-         var friendlyName_first ="";
-         var friendlyName_last="";
+         
         req(options, function (error, response, body) {
           if (error) throw new Error(error);
               //console.log(body);
@@ -163,14 +166,22 @@ app.post('/initiatebot', function(request, response) {
               else {
 
               
-              try {
-                console.log(request.body.AddOns);
-                var addOnsData = JSON.parse(request.body.AddOns);
-                console.log(addOnsData['results']);
-                //var friendlyName_first = addOnsData['results']['whitepages_pro_caller_identity']['result']['results'][0]['belongs_to'][0]['names'][0]['first_name'];
-                //var friendlyName_last = addOnsData['results']['whitepages_pro_caller_identity']['result']['results'][0]['belongs_to'][0]['names'][0]['last_name'];
-              }
-              catch (err) {}
+                try {
+                  console.log(request.body.AddOns);
+                  var addOnsData = JSON.parse(request.body.AddOns);
+                  console.log(addOnsData['results']);
+
+                  friendlyName_first = addOnsData['results']['nextcaller_advanced_caller_id']['result']['records'][0]['first_name'];
+                  friendlyName_last = addOnsData['results']['nextcaller_advanced_caller_id']['result']['records'][0]['last_name'];
+                  address_street = addOnsData['results']['nextcaller_advanced_caller_id']['result']['records'][0]['address'][0]['line1'];
+                  address_city = addOnsData['results']['nextcaller_advanced_caller_id']['result']['records'][0]['address'][0]['city'];
+
+
+
+                  //var friendlyName_last = addOnsData['results']['whitepages_pro_caller_identity']['result']['results'][0]['belongs_to'][0]['names'][0]['last_name'];
+                }
+                catch (err) {}
+                myFirebase.child("profiles").child(newTaskResponse.sid).set({'first_name':friendlyName_first, 'last_name':friendlyName_last, 'address_street':address_street,'address_city':address_city, 'message_type':'sms'});
 
               }
               updateConversationPost(newTaskResponse.sid,request, friendlyName_first, friendlyName_last);
@@ -201,7 +212,7 @@ app.post('/initiatebot', function(request, response) {
           var bodyJSON=JSON.parse(body);
             results['first_name'] = bodyJSON['first_name'];
             results['last_name'] = bodyJSON['last_name'];
-            results['full_name'] = bodyJSON['first_name']+" "+body['last_name'];
+            results['full_name'] = bodyJSON['first_name']+" "+bodyJSON['last_name'];
             results['profile_pic'] = bodyJSON['profile_pic'];
             results['message_type'] = "facebook";
             console.log("response data is " + JSON.stringify(results));
