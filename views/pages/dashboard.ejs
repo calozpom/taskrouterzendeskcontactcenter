@@ -351,6 +351,7 @@
         $("#task"+reservation.task.sid+"title").html(replacementText);
         var completeButton=document.getElementById('completeTask'+reservation.task.sid)
         completeButton.onclick = function(){
+            console.log("trying to complete task");
             completeTask(reservation);
         };
         myFirebase.child(reservation.task.sid).off();
@@ -442,6 +443,7 @@
         reservation.accept();
     }
     function completeTask(reservation) {
+        console.log("completing task");
         changeState("Idle");
         myFirebase.child(reservation.task.sid).remove();
         var element = $("#taskDiv"+reservation.task.sid);
