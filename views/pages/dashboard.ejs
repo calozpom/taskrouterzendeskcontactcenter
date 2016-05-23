@@ -544,7 +544,7 @@
             taskrouterGlobals[sid].address_city = childData['address_city'];
             titleText += "<br /> " + childData['address_street'] + ", " + childData['address_city'];
          }
-        titleDiv.innerHTML = ;
+        titleDiv.innerHTML = titleText;
         $('.messageNameSender'+sid).each(function(i, obj) {
             obj.innerHTML=childData['first_name'];
         });
