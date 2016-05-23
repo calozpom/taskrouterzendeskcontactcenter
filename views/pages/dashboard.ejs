@@ -439,8 +439,16 @@
           updateCapacity(2,worker.workerSid);
         });
         }
-    function acceptTask(reservation) {
-        reservation.accept();
+    function acceptTask(tasksid, reservationsid) {
+        $.ajax({ 
+          url: 'acceptTask',
+          data: {'tasksid': tasksid, 'reservationsid':reservationsid},
+          type: 'get',
+          success: function(output) {
+                      console.log("received OK to accept task");
+
+                  }
+});
     }
     function completeTask(sid) {
         console.log("completing task");
@@ -537,7 +545,7 @@
           updateTaskTitle(reservation.task.sid, snapshot);
         });
         htmlToAdd += "<div class='custom-panel-heading'>";
-        htmlToAdd += "<h5 class='white' id='task" + reservation.task.sid + "title'>" +"<div id='titleText" + reservation.task.sid+"'>Task:" + reservation.task.attributes.message_from + "</div><span class='label radius alert right'>Reject</span>&nbsp;<a href='#' id='acceptTask"+reservation.task.sid+"'><span class='label radius success right'>Accept</span></a></h5></div>";
+        htmlToAdd += "<h5 class='white' id='task" + reservation.task.sid + "title'>" +"<div id='titleText" + reservation.task.sid+"'>Task:" + reservation.task.attributes.message_from + "</div><span class='label radius alert right'>Reject</span>&nbsp;<a href='#' id='acceptTask"+reservation.task.sid+"' onClick='acceptTask(\"" + reservation.task.sid+", " + reservation.sid +"\")'><span class='label radius success right'>Accept</span></a></h5></div>";
         htmlToAdd += "<div class='custom-panel-details' id='messageDiv"+reservation.task.sid+"'>";
         htmlToAdd += "</div>";
         htmlToAdd += "</div>";
@@ -545,9 +553,7 @@
         var divToAddTo=document.getElementById('addToThis');
         divToAddTo.innerHTML = divToAddTo.innerHTML + htmlToAdd;
         $("#taskDiv"+reservation.task.sid).hide();   
-        $("#taskDiv"+reservation.task.sid).bind("click", function() {
-            acceptTask(reservation);
-        });  
+          
     }
     function updateTaskTitle(sid, snapshot) {
         childData = snapshot.val();

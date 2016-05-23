@@ -292,6 +292,31 @@ app.get('/completeTask', function (request, response) {
             response.send('');
 });
 
+app.get('/acceptTask', function (request, response) {
+  console.log("received request to accept task ");
+    console.log(request.query.tasksid);
+    console.log(request.query.reservationsid)
+
+   //POST /v1/Workspaces/{WorkspaceSid}/Tasks/{TaskSid}/Reservations/{ReservationSid}
+        var options = { method: 'POST',
+        url: 'https://taskrouter.twilio.com/v1/Workspaces/' + workspaceSid +'/Tasks/'+request.query.tasksid + '/Reservations/' + request.query.reservationsid,
+        auth: {username: accountSid, password: authToken},
+        form: 
+            { ReservationStatus: 'accepted'
+          } 
+        };
+        console.log(options);
+        
+        req(options, function (error, response, body) {
+          if (error) throw new Error(error);
+              //console.log(body);
+              console.log("accepted task"+ body);
+              
+            });
+            response.send('');
+});
+
+
 
 app.post('/botresponse', function(request, response) {
     // desired behavior
