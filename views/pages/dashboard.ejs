@@ -519,7 +519,7 @@
         id = id.replace('Messenger:','');
         myFirebase.child('profiles').child(reservation.task.sid).once("value", function(snapshot) {
           // The callback function will get called twice, once for "fred" and once for "barney"
-          updateTask(reservation.task.sid, snapshot);
+          updateTaskTitle(reservation.task.sid, snapshot);
         });
         htmlToAdd += "<div class='custom-panel-heading'>";
         htmlToAdd += "<h5 class='white' id='task" + reservation.task.sid + "title'>" +"<div id='titleText" + reservation.task.sid+"'>Task:" + reservation.task.attributes.message_from + "</div><span class='label radius alert right'>Reject</span>&nbsp;<a href='#' id='acceptTask"+reservation.task.sid+"'><span class='label radius success right'>Accept</span></a></h5></div>";
