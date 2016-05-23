@@ -269,6 +269,29 @@ app.get('/deletealltasks', function(request,response) {
         //client.workspace.tasks.delete()
       });
 
+app.get('completeTask', function (request, response) {
+  console.log("received request to complete task ");
+    console.log(request.query.sid);
+
+   //POST /v1/Workspaces/{WorkspaceSid}/Tasks/{TaskSid}
+        var options = { method: 'POST',
+        url: 'https://taskrouter.twilio.com/v1/Workspaces/' + workspaceSid +'/Tasks/'+request.query.sid,
+        auth: {username: accountSid, password: authToken},
+        form: 
+            { AssignmentStatus: 'completed'
+          } 
+        };
+        console.log(options);
+        
+        req(options, function (error, response, body) {
+          if (error) throw new Error(error);
+              //console.log(body);
+              console.log("task moved to completed state "+ body);
+              
+            });
+            response.send('');
+});
+
 
 app.post('/botresponse', function(request, response) {
     // desired behavior

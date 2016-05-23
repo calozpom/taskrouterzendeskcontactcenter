@@ -347,13 +347,13 @@
         if (taskrouterGlobals[reservation.task.sid]['address_street']) {
             replacementText += "<br /> " + taskrouterGlobals[reservation.task.sid]['address_street'] + ", " + taskrouterGlobals[reservation.task.sid]['address_city'];
         }
-        replacementText += "<a href='#' id='completeTask"+reservation.task.sid+"'><span class='label radius success right'>Complete</span></a>"
-        $("#task"+reservation.task.sid+"title").html(replacementText);
-        var completeButton=document.getElementById('completeTask'+reservation.task.sid)
+        replacementText += "<a href='#' id='completeTask"+reservation.task.sid+"' onClick='completeTask(\"' + reservation.task.sid+'\")'><span class='label radius success right'>Complete</span></a>"
+        /*$("#task"+reservation.task.sid+"title").html(replacementText);
+        var completeButton=document.getElementById('completeTask'+reservation.task.sid);
         completeButton.onclick = function(){
             console.log("trying to complete task");
             completeTask(reservation);
-        };
+        };*/
         myFirebase.child(reservation.task.sid).off();
         myFirebase.child(reservation.task.sid).on("value", function(dataSnapshot) {
          updateTask(reservation);
@@ -442,11 +442,19 @@
     function acceptTask(reservation) {
         reservation.accept();
     }
-    function completeTask(reservation) {
+    function completeTask(sid) {
         console.log("completing task");
-        changeState("Idle");
-        myFirebase.child(reservation.task.sid).remove();
-        var element = $("#taskDiv"+reservation.task.sid);
+        $.ajax({ 
+          url: 'completeTask',
+          data: {'sid': sid},
+          type: 'get',
+          success: function(output) {
+                      console.log("task completed OK");
+
+                  }
+        });
+        myFirebase.child(sid).remove();
+        var element = $("#taskDiv"+sid);
         element.fadeOut(function(){
             element.remove();
         })
@@ -603,7 +611,7 @@
      
     }
 
-   
+ 
 
     function updateCapacity(number, workerSid) {
        $.ajax({ 
