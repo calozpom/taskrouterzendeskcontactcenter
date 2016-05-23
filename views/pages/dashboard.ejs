@@ -343,7 +343,7 @@
      
       worker.on("reservation.accepted", function(reservation) {
         console.log("Reservation " + reservation.task.sid + " accepted!");
-        $("#task"+reservation.task.sid+"title").html("Task: " + taskrouterGlobals[reservation.task.sid].full_name +  "<br /> " + taskrouterGlobals[reservation.task.sid]['address_street'] + ", " + taskrouterGlobals[reservation.task.sid]['address_city']"<a href='#' id='completeTask"+reservation.task.sid+"'><span class='label radius success right'>Complete</span></a>");
+        $("#task"+reservation.task.sid+"title").html("Task: " + taskrouterGlobals[reservation.task.sid].full_name +  "<br /> " + taskrouterGlobals[reservation.task.sid]['address_street'] + ", " + taskrouterGlobals[reservation.task.sid]['address_city']+ "<a href='#' id='completeTask"+reservation.task.sid+"'><span class='label radius success right'>Complete</span></a>");
         var completeButton=document.getElementById('completeTask'+reservation.task.sid)
         completeButton.onclick = function(){
             completeTask(reservation);
