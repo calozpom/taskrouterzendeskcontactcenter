@@ -347,7 +347,7 @@
         if (taskrouterGlobals[reservation.task.sid]['address_street']) {
             replacementText += "<br /> " + taskrouterGlobals[reservation.task.sid]['address_street'] + ", " + taskrouterGlobals[reservation.task.sid]['address_city'];
         }
-        replacementText += "<a href='#' id='completeTask"+reservation.task.sid+"' onClick='completeTask(\"' + reservation.task.sid+'\")'><span class='label radius success right'>Complete</span></a>"
+        replacementText += "<a href='#' id='completeTask"+reservation.task.sid+"' onClick='completeTask(\"" + reservation.task.sid+"\")'><span class='label radius success right'>Complete</span></a>";
         $("#task"+reservation.task.sid+"title").html(replacementText);
         /*var completeButton=document.getElementById('completeTask'+reservation.task.sid);
         completeButton.onclick = function(){
