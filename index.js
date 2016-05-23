@@ -269,7 +269,7 @@ app.get('/deletealltasks', function(request,response) {
         //client.workspace.tasks.delete()
       });
 
-app.get('completeTask', function (request, response) {
+app.get('/completeTask', function (request, response) {
   console.log("received request to complete task ");
     console.log(request.query.sid);
 
