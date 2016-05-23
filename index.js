@@ -181,7 +181,7 @@ app.post('/initiatebot', function(request, response) {
                   //var friendlyName_last = addOnsData['results']['whitepages_pro_caller_identity']['result']['results'][0]['belongs_to'][0]['names'][0]['last_name'];
                 }
                 catch (err) {}
-                myFirebase.child("profiles").child(newTaskResponse.sid).set({'first_name':friendlyName_first, 'last_name':friendlyName_last, 'address_street':address_street,'address_city':address_city, 'message_type':'sms'});
+                myFirebase.child("profiles").child(newTaskResponse.sid).set({'first_name':friendlyName_first, 'last_name':friendlyName_last, 'address_street':address_street,'address_city':address_city, 'message_type':'sms', 'profile_pic':'img/unknownavatar.jpeg'});
 
               }
               updateConversationPost(newTaskResponse.sid,request, friendlyName_first, friendlyName_last);

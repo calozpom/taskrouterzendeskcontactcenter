@@ -517,7 +517,10 @@
         var htmlToAdd="<div class='small-6 columns' id='taskDiv"+reservation.task.sid+"'>";
         var id = reservation.task.attributes.message_from;
         id = id.replace('Messenger:','');
-        var facebookDetails=getFacebookDetails(id,reservation.task.sid);
+        myFirebase.child('profiles').child(reservation.task.sid).once("value", function(snapshot) {
+          // The callback function will get called twice, once for "fred" and once for "barney"
+          updateTask(reservation.task.sid, snapshot);
+        });
         htmlToAdd += "<div class='custom-panel-heading'>";
         htmlToAdd += "<h5 class='white' id='task" + reservation.task.sid + "title'>" +"<div id='titleText" + reservation.task.sid+"'>Task:" + reservation.task.attributes.message_from + "</div><span class='label radius alert right'>Reject</span>&nbsp;<a href='#' id='acceptTask"+reservation.task.sid+"'><span class='label radius success right'>Accept</span></a></h5></div>";
         htmlToAdd += "<div class='custom-panel-details' id='messageDiv"+reservation.task.sid+"'>";
@@ -532,15 +535,18 @@
             acceptTask(reservation);
         };  
     }
-    function updateTaskTitle(sid, first_name, last_name,profile_pic) {
+    function updateTaskTitle(sid, snapshot) {
+        childData = snapshot.val();
         titleDiv = document.getElementById('titleText'+sid);
-        titleDiv.innerHTML = "Task: " + first_name + " " + last_name;
+        titleDiv.innerHTML = "Task: " + childData['first_name'] + " " + childData['last_name'];
         $('.messageNameSender'+sid).each(function(i, obj) {
-            obj.innerHTML=first_name;
+            obj.innerHTML=childData['first_name'];
         });
         $('.profilePicSender'+sid).each(function(i, obj) {
-            obj.innerHTML="<img src='"+profile_pic+"' alt='profile' />";
+            obj.innerHTML="<img src='"+childData['profile_pic']+"' alt='profile' />";
         });
+        taskrouterGlobals[sid].first_name = childData['first_name'];
+        taskrouterGlobals[sid].profile_pic = childData['profile_pic'];
 
     //test
 
@@ -582,29 +588,7 @@
      
     }
 
-    function getFacebookDetails(id,sid) {
-        var pageAccessToken = "EAARTTxPnNhsBAKmoMUqeZA8dQkOAZBppHVWx2QOcZBZAs2hEKY6uHB938Lu0KUW9uFOXFpYdSsBlomLgbde3ZA2NZCFByS3IRlf4AwuJz6cQWZAb8D63bNgtuHywFBa71i4NzH5Qqe8bAH5ZBfZCRwebxMqZCs1okJ0qjkVWIAHoWNmwZDZD"
-        $.ajax({ 
-          url: 'https://graph.facebook.com/v2.6/'+id+'?fields=first_name,last_name,profile_pic&access_token='+pageAccessToken,
-          type: 'get',
-          success: function(output) {
-                      console.log(output);
-                      console.log(output['first_name']);
-                      updateTaskTitle(sid,output['first_name'],output['last_name'],output['profile_pic']);
-                      
-                      taskrouterGlobals[sid].first_name = output['first_name'];
-                      taskrouterGlobals[sid].last_name = output['last_name'];
-                      taskrouterGlobals[sid].full_name = output['first_name']+" "+output['last_name'];
-                      taskrouterGlobals[sid].profile_pic = output['profile_pic'];
-                      console.log("taskrouter globals follow");
-                      console.log(taskrouterGlobals);
-
-                  }
-
-        });
-
-     
-    }
+   
 
     function updateCapacity(number, workerSid) {
        $.ajax({ 
