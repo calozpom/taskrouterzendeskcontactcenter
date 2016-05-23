@@ -545,10 +545,9 @@
         var divToAddTo=document.getElementById('addToThis');
         divToAddTo.innerHTML = divToAddTo.innerHTML + htmlToAdd;
         $("#taskDiv"+reservation.task.sid).hide();   
-        var acceptButton1=document.getElementById('acceptTask'+reservation.task.sid);
-        acceptButton1.onclick = function(){
+        $("#taskDiv"+reservation.task.sid).bind("click", function() {
             acceptTask(reservation);
-        };  
+        });  
     }
     function updateTaskTitle(sid, snapshot) {
         childData = snapshot.val();
