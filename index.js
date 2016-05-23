@@ -229,11 +229,10 @@ function updateConversationPost(taskSid,request,friendlyName_first,friendlyName_
   //TODO: need to add an if statement here and only post to meya if bot_qualified is not true
   var meyaUserID = {};
 
-  meyaUserID['from']=request.body['From'];
-  meyaUserID['to']=request.body['To'];
+  meyaUserID['from']=request.body['From'].replace("Messenger:","M@");
+  meyaUserID['to']=request.body['To'].replace("Messenger:","M@");
   meyaUserID['sid']=taskSid;
-  var meyaUserID_string = JSON.stringify(meyaUserID);
-  meyaUserID_string = request.body['From'] + "@@" + request.body['To'] + "@@" + taskSid;
+  meyaUserID_string = meyaUserID['from'] + "@@" + meyaUserID['to'] + "@@" + taskSid;
   console.log("going to use this as meya user ID " + meyaUserID_string);
    client.workspace.tasks(taskSid).get(function(err, task) {
     attr=JSON.parse(task.attributes);
@@ -292,8 +291,8 @@ app.post('/botresponse', function(request, response) {
 
   smsclient.sendMessage({
 
-    to:meyaUserID[0], // Any number Twilio can deliver to
-    from: meyaUserID[1], // A number you bought from Twilio and can use for outbound communication
+    to:meyaUserID[0].replace("M@","Messenger:"), // Any number Twilio can deliver to
+    from: meyaUserID[1].replace("M@","Messenger:"), // A number you bought from Twilio and can use for outbound communication
     body: request.body.text // body of the SMS message
 
   /*client.workspace.tasks(request.body.user_id).get(function(err, task) {
