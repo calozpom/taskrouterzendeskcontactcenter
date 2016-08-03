@@ -229,66 +229,7 @@
         </div>
         <div id="dashboard-body">
             <div class="row" id="addToThis">
-<!--
-                <div class="large-6 columns">
-                    <div class="custom-panel-heading">
-                        <h5 class="white" id="task1title">
-                            Task: 
-                        </h5>
-                    </div>
-                    <div class="custom-panel-details">
-                        <div class="row">
-                            <div class="message-dashboard">
-                                <div class="small-2 columns">
-                                    <img src="img/prof.jpg" alt="profile" />
-                                </div>
-                                <div class="small-10 columns">
-                                    <div class="message-desc">
-                                        <b>John</b> said Are you ready to order new shoes? <span class="right green">5h</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="message-dashboard">
-                                <div class="small-2 columns">
-                                    <img src="img/prof.jpg" alt="profile" />
-                                </div>
-                                <div class="small-10 columns">
-                                    <div class="message-desc">
-                                        <b>Debby</b> said I would like to order this phone there seems to be a problem aid I would like to order this phone there seems to be a problem aid I would like to order this phone there seems to be a problem aid I would like to order this phone there seems to be a problem aid I would like to order this phone there seems to be a problem aid I would like to order this phone there seems to be a problem aid I would like to order this phone there seems to be a problem aid I would like to order this phone there seems to be a problem aid I would like to order this phone there seems to be a problem aid I would like to order this phone there seems to be a problem aid I would like to order this phone there seems to be a problem aid I would like to order this phone there seems to be a problem<span
-                                            class="right green">5h</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="message-dashboard">
-                                <div class="small-2 columns">
-                                    <img src="img/prof.jpg" alt="profile" />
-                                </div>
-                                <div class="small-10 columns">
-                                    <div class="message-desc">
-                                        <b>Chin</b> said More raw material coming your way <span class="right green">5h</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="message-dashboard">
-                                <div class="small-2 columns">
-                                    <img src="img/prof.jpg" alt="profile" />
-                                </div>
-                                <div class="small-10 columns">
-                                    <div class="message-desc">
-                                        <b>Beth</b> said Marketing Campaign is ready <span class="right green">5h</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            -->
+
                 
         </div>
 
@@ -347,7 +288,7 @@
         if (taskrouterGlobals[reservation.task.sid]['address_street']) {
             replacementText += "<br /> " + taskrouterGlobals[reservation.task.sid]['address_street'] + ", " + taskrouterGlobals[reservation.task.sid]['address_city'];
         }
-        replacementText += "<a href='#' id='completeTask"+reservation.task.sid+"' onClick='completeTask(\"" + reservation.task.sid+"\")'><span class='label radius success right'>Complete</span></a>";
+        replacementText += "<a href='#' id='completeTask"+reservation.task.sid+"' onClick='completeTask(\"" + reservation.task.sid+"\"); return false;'><span class='label radius success right'>Complete</span></a>";
         $("#task"+reservation.task.sid+"title").html(replacementText);
         /*var completeButton=document.getElementById('completeTask'+reservation.task.sid);
         completeButton.onclick = function(){
@@ -463,7 +404,8 @@
 
                   }
         });
-        myFirebase.child(sid).remove();
+        //used to do firebase update here but moved server side for security
+        //myFirebase.child(sid).remove();
         var element = $("#taskDiv"+sid);
         element.fadeOut(function(){
             element.remove();
@@ -547,7 +489,7 @@
           updateTaskTitle(reservation.task.sid, snapshot);
         });
         htmlToAdd += "<div class='custom-panel-heading'>";
-        htmlToAdd += "<h5 class='white' id='task" + reservation.task.sid + "title'>" +"<div id='titleText" + reservation.task.sid+"'>Task:" + reservation.task.attributes.message_from + "</div><span class='label radius alert right'>Reject</span>&nbsp;<a href='#' id='acceptTask"+reservation.task.sid+"' onClick='acceptTask(\"" + reservation.task.sid+"\", \"" + reservation.sid +"\")'><span class='label radius success right'>Accept</span></a></h5></div>";
+        htmlToAdd += "<h5 class='white' id='task" + reservation.task.sid + "title'>" +"<div id='titleText" + reservation.task.sid+"'>Task:" + reservation.task.attributes.message_from + "</div><span class='label radius alert right'>Reject</span>&nbsp;<a href='#' id='acceptTask"+reservation.task.sid+"' onClick='acceptTask(\"" + reservation.task.sid+"\", \"" + reservation.sid +"\"); return false;'><span class='label radius success right'>Accept</span></a></h5></div>";
         htmlToAdd += "<div class='custom-panel-details' id='messageDiv"+reservation.task.sid+"'>";
         htmlToAdd += "</div>";
         htmlToAdd += "</div>";
@@ -598,22 +540,23 @@
             sendButton.onclick = function(){
                 var messageText=document.getElementById('messageText'+reservation.task.sid).value;
                 console.log(messageText);
-                myFirebase.child(reservation.task.sid).push({'from':'me', 'message':messageText}    );
-                sendSMS(reservation.task.attributes.message_to,reservation.task.attributes.message_from,messageText);
+                //used to do firebase push here but moved it server side for security
+                //myFirebase.child(reservation.task.sid).push({'from':'me', 'message':messageText}    );
+                sendSMS(reservation.task.attributes.message_to,reservation.task.attributes.message_from,reservation.task.sid,messageText);
             };  
             htmlToAdd+="<form><input type='text' placeholder='Reply...'><a href='#' class='button success radius'><i class='fi fi-check'></i>Send</a></form>";
         }    
     }
-   function sendSMS(from, to, body) {
+   function sendSMS(from, to, sid, body) {
         $.ajax({ 
           url: 'sendSMS',
-          data: {'from': from, 'to':to, 'body':body},
+          data: {'from': from, 'to':to, 'sid':sid, 'body':body},
           type: 'get',
           success: function(output) {
                       console.log("SMS sent OK");
 
-                  }
-});
+                }
+    });
 
      
     }
@@ -629,7 +572,7 @@
                       console.log("received OK from request to update capacity");
 
                   }
-});
+    });
     }
 
 
