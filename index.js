@@ -30,7 +30,7 @@ var firebaseToken = firebaseTokenGenerator.createToken({ uid: "secure-server"}, 
 console.log(firebaseToken);
 var myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
 myFirebase.authWithCustomToken(firebaseToken, function(error, authData) {
-  console.log('uh-oh some sort of firebase error');
+  console.log("firebase auth status:");
   console.log(error);
   console.log(authData);
 });
@@ -284,13 +284,14 @@ function updateConversationPost(taskSid, request, friendlyName_first, friendlyNa
     console.log(attr['bot_qualified']);
     if (!attr.hasOwnProperty('bot_qualified')) {
       console.log("this task is not yet bot qualified");
-      
+      console.log("posting to meya with user id " + meyaUserID_string + " and text " + request.body['Body']);
       req
         .post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({
           user_id: meyaUserID_string,
           text: request.body['Body']
         })
         .on('response', function(response) {
+          console.log("got response from meya " + response);
 
         })
 
