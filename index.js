@@ -25,7 +25,7 @@ var firebaseTokenGenerator = new FirebaseTokenGenerator(firebaseSecret);
 }
 */
 //probably ought to implement some sort of token refresh function
-var firebaseToken = firebaseTokenGenerator.createToken({ uid: "secure-server"}, { expires: 86400});
+var firebaseToken = firebaseTokenGenerator.createToken({ uid: "secure-server"});
 console.log(firebaseToken);
 var myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
 myFirebase.authWithCustomToken(firebaseToken, function(error, authData) {
