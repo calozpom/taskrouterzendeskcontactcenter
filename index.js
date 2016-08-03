@@ -28,6 +28,8 @@ var firebaseToken = firebaseTokenGenerator.createToken({ uid: "secure-server"}, 
 var myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
 myFirebase.authWithCustomToken(firebaseToken, function(error, authData) {
   console.log('uh-oh some sort of firebase error');
+  console.log(error);
+  console.log(authData);
 });
 
 
