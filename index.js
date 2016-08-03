@@ -13,6 +13,7 @@ var workerSid = process.env.workerSid;
 var meyaAPIKey = process.env.meyaAPIKey;
 var pageAccessToken = process.env.pageAccessToken; //facebook
 var firebaseSecret = process.env.firebaseSecret;
+console.log("trying to authenticate to firebase with secret " + firebaseSecret);
 
 var firebaseTokenGenerator = new FirebaseTokenGenerator(firebaseSecret);
 //firebase instance is set to allow read from any client, but write only from secure-server. From firebase settings:
@@ -25,6 +26,7 @@ var firebaseTokenGenerator = new FirebaseTokenGenerator(firebaseSecret);
 */
 //probably ought to implement some sort of token refresh function
 var firebaseToken = firebaseTokenGenerator.createToken({ uid: "secure-server"}, { expires: 86400});
+console.log(firebaseToken);
 var myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
 myFirebase.authWithCustomToken(firebaseToken, function(error, authData) {
   console.log('uh-oh some sort of firebase error');
