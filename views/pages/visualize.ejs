@@ -164,7 +164,7 @@ function buildTaskRouterGrid() {
 }
 
 function updateTasks(queueSid,snapshot) {
-	console.log("update tasks method called for queue " + queueSid);
+	console.log("update tasks method called for queue " + queueSid + "with snapshot data " + snapshot.val());
 	var queueColumn=$("#queueColumn"+queueSid);
 	queueColumn.html("");
 	snapshot.forEach(function(childSnapshot) {
