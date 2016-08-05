@@ -1,0 +1,72 @@
+﻿/*Login & Sign up */
+
+body
+{
+	background-image: url('../img/we1.jpg'); 
+  background-position: right top;
+  background-repeat: no-repeat;
+	
+}
+ 
+.login-heading
+{
+   background-color: #5f6f81;
+   padding: 20px;
+   color: #fff;
+   border-bottom: 5px solid #536375;
+
+   -webkit-border-top-left-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+-moz-border-radius-topleft: 4px;
+-moz-border-radius-topright: 4px;
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+
+}
+
+.login-txtbox-area
+{
+	padding: 20px;
+	background-color: #e1e1e1;
+   
+}
+
+.login-button-area
+{
+   background-color: #fff;
+   min-height: 40px;
+   padding: 20px;
+
+   -webkit-border-bottom-right-radius: 4px;
+-webkit-border-bottom-left-radius: 4px;
+-moz-border-radius-bottomright: 4px;
+-moz-border-radius-bottomleft: 4px;
+border-bottom-right-radius: 4px;
+border-bottom-left-radius: 4px;
+}
+
+
+
+input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], 
+input[type="datetime-local"], input[type="month"], input[type="week"], input[type="email"], 
+input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], 
+textarea
+{
+   -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+   border-radius: 4px;
+   border: none;
+}
+.login-signup
+{
+     width:40%;
+      margin:auto;
+}
+@media (max-width:765px)
+{
+	.login-signup
+       {
+           width:80%;
+       }
+}
+/*Login & Sign up */

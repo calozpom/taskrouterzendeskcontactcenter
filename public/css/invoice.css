@@ -1,0 +1,35 @@
+﻿#side-invoice
+{
+    text-align: right;
+    padding:20px 0px 20px 0px;
+}
+
+
+table thead
+{
+    background: #3ECD94;
+}
+
+table thead tr th, table thead tr td
+{
+    color: #fff;
+}
+table thead tr th, table tfoot tr th, table tfoot tr td, table tbody tr th, table tbody tr td, table tr td
+{
+    line-height: 2rem;
+}
+table tr td:nth-child(4)
+{
+    color: #3ECD94;
+    font-weight: bold;
+}
+
+table tr.even, table tr.alt, table tr:nth-of-type(even)
+{
+    background: #f1f1f1;
+}
+
+#payment-method i
+{
+    font-size: 1.4rem;
+}

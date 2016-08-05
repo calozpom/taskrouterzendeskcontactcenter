@@ -1,0 +1,215 @@
+
+<!DOCTYPE html>
+<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
+<html class="no-js" lang="en">
+<head>
+<meta charset="utf-8">
+ 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Visualize TaskRouter Workspace</title>
+ 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/normalize.min.css">
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/foundation.min.css">-->
+<link rel="stylesheet" href="css/foundation.css">
+<link href='http://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css' rel='stylesheet' type='text/css'>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/motion-ui/1.1.1/motion-ui.min.css" />
+
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+</head>
+<body>
+ 
+<nav class="top-bar" data-topbar>
+<ul class="title-area">
+ 
+<li class="name">
+<h1>
+<a href="#">
+Visualize Workspace
+</a>
+</h1>
+</li>
+<li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+</ul>
+<section class="top-bar-section">
+ 
+<ul class="left">
+<li class="divider"></li>
+<li class="has-dropdown">
+<a class="active" href="#">Change Workspace</a>
+<ul class="dropdown">
+<li><label>Other workspaces</label></li>
+<li><a href="#" class="">No other workspaces</a></li>
+</ul>
+</li>
+<li class="divider"></li>
+
+</ul>
+ 
+<ul class="right">
+<li class="divider"></li>
+
+<li class="divider"></li>
+<li><a href="#">Logout</a></li>
+<li class="divider"></li>
+</ul>
+</section>
+</nav>
+ <div class="row" id="spacer" ><div>&nbsp;<br /></div></div>
+ 
+<div class="row" id="rowone" data-equalizer>
+
+
+
+</div>
+ 
+ 
+<footer class="row">
+<div class="large-12 columns">
+<hr/>
+<div class="row">
+<div class="large-6 columns">
+<p>&copy; Al Cook | @calozpom | Twilio</p>
+</div>
+</div>
+</div>
+</footer>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/js/foundation.min.js"></script>
+<script src="js/foundation/foundation.core.js"></script>
+<script src="js/foundation/foundation.util.motion.js"></script>
+<script src="js/foundation/foundation.util.mediaQuery.js"></script>
+
+<script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.4/taskrouter.min.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+
+<script>
+      $(document).foundation();
+    </script>
+<script>
+window.onload = function() {
+	window.workspace = new Twilio.TaskRouter.Workspace("<%= token %>");
+	window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
+	window.taskrouterGlobals = {};
+	registerTaskRouterCallbacks();
+
+
+}
+
+function registerTaskRouterCallbacks() {
+	workspace.on("ready", function(workspace) {
+		console.log(workspace.sid)             // 'WKxxx'
+		console.log(workspace.friendlyName)    // 'Worker 1'
+    console.log(workspace.activityName)    // 'Reserved'
+    console.log(workspace.available)       // false
+    buildTaskRouterGrid();
+    });
+}
+
+function buildTaskRouterGrid() {
+	console.log("building taskrouter grid");
+	workspace.taskqueues.fetch(
+    function(error, taskQueueList) {
+        if(error) {
+            console.log(error.code);
+            console.log(error.message);
+            return;
+        }
+        console.log("Parsing response");
+
+        var data = taskQueueList.data;
+        console.log("going to create " + taskQueueList.data.length + " columns");
+        var width=Math.floor(12/taskQueueList.data.length);
+        if (width==0){
+        	console.log("error - cannot create visualization for workspace with more than twelve queues");
+        }
+        console.log("going to use foundation grid width of " +width);
+        console.log("going to loop " + data.length + " times");
+        for(i=0; i<data.length; i++) {
+        	console.log(data[i]);
+        	var htmlToAdd = "";
+        	htmlToAdd += "<div class='large-"+width+" columns"
+        	if (i==(data.length-1)) {
+        		htmlToAdd += " end";
+        	} 
+        	htmlToAdd +="' data-equalizer-watch >";
+        	htmlToAdd += "<div class='box'>";
+        	htmlToAdd += "<div class='box-icon'><img src='img/taskrouter-icon_wb.png'></div>";
+        	htmlToAdd += "<div class='info'>";
+        	htmlToAdd += "<h4 class='text-center'>" + data[i].friendlyName + "</h4>";
+        	htmlToAdd += "<div id='queueColumn"+data[i].sid+"'>"
+
+
+
+        	htmlToAdd += "<br /></div>";
+        	htmlToAdd += "</div></div>";
+        	console.log("current inner html is " + $("#rowone").html());
+        	console.log("wanting to add this html " + htmlToAdd);
+        	$("#rowone").html($("#rowone").html() + htmlToAdd);
+        	console.log("combined html is now " + $("#rowone").html());
+            console.log(data[i].friendlyName);
+            console.log("setting firebase callback for eventstream."+data[i].sid)
+            eventstream.child(data[i].sid).on('value', function(dataSnapshot) {
+            	console.log("call back fired!! calling for " + this.sid);
+            	updateTasks(this.sid, dataSnapshot);
+			},{sid: data[i].sid});
+        }
+    }
+);
+	var eventstream = myFirebase.child("eventstream");
+	eventstream.once("value", function(snapshot) {
+
+	});
+}
+
+function updateTasks(queueSid,snapshot) {
+	console.log("update tasks method called for queue " + queueSid + "with snapshot data " + snapshot.val());
+	var queueColumn=$("#queueColumn"+queueSid);
+	queueColumn.html("");
+	snapshot.forEach(function(childSnapshot) {
+            var childData = childSnapshot.val();
+            var attr = JSON.parse(childData['attributes']);
+            console.log(childData);
+            var htmlToAdd="";
+            htmlToAdd += "<div class='header panel'>";
+      		htmlToAdd += "<div class='sign'>";
+        	htmlToAdd += "<h1>";
+        	htmlToAdd += attr['message_from'].replace("Messenger:","Messenger: ");
+
+            htmlToAdd += "</h1>";
+      		htmlToAdd += "</div>";
+      		htmlToAdd += "<p><span class='text-center'>" + childData['status'] + "</span><br />";
+      		for (var key in attr) {
+				  if (attr.hasOwnProperty(key)) {
+				  	htmlToAdd += key + ": " + attr[key] +"<br />";
+				  }
+				}
+
+			htmlToAdd += " </p></div>";
+      		console.log("current html is " + queueColumn.html());
+      		
+      		console.log();
+      		console.log("wanting to add " + htmlToAdd);
+      		queueColumn.html(queueColumn.html() + htmlToAdd);
+      		console.log("new html is " + queueColumn.html());
+
+      	});
+
+
+}
+
+        	
+
+function test(divID) {
+	console.log("attempting to animate");
+	var elem = $("#"+divID);
+Foundation.Motion.animateOut(elem, fade-out);
+}
+
+
+//<![CDATA[
+//document.write('<script src="//' + (location.hostname || 'localhost') + ':35729/livereload.js?snipver=1"><\/script>')
+//]]></script>
+</body>
+</html>
