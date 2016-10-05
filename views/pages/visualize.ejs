@@ -94,14 +94,15 @@ window.onload = function() {
         $.getJSON('/workspacetoken', function(data) {
 
     console.log(data.workspacetoken);
+      window.worker = new Twilio.TaskRouter.Worker(data.workspacetoken);
+    window.workspace = new Twilio.TaskRouter.Workspace("<%= token %>");
+    window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
+    window.taskrouterGlobals = {};
+    registerTaskRouterCallbacks();
 
 
 });
-      window.worker = new Twilio.TaskRouter.Worker(data.workspacetoken);
-	window.workspace = new Twilio.TaskRouter.Workspace("<%= token %>");
-	window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
-	window.taskrouterGlobals = {};
-	registerTaskRouterCallbacks();
+    
 
 
 }

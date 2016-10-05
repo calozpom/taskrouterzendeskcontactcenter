@@ -324,13 +324,16 @@
         $.getJSON('/token', function(data) {
 
     console.log(data.token);
+    window.worker = new Twilio.TaskRouter.Worker(data.token);
+    window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
+    window.taskrouterGlobals = {};
+    registerTaskRouterCallbacks();
 
 
 });
-      window.worker = new Twilio.TaskRouter.Worker(data.token);
-      window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
-      window.taskrouterGlobals = {};
-      registerTaskRouterCallbacks();
+      
+      
+      
       
 
     }
