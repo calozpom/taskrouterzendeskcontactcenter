@@ -105,6 +105,15 @@ app.get('/dashboard', function(request, response) {
     'token': token
   });
 });
+app.get('/token', function(request, response) {
+  var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
+  capability.allowActivityUpdates();
+  capability.allowReservationUpdates();
+  var token = capability.generate(86400);
+  response.send({
+        token: token
+    });
+});
 
 app.get('/visualize', function(request, response) {
   //visualize shows a visual representation of TaskRouter state
