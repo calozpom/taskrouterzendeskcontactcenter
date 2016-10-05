@@ -111,9 +111,7 @@ app.get('/token', function(request, response) {
   capability.allowActivityUpdates();
   capability.allowReservationUpdates();
   var token = capability.generate(86400);
-  response.send({
-        token: token
-    });
+  response.send({'test'});
 });
 
 app.get('/visualize', function(request, response) {
