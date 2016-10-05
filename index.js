@@ -105,6 +105,7 @@ app.get('/dashboard', function(request, response) {
     'token': token
   });
 });
+
 app.get('/token', function(request, response) {
   var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
   capability.allowActivityUpdates();
