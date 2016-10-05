@@ -47,14 +47,14 @@ var smsclient = new twilio.RestClient(accountSid, authToken);
 
 capability.allowActivityUpdates();
 capability.allowReservationUpdates();
-var workspacetoken = workspacecapability.generate();
+var workspacetoken = workspacecapability.generate(86400);
 
 // By default, tokens are good for one hour.
 // Override this default timeout by specifiying a new value (in seconds).
 // For example, to generate a token good for 8 hours:
 
 //probably ought to implement some sort of token refresh function
-var token = capability.generate(); // 60 * 60 * 8
+var token = capability.generate(86400); // 60 * 60 * 24
 var app = express();
 
 function epicRandomString(b) {
@@ -529,7 +529,7 @@ app.get('/updateCapacity', function(request, response) {
     req(tempOptions, function(error, response, body) {
       if (error) throw new Error(error);
 
-      //temporary hack
+      // Manually force 
       // reevaluate tasks after update to trigger immediate push
       // POST /v1/Workspaces/{WorkspaceSid}/Workflows/{WorkflowSid}
 
