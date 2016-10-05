@@ -319,7 +319,15 @@
     }
    
     window.onload = function() {
-      window.worker = new Twilio.TaskRouter.Worker("<%= token %>");
+        // We use jQuery to make an Ajax request to the server to retrieve our 
+        // Access Token
+        $.getJSON('/token', function(data) {
+
+    console.log(data.token);
+
+
+});
+      window.worker = new Twilio.TaskRouter.Worker(data.token);
       window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
       window.taskrouterGlobals = {};
       registerTaskRouterCallbacks();

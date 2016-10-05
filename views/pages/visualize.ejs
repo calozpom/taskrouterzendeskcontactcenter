@@ -89,6 +89,15 @@ Visualize Workspace
     </script>
 <script>
 window.onload = function() {
+     // We use jQuery to make an Ajax request to the server to retrieve our 
+        // Access Token
+        $.getJSON('/workspacetoken', function(data) {
+
+    console.log(data.workspacetoken);
+
+
+});
+      window.worker = new Twilio.TaskRouter.Worker(data.workspacetoken);
 	window.workspace = new Twilio.TaskRouter.Workspace("<%= token %>");
 	window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
 	window.taskrouterGlobals = {};

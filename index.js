@@ -35,26 +35,22 @@ myFirebase.authWithCustomToken(firebaseToken, function(error, authData) {
   console.log(authData);
 });
 
+var client = new twilio.TaskRouterClient(accountSid, authToken, workspaceSid);
+var smsclient = new twilio.RestClient(accountSid, authToken);
 
-var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
+
 var workspacecapability = new twilio.TaskRouterWorkspaceCapability(accountSid, authToken, workspaceSid);
 workspacecapability.allowFetchSubresources();
 workspacecapability.allowUpdatesSubresources();
 workspacecapability.allowDeleteSubresources();
-
-var client = new twilio.TaskRouterClient(accountSid, authToken, workspaceSid);
-var smsclient = new twilio.RestClient(accountSid, authToken);
-
-capability.allowActivityUpdates();
-capability.allowReservationUpdates();
 var workspacetoken = workspacecapability.generate(86400);
 
-// By default, tokens are good for one hour.
-// Override this default timeout by specifiying a new value (in seconds).
-// For example, to generate a token good for 8 hours:
-
-//probably ought to implement some sort of token refresh function
+var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
+capability.allowActivityUpdates();
+capability.allowReservationUpdates();
 var token = capability.generate(86400); // 60 * 60 * 24
+
+
 var app = express();
 
 function epicRandomString(b) {
@@ -112,6 +108,17 @@ app.get('/token', function(request, response) {
   capability.allowReservationUpdates();
   var token = capability.generate(86400);
   response.send({token:token});
+});
+
+app.get('/workspacetoken', function(request, response) {
+  var workspacecapability = new twilio.TaskRouterWorkspaceCapability(accountSid, authToken, workspaceSid);
+  workspacecapability.allowFetchSubresources();
+  workspacecapability.allowUpdatesSubresources();
+  workspacecapability.allowDeleteSubresources();
+  apability.allowActivityUpdates();
+  capability.allowReservationUpdates();
+  var workspacetoken = workspacecapability.generate(86400);
+  response.send({workspacetoken:workspacetoken});
 });
 
 app.get('/visualize', function(request, response) {
