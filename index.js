@@ -101,9 +101,8 @@ app.get('/workspacetoken', function(request, response) {
   workspacecapability.allowFetchSubresources();
   workspacecapability.allowUpdatesSubresources();
   workspacecapability.allowDeleteSubresources();
-  apability.allowActivityUpdates();
-  capability.allowReservationUpdates();
   var workspacetoken = workspacecapability.generate(86400);
+  
   var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
   capability.allowActivityUpdates();
   capability.allowReservationUpdates();
