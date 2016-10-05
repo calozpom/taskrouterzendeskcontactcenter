@@ -39,18 +39,6 @@ var client = new twilio.TaskRouterClient(accountSid, authToken, workspaceSid);
 var smsclient = new twilio.RestClient(accountSid, authToken);
 
 
-var workspacecapability = new twilio.TaskRouterWorkspaceCapability(accountSid, authToken, workspaceSid);
-workspacecapability.allowFetchSubresources();
-workspacecapability.allowUpdatesSubresources();
-workspacecapability.allowDeleteSubresources();
-var workspacetoken = workspacecapability.generate(86400);
-
-var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
-capability.allowActivityUpdates();
-capability.allowReservationUpdates();
-var token = capability.generate(86400); // 60 * 60 * 24
-
-
 var app = express();
 
 function epicRandomString(b) {
@@ -97,9 +85,7 @@ app.get('/', function(request, response) {
 
 app.get('/dashboard', function(request, response) {
   // dashboard is the main page for the demo
-  response.render('pages/dashboard', {
-    'token': token
-  });
+  response.render('pages/dashboard');
 });
 
 app.get('/token', function(request, response) {
@@ -118,15 +104,17 @@ app.get('/workspacetoken', function(request, response) {
   apability.allowActivityUpdates();
   capability.allowReservationUpdates();
   var workspacetoken = workspacecapability.generate(86400);
-  response.send({workspacetoken:workspacetoken});
+  var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
+  capability.allowActivityUpdates();
+  capability.allowReservationUpdates();
+  var token = capability.generate(86400);
+  response.send({workspacetoken:workspacetoken,token:token});
 });
 
 app.get('/visualize', function(request, response) {
   //visualize shows a visual representation of TaskRouter state
   response.setHeader('Cache-Control', 'no-cache');
-  response.render('pages/visualize', {
-    'token': workspacetoken
-  });
+  response.render('pages/visualize');
 });
 
 
