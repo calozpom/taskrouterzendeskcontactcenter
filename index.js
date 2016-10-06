@@ -402,7 +402,7 @@ app.post('/botresponse', function(request, response) {
     to: meyaUserID[0].replace("M@", "Messenger:"), // Any number Twilio can deliver to
     from: meyaUserID[1].replace("M@", "Messenger:"), // A number you bought from Twilio and can use for outbound communication
     body: request.body.text, // body of the SMS message
-    statusCallback: '/messagestatus/'
+    statusCallback: 'https://taskrouterbot.herokuapp.com/messagestatus/'
 
 
     /*client.workspace.tasks(request.body.user_id).get(function(err, task) {
