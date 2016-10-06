@@ -493,6 +493,14 @@ app.post('/eventstream', function(request, response) {
   response.send('');
 });
 
+app.post('/messagestatus', function(request, response) {
+  // This function consumes the event stream and structures it into firebase data
+  // This firebase structure is then used for real time visualization of queue state
+  console.log("received message status " + request.body);
+  
+  response.send('');
+});
+
 app.get('/updateCapacity', function(request, response) {
   // This function uses the TaskRouter multi-tasking API to change concurrent task capacity
   // This function was written before multi-tasking was available throught the Node helper lib
