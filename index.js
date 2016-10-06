@@ -496,7 +496,7 @@ app.post('/eventstream', function(request, response) {
 app.post('/messagestatus', function(request, response) {
   // This function consumes the event stream and structures it into firebase data
   // This firebase structure is then used for real time visualization of queue state
-  console.log("received message status " + JSON.stringify(request.body);
+  console.log("received message status " + JSON.stringify(request.body));
   
   response.send('');
 });
