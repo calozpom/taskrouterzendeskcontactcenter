@@ -102,7 +102,7 @@ app.get('/workspacetoken', function(request, response) {
   workspacecapability.allowUpdatesSubresources();
   workspacecapability.allowDeleteSubresources();
   var workspacetoken = workspacecapability.generate(86400);
-  
+
   var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
   capability.allowActivityUpdates();
   capability.allowReservationUpdates();
@@ -401,7 +401,9 @@ app.post('/botresponse', function(request, response) {
 
     to: meyaUserID[0].replace("M@", "Messenger:"), // Any number Twilio can deliver to
     from: meyaUserID[1].replace("M@", "Messenger:"), // A number you bought from Twilio and can use for outbound communication
-    body: request.body.text // body of the SMS message
+    body: request.body.text, // body of the SMS message
+    statusCallback: '/messagestatus/'
+
 
     /*client.workspace.tasks(request.body.user_id).get(function(err, task) {
    // var attrib=JSON.parse(task.attributes);
