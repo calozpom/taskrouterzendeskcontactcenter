@@ -1,39 +1,19 @@
-# node-js-getting-started
+# taskrouterbot
 
-A barebones Node.js app using [Express 4](http://expressjs.com/).
+An omni-channel routing bot, using [Twilio TaskRouter](http://www.twilio.com/taskrouter).
 
-This application supports the [Getting Started with Node on Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs) article - check it out.
+You can read more about this on the Twilio blog. 
 
-## Running Locally
+This application provides a Call Center Interface for handling inbound customer inquiries from both SMS and Facebook, through the Twilio API. 
 
-Make sure you have [Node.js](http://nodejs.org/) and the [Heroku Toolbelt](https://toolbelt.heroku.com/) installed.
 
-```sh
-$ git clone git@github.com:heroku/node-js-getting-started.git # or clone your own fork
-$ cd node-js-getting-started
-$ npm install
-$ npm start
-```
 
-Your app should now be running on [localhost:5000](http://localhost:5000/).
 
-## Deploying to Heroku
 
-```
-$ heroku create
-$ git push heroku master
-$ heroku open
-```
-or
 
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
 ## Documentation
 
-For more information about using Node.js on Heroku, see these Dev Center articles:
+There are minimal comments in the code.
 
-- [Getting Started with Node.js on Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs)
-- [Heroku Node.js Support](https://devcenter.heroku.com/articles/nodejs-support)
-- [Node.js on Heroku](https://devcenter.heroku.com/categories/nodejs)
-- [Best Practices for Node.js Development](https://devcenter.heroku.com/articles/node-best-practices)
-- [Using WebSockets on Heroku with Node.js](https://devcenter.heroku.com/articles/node-websockets)
+Disclaimer: this is my first code written in 10 years, and first ever in Node.js. This project is designed to b

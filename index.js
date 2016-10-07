@@ -273,9 +273,8 @@ function updateConversationPost(taskSid, request, friendlyName_first, friendlyNa
     'first': friendlyName_first,
     'last': friendlyName_last
   });
-  //TODO: need to add an if statement here and only post to meya if bot_qualified is not true
   var meyaUserID = {};
-
+  //We munge multiple parameters together to pass all the context to Meya. I had to shorten the Messenger prefix to stay within character count limits.
   meyaUserID['from'] = request.body['From'].replace("Messenger:", "M@");
   meyaUserID['to'] = request.body['To'].replace("Messenger:", "M@");
   meyaUserID['sid'] = taskSid;
