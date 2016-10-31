@@ -168,7 +168,7 @@ app.post('/initiatebot', function(request, response) {
         attributesJson['message_to'] = request.body['To'];
         attributesJson['message_sid'] = request.body['MessageSid'];
         // hard coding in a specific number that skips bot qualification when messaged
-        if (request.body['From']=="+18559798881") {
+        if (request.body['To']=="+18559798881") {
           attributesJson['bot_qualified'] = "true";
 
         }
