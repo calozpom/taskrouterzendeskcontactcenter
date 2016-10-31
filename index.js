@@ -167,6 +167,11 @@ app.post('/initiatebot', function(request, response) {
         attributesJson['message_body'] = request.body['Body'];
         attributesJson['message_to'] = request.body['To'];
         attributesJson['message_sid'] = request.body['MessageSid'];
+        // hard coding in a specific number that skips bot qualification when messaged
+        if (request.body['From']=="+18559798881") {
+          attributesJson['bot_qualified'] = "true";
+
+        }
         console.log("want to create a new task with these attributes");
         console.log(attributesJson);
         var attributesString = JSON.stringify(attributesJson);
