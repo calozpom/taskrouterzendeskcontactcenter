@@ -16,7 +16,7 @@
     "express": "4.13.3",
     "firebase": "^2.4.2",
     "firebase-token-generator": "^2.0.0",
-    "node-wit": "^3.2.2",
+    "node-wit": "^3.3.2",
     "request": "2.72.0",
     "requests": "0.1.7",
     "twilio": "^2.9.1"

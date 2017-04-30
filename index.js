@@ -1,5 +1,6 @@
 var req = require('request');
 var express = require('express');
+var wit=require('node-wit');
 var bodyParser = require('body-parser');
 var twilio = require('twilio');
 var FirebaseTokenGenerator = require('firebase-token-generator');
@@ -37,6 +38,8 @@ myFirebase.authWithCustomToken(firebaseToken, function(error, authData) {
 
 var client = new twilio.TaskRouterClient(accountSid, authToken, workspaceSid);
 var smsclient = new twilio.RestClient(accountSid, authToken);
+var witClient = new Wit({accessToken: 'UQZMKIWYDG675WZJXOFHWZXGIMDSXHDH'});
+
 
 
 var app = express();
@@ -125,17 +128,22 @@ app.post('/initiateivr', function(request,response){
 
 app.post('/finalresult', function(request,response){
   console.log("final result:");
-  console.log(request.body);
-    console.log("=====");
+  //console.log(request.body);
+  //  console.log("=====");
   console.log(request.body['SpeechResult']);
+  client.message(request.body['SpeechResult'], {})
+.then((data) => {
+  console.log('Yay, got Wit.ai response: ' + JSON.stringify(data));
+})
+.catch(console.error);
   response.send('');
 
 })
 
 app.post('/partialresult', function(request,response){
   console.log("partial result:");
-  console.log(request.body);
-  console.log("=====");
+  //console.log(request.body);
+  //console.log("=====");
   console.log(request.body['IncrementalSpeechResult']);
   response.send('');
 })
