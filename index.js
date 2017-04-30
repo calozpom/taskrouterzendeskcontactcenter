@@ -155,6 +155,20 @@ app.post('/partialresult', function(request,response){
   //console.log(request.body);
   //console.log("=====");
   console.log(request.body['IncrementalSpeechResult']);
+    var result = querystring.stringify({q: request.body['IncrementalSpeechResult']});
+
+  var headers = {
+    'Authorization': 'Bearer UQZMKIWYDG675WZJXOFHWZXGIMDSXHDH'
+};
+var options = {
+    url: 'https://api.wit.ai/message?v=20170430&'+result,
+    headers: headers
+};
+
+req(options, function(error, response, body){
+  console.log(body);
+  console.log(JSON.parse(body)['entities']['intent'][0]['value']);
+});
   response.send('');
 })
 
