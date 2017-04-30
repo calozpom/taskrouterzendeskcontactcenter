@@ -1,8 +1,5 @@
 var req = require('request');
 var express = require('express');
-const {Logger, logLevels, Wit} = require('node-wit');
-console.log(Wit);
-console.log("]]]]]");
 var bodyParser = require('body-parser');
 var twilio = require('twilio');
 var FirebaseTokenGenerator = require('firebase-token-generator');
@@ -40,7 +37,6 @@ myFirebase.authWithCustomToken(firebaseToken, function(error, authData) {
 
 var client = new twilio.TaskRouterClient(accountSid, authToken, workspaceSid);
 var smsclient = new twilio.RestClient(accountSid, authToken);
-var witClient = new Wit({accessToken: 'UQZMKIWYDG675WZJXOFHWZXGIMDSXHDH'});
 
 
 
@@ -133,11 +129,19 @@ app.post('/finalresult', function(request,response){
   //console.log(request.body);
   //  console.log("=====");
   console.log(request.body['SpeechResult']);
-  client.message(request.body['SpeechResult'], {})
-.then((data) => {
-  console.log('Yay, got Wit.ai response: ' + JSON.stringify(data));
-})
-.catch(console.error);
+  var headers = {
+    'Authorization': 'Bearer UQZMKIWYDG675WZJXOFHWZXGIMDSXHDH'
+};
+var options = {
+    url: 'https://api.wit.ai/message?v=20170430&q=hello%20i%20love%20you',
+    headers: headers
+};
+
+req(options, function(error, response, body){
+  console.log('body');
+});
+
+
   response.send('');
 
 })
