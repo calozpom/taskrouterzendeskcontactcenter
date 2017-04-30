@@ -118,7 +118,20 @@ app.get('/visualize', function(request, response) {
 
 
 
+app.post('/initiateivr', function(request,response){
+  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio\"><Say>Please say ahoy to Twilio</Say></Gather></Response>";
+  response.send(responseString);
+})
 
+app.post('/finalresult', function(request,response){
+  console.log("final result:");
+  console.log(request.body);
+})
+
+app.post('/partialresult', function(request,response){
+  console.log("partial result:");
+  console.log(request.body);
+})
 
 app.post('/initiatebot', function(request, response) {
   // desired behavior
