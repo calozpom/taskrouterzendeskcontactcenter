@@ -138,7 +138,7 @@ var options = {
 };
 
 req(options, function(error, response, body){
-  console.log(body);
+  console.log(body.entities.intent[0].value);
 });
 
 
