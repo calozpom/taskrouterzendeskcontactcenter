@@ -1,6 +1,6 @@
 var req = require('request');
 var express = require('express');
-const Wit = require('node-wit').Wit;
+const {Logger, logLevels, Wit} = require('node-wit');
 console.log(Wit);
 console.log("]]]]]");
 var bodyParser = require('body-parser');
