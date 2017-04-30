@@ -125,12 +125,15 @@ app.post('/initiateivr', function(request,response){
 
 app.post('/finalresult', function(request,response){
   console.log("final result:");
-  console.log(request.body);
+  console.log(request.body.SpeechResult);
+  response.send('');
+
 })
 
 app.post('/partialresult', function(request,response){
   console.log("partial result:");
-  console.log(request.body);
+  console.log(request.body.SpeechResult);
+  response.send('');
 })
 
 app.post('/initiatebot', function(request, response) {
