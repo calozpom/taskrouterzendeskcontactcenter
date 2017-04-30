@@ -141,7 +141,8 @@ var options = {
 };
 
 req(options, function(error, response, body){
-  console.log(body['entities']['intent'][0]['value']);
+  console.log(body);
+  console.log(JSON.parse(body)['entities']['intent'][0]['value']);
 });
 
 
