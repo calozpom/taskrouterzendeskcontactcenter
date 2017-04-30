@@ -146,6 +146,7 @@ req(options, function(error, response, body){
       console.log(JSON.parse(body)['entities']['intent'][0]['value']);
 
   }
+  catch (err) {}
 });
 
 
@@ -174,6 +175,7 @@ req(options, function(error, response, body){
       console.log(JSON.parse(body)['entities']['intent'][0]['value']);
 
   }
+  catch (err) {}
 });
   response.send('');
 })
