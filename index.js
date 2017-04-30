@@ -129,11 +129,13 @@ app.post('/finalresult', function(request,response){
   //console.log(request.body);
   //  console.log("=====");
   console.log(request.body['SpeechResult']);
+  var result = querystring.stringify({q: request.body['SpeechResult']});
+
   var headers = {
     'Authorization': 'Bearer UQZMKIWYDG675WZJXOFHWZXGIMDSXHDH'
 };
 var options = {
-    url: 'https://api.wit.ai/message?v=20170430&q=hello%20i%20love%20you',
+    url: 'https://api.wit.ai/message?v=20170430&'+result,
     headers: headers
 };
 
