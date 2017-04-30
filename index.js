@@ -1,6 +1,6 @@
 var req = require('request');
 var express = require('express');
-const Wit = require('node-wit');
+const Wit = require('node-wit').Wit;
 console.log(Wit);
 console.log("]]]]]");
 var bodyParser = require('body-parser');
