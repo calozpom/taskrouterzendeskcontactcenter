@@ -142,7 +142,10 @@ var options = {
 
 req(options, function(error, response, body){
   console.log(body);
-  console.log(JSON.parse(body)['entities']['intent'][0]['value']);
+  try {
+      console.log(JSON.parse(body)['entities']['intent'][0]['value']);
+
+  }
 });
 
 
@@ -167,7 +170,10 @@ var options = {
 
 req(options, function(error, response, body){
   console.log(body);
-  console.log(JSON.parse(body)['entities']['intent'][0]['value']);
+  try {
+      console.log(JSON.parse(body)['entities']['intent'][0]['value']);
+
+  }
 });
   response.send('');
 })
