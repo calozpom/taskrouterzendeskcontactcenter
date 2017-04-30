@@ -1,6 +1,8 @@
 var req = require('request');
 var express = require('express');
 const Wit = require('node-wit');
+console.log(Wit);
+console.log("]]]]]");
 var bodyParser = require('body-parser');
 var twilio = require('twilio');
 var FirebaseTokenGenerator = require('firebase-token-generator');
