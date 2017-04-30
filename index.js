@@ -125,14 +125,16 @@ app.post('/initiateivr', function(request,response){
 
 app.post('/finalresult', function(request,response){
   console.log("final result:");
-  console.log(JSON.parse(request.body).SpeechResult);
+  console.log(request.body);
   response.send('');
 
 })
 
 app.post('/partialresult', function(request,response){
   console.log("partial result:");
-  console.log(JSON.parse(request.body).SpeechResult);
+  console.log(request.body);
+  console.log("=====");
+  console.log(request.body['SpeechResult']);
   response.send('');
 })
 
