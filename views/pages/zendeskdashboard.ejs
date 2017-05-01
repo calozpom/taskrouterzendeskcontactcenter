@@ -120,6 +120,16 @@
         myFirebase.child(reservation.task.sid).on("value", function(dataSnapshot) {
          updateTask(reservation,dataSnapshot);
          $("#taskDiv"+reservation.task.sid).fadeIn();
+         zendeskClient.invoke('instances.create', {
+  location: 'modal',
+  url: 'https://en.m.wikipedia.org/wiki/Main_Page'
+}).then(function(modalContext) {
+  // The modal is on the screen now!
+  var modalClient = zendeskClient.instance(modalContext['instances.create'][0].instanceGuid);
+  modalClient.on('modal.close', function() {
+    // The modal has been closed.
+  });
+});
          //Foundation.Motion.animateIn($("#taskDiv"+reservation.task.sid), 'hinge-in-from-top');
      });
       });
@@ -170,8 +180,8 @@
     window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
     window.taskrouterGlobals = {};
     registerTaskRouterCallbacks();
-    var client = ZAFClient.init();
-    client.invoke('resize', { width: '100%', height: '600px' });
+    window.zendeskClient = ZAFClient.init();
+    zendeskClient.invoke('resize', { width: '100%', height: '600px' });
 
 
 });
