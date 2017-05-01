@@ -170,6 +170,8 @@
     window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
     window.taskrouterGlobals = {};
     registerTaskRouterCallbacks();
+    var client = ZAFClient.init();
+    client.invoke('resize', { width: '100%', height: '600px' });
 
 
 });
