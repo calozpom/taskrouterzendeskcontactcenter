@@ -125,7 +125,7 @@
   url: 'https://taskrouterbot.herokuapp.com/reservationmodal?reservationSid='+reservation.sid+'&taskSid='+reservation.task.sid
 }).then(function(modalContext) {
   // The modal is on the screen now!
-  var modalClient = zendeskClient.instance(modalContext['instances.create'][0].instanceGuid);
+  window.modalClient = zendeskClient.instance(modalContext['instances.create'][0].instanceGuid);
   modalClient.on('modal.close', function() {
     // The modal has been closed.
   });
@@ -135,6 +135,7 @@
       });
      
       worker.on("reservation.accepted", function(reservation) {
+        modalClient.invoke('destroy');
         console.log("Reservation " + reservation.task.sid + " accepted!");
         var replacementText = "Task: " + taskrouterGlobals[reservation.task.sid].full_name;
         if (taskrouterGlobals[reservation.task.sid]['address_street']) {
