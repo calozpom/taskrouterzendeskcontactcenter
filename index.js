@@ -189,8 +189,6 @@ req(options, function(error, response, body){
 });
 
 
-  response.send('');
-
 })
 
 app.post('/partialresult', function(request,response){
