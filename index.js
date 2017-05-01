@@ -95,6 +95,11 @@ app.get('/zendeskdashboard', function(request, response) {
   response.render('pages/zendeskdashboard');
 });
 
+app.get('/agentcontrols', function(request, response) {
+  // dashboard is the main page for the demo
+  response.render('pages/agentcontrols');
+});
+
 app.get('/reservationmodal', function(request, response) {
   // dashboard is the main page for the demo
   console.log("calling modal dialog.");
