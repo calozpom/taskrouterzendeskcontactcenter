@@ -93,6 +93,7 @@ onClick='acceptTask("<%= taskSid %>","<%= reservationSid %>"); return false;'><s
           success: function(output) {
                       console.log("received this data of task in question");
                       console.log(output);
+                      return(output);
 
                   }
 });
@@ -106,7 +107,11 @@ window.onload = function() {
 
   }
 });
-    getTaskDetails("<%= taskSid %>");
+    getTaskDetails("<%= taskSid %>", function(task){
+      console.log(task.task_channel_unique_name);
+      modalText.type=task.task_channel_unique_name;
+
+    });
     window.zendeskClient = ZAFClient.init();
     zendeskClient.invoke('resize', { width: '100%', height: '600px' });
   }
