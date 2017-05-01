@@ -460,6 +460,17 @@ app.get('/acceptTask', function(request, response) {
   response.send('');
 });
 
+app.get('/getTaskDetails', function(request, response) {
+  console.log("received request to get task details");
+  console.log(request.query.tasksid);
+
+  client.workspace.tasks(request.query.tasksid).get(function(err, task) {
+    console.log(task.attributes);
+    response.send(task);
+});
+  
+});
+
 
 
 app.post('/botresponse', function(request, response) {

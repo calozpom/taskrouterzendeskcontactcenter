@@ -36,7 +36,7 @@
              <div class='small-12 columns'> 
                <div class='custom-panel-heading'>
                <h5 class='white'>
-               <div id='modalText'>New Task from {{message}}: <%= reservationSid %>
+               <div id='modalText'>New Task from {{from}} of type {{type}}<br />
                <span class='label radius alert right'>Reject</span>&nbsp;<a href='#' 
 onClick='acceptTask("<%= taskSid %>","<%= reservationSid %>"); return false;'><span class='label radius success right'>Accept</span></a>
                <Script><% console.log("===========");console.log(reservationSid);%></Script>
@@ -68,7 +68,6 @@ onClick='acceptTask("<%= taskSid %>","<%= reservationSid %>"); return false;'><s
     <script src="js/menucustom.js" type="text/javascript"></script>
     <script src="https://unpkg.com/vue"></script>
     <script>        $(document).foundation(); </script>
-    <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
 
     <script src="js/morris-demo.js"></script>
         <script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.6/taskrouter.min.js"></script>
@@ -85,28 +84,32 @@ onClick='acceptTask("<%= taskSid %>","<%= reservationSid %>"); return false;'><s
                   }
 });
     }
-window.onload = function() {
-        // We use jQuery to make an Ajax request to the server to retrieve our 
-        // Access Token
-        $.getJSON('/token', function(data) {
 
-    console.log(data.token);
-    window.worker = new Twilio.TaskRouter.Worker(data.token);
+    function getTaskDetails(tasksid) {
+        $.ajax({ 
+          url: 'getTaskDetails',
+          data: {'tasksid': tasksid},
+          type: 'get',
+          success: function(output) {
+                      console.log("received this data of task in question");
+                      console.log(output);
+
+                  }
+});
+    }
+window.onload = function() {    
     var modalText = new Vue({
   el: '#modalText',
   data: {
-    message: 'Hello Vue!'
+    message: '',
+    type: ''
+
   }
-})
-    window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
-    window.taskrouterGlobals = {};
-    registerTaskRouterCallbacks();
+});
+    getTaskDetails("<%= taskSid %>");
     window.zendeskClient = ZAFClient.init();
     zendeskClient.invoke('resize', { width: '100%', height: '600px' });
-
-
-});
-      }
+      
     </script>
 </body>
 </html>
