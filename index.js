@@ -706,7 +706,7 @@ else console.log(data); // successful response
 
 // Generate a unique name for this audio file, the file name is: PollyVoiceTimeStamp.mp3
 var filename = req.params.voiceId + (new Date).getTime() + ".mp3";
-fs.writeFile('./audioFiles/'+filename, data.AudioStream, function (err) {
+fs.writeFile('/audioFiles/'+filename, data.AudioStream, function (err) {
 if (err) {
 console.log('An error occurred while writing the file.');
 console.log(err);
@@ -715,7 +715,7 @@ console.log('Finished writing the file to the filesystem ' + '/audioFiles/'+file
 
 // Send the audio file
 res.setHeader('content-type', 'audio/mpeg');
-res.download('audioFiles/'+filename);
+res.download('/audioFiles/'+filename);
 });
 };
 
