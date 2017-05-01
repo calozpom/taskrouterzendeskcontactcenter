@@ -256,6 +256,7 @@ app.post('/initiatebot', function(request, response) {
         console.log(attributesJson);
         var attributesString = JSON.stringify(attributesJson);
 
+
         var options = {
           method: 'POST',
           url: 'https://taskrouter.twilio.com/v1/Workspaces/' + workspaceSid + '/Tasks',
@@ -265,7 +266,8 @@ app.post('/initiatebot', function(request, response) {
           },
           form: {
             WorkflowSid: 'WW4d526c9041d73060ca46d4011cf34b33',
-            Attributes: attributesString
+            Attributes: attributesString,
+            TaskChannel: 'chat'
           }
         };
 

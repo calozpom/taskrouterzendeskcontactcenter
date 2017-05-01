@@ -108,12 +108,8 @@ window.onload = function() {
   }
 });
     getTaskDetails("<%= taskSid %>", function(task){
-      console.log(task.task_channel_unique_name);
       modalText.type=task.task_channel_unique_name;
-      console.log(task.attributes);
-      console.log(task.attributes['message_from']);
-      console.log(JSON.parse(task.attributes)['message_from']);
-      modalText.from=task.attributes['message_from'];
+      modalText.from=JSON.parse(task.attributes)['message_from'];
 
     });
     window.zendeskClient = ZAFClient.init();
