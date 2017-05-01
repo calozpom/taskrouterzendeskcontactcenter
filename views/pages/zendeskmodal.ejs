@@ -85,7 +85,7 @@ onClick='acceptTask("<%= taskSid %>","<%= reservationSid %>"); return false;'><s
 });
     }
 
-    function getTaskDetails(tasksid) {
+    function getTaskDetails(tasksid, fn) {
         $.ajax({ 
           url: 'getTaskDetails',
           data: {'tasksid': tasksid},
@@ -93,7 +93,7 @@ onClick='acceptTask("<%= taskSid %>","<%= reservationSid %>"); return false;'><s
           success: function(output) {
                       console.log("received this data of task in question");
                       console.log(output);
-                      return(output);
+                      fn(output);
 
                   }
 });
