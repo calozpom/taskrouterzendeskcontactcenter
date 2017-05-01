@@ -5,6 +5,17 @@ var twilio = require('twilio');
 var FirebaseTokenGenerator = require('firebase-token-generator');
 var querystring = require("querystring");
 var Firebase = require('firebase');
+var AWS = require('aws-sdk');
+AWS.config = {
+region: 'us-east-1',
+maxRetries: '3',
+accessKeyId: process.env.awsAccessKeyId,
+secretAccessKey: process.env.awsSecretAccessKey,
+timeout: '15000'
+};
+var polly = new AWS.Polly();
+
+
 
 
 var accountSid = process.env.accountSid;
@@ -163,10 +174,18 @@ var options = {
 req(options, function(error, response, body){
   console.log(body);
   try {
+      //Works if Wit extracted an intent. 
       console.log(JSON.parse(body)['entities']['intent'][0]['value']);
+      var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://taskrouterbot.herokuapp.com/play/Joanna/Wow.%20I%20have%20integrated%20Amazon%20Polly%20into%20my%20Twilio%20application.%20Now%20I%20can%20generate%20natural%20voices%20with%20custom%20text%20exactly%20when%20needed.%20This%20is%20amazing.</Play></Response>";
+
+
 
   }
-  catch (err) {}
+  catch (err) {
+      // Failed to extract an intent. Ask the fool again. 
+      var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio\"><Say>Please say ahoy to Twilio</Say></Gather></Response>";
+      response.send(responseString);
+  }
 });
 
 
@@ -680,6 +699,35 @@ app.get('/sendsms', function(request, response) {
 
 });
 
+app.get('/play/:voiceId/:textToConvert', function (req, res) {
+var pollyCallback = function (err, data) {
+if (err) console.log(err, err.stack); // an error occurred
+else console.log(data); // successful response
+
+// Generate a unique name for this audio file, the file name is: PollyVoiceTimeStamp.mp3
+var filename = req.params.voiceId + (new Date).getTime() + ".mp3";
+fs.writeFile('./audioFiles/'+filename, data.AudioStream, function (err) {
+if (err) {
+console.log('An error occurred while writing the file.');
+console.log(err);
+}
+console.log('Finished writing the file to the filesystem ' + '/audioFiles/'+filename)
+
+// Send the audio file
+res.setHeader('content-type', 'audio/mpeg');
+res.download('audioFiles/'+filename);
+});
+};
+
+var pollyParameters = {
+OutputFormat: 'mp3',
+Text: unescape(req.params.textToConvert),
+VoiceId: req.params.voiceId
+};
+
+// Make a request to AWS Polly with the text and voice needed, when the request is completed push callback to pollyCallback
+polly.synthesizeSpeech(pollyParameters, pollyCallback);
+});
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
