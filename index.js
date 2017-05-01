@@ -95,6 +95,16 @@ app.get('/zendeskdashboard', function(request, response) {
   response.render('pages/zendeskdashboard');
 });
 
+app.get('/reservationmodal', function(request, response) {
+  // dashboard is the main page for the demo
+  console.log("calling modal dialog.");
+  console.log(request.query.reservationSid);
+  console.log(request.query.taskSid);
+  response.render('pages/zendeskmodal', {
+    taskSid: request.query.taskSid,
+    reservationSid: request.query.reservationSid});
+});
+
 app.get('/token', function(request, response) {
   var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
   capability.allowActivityUpdates();

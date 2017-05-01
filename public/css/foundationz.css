@@ -402,8 +402,8 @@ select {
   .column,
   .columns {
     position: relative;
-    padding-left: 0.9375rem;
-    padding-right: 0.9375rem;
+    padding-left: 0.05rem;
+    padding-right: 0.05rem;
     float: left;
   }
 
@@ -6269,7 +6269,7 @@ h4 {
 
 /* line 273, foundation-master/scss/foundation/components/_type.scss */
 h5 {
-  font-size: 1.125rem;
+  font-size: 0.9rem;
 }
 
 /* line 274, foundation-master/scss/foundation/components/_type.scss */

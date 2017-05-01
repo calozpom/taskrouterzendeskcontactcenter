@@ -122,7 +122,7 @@
          $("#taskDiv"+reservation.task.sid).fadeIn();
          zendeskClient.invoke('instances.create', {
   location: 'modal',
-  url: 'https://en.m.wikipedia.org/wiki/Main_Page'
+  url: 'https://taskrouterbot.herokuapp.com/reservationmodal?reservationSid='+reservation.sid+'&taskSid='+reservation.task.sid
 }).then(function(modalContext) {
   // The modal is on the screen now!
   var modalClient = zendeskClient.instance(modalContext['instances.create'][0].instanceGuid);
@@ -294,7 +294,7 @@
           // The callback function will get called twice, once for "fred" and once for "barney"
           snapshot.forEach(function(childSnapshot) {
             var childData = childSnapshot.val();
-            htmlToAdd +="<div class='row'><div class='message-dashboard'><div class='small-1 columns'>";
+            htmlToAdd +="<div class='row'><div class='message-dashboard'><div class='small-2 columns'>";
             
             if (childData['from'] == "me") {
                 htmlToAdd += "<div class='profilePicMe"+reservation.task.sid+"'><img src='";
