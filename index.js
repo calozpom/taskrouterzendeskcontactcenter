@@ -177,7 +177,7 @@ req(options, function(error, response, body){
       //Works if Wit extracted an intent. 
       console.log(JSON.parse(body)['entities']['intent'][0]['value']);
       var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://taskrouterbot.herokuapp.com/play/Joanna/Wow.%20I%20have%20integrated%20Amazon%20Polly%20into%20my%20Twilio%20application.%20Now%20I%20can%20generate%20natural%20voices%20with%20custom%20text%20exactly%20when%20needed.%20This%20is%20amazing.</Play></Response>";
-
+      response.send(responseString);
 
 
   }
