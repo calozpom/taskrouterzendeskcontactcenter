@@ -37,7 +37,8 @@
                <div class='custom-panel-heading'>
                <h5 class='white'>
                <div>Task: <%= reservationSid %>
-               <span class='label radius alert right'>Reject</span>&nbsp;<a href='#' ><span class='label radius success right'>Accept</span></a>
+               <span class='label radius alert right'>Reject</span>&nbsp;<a href='#' 
+onClick='acceptTask("<%= reservationSid %>", "<%= taskSid %>"); return false;><span class='label radius success right'>Accept</span></a>
                <Script><% console.log("===========");console.log(reservationSid);%></Script>
                </div>
                </h5>
