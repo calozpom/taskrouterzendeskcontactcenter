@@ -39,7 +39,7 @@
                <div id='modalText'>New Task from {{from}} of type {{type}}<br />
                <span class='label radius alert right'>Reject</span>&nbsp;<a href='#' 
 onClick='acceptTask("<%= taskSid %>","<%= reservationSid %>"); return false;'><span class='label radius success right'>Accept</span></a>
-               <Script><% console.log("===========");console.log(reservationSid);%></Script>
+               
                </div>
                </h5>
         </div>
@@ -102,7 +102,7 @@ window.onload = function() {
     var modalText = new Vue({
   el: '#modalText',
   data: {
-    message: '',
+    from: '',
     type: ''
 
   }
@@ -110,6 +110,7 @@ window.onload = function() {
     getTaskDetails("<%= taskSid %>", function(task){
       console.log(task.task_channel_unique_name);
       modalText.type=task.task_channel_unique_name;
+      modalText.from=task.attributes['message_from'];
 
     });
     window.zendeskClient = ZAFClient.init();
