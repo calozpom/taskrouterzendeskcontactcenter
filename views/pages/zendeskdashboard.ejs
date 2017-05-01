@@ -336,7 +336,7 @@
         taskrouterGlobals[reservation.task.sid].first_name = reservation.task.attributes.message_from;
         taskrouterGlobals[reservation.task.sid].full_name = reservation.task.attributes.message_from;
         taskrouterGlobals[reservation.task.sid].profile_pic = "img/unknownavatar.jpeg";
-        var htmlToAdd="<div class='small-6 columns' id='taskDiv"+reservation.task.sid+"'>";
+        var htmlToAdd="<div class='small-12 columns' id='taskDiv"+reservation.task.sid+"'>";
         var id = reservation.task.attributes.message_from;
         id = id.replace('Messenger:','');
         myFirebase.child('profiles').child(reservation.task.sid).once("value", function(snapshot) {
