@@ -6,6 +6,8 @@ var FirebaseTokenGenerator = require('firebase-token-generator');
 var querystring = require("querystring");
 var Firebase = require('firebase');
 var AWS = require('aws-sdk');
+var fs = require('fs')
+
 AWS.config = {
 region: 'us-east-1',
 maxRetries: '3',
