@@ -90,6 +90,11 @@ app.get('/dashboard', function(request, response) {
   response.render('pages/dashboard');
 });
 
+app.get('/zendeskdashboard', function(request, response) {
+  // dashboard is the main page for the demo
+  response.render('pages/zendeskdashboard');
+});
+
 app.get('/token', function(request, response) {
   var capability = new twilio.TaskRouterWorkerCapability(accountSid, authToken, workspaceSid, workerSid);
   capability.allowActivityUpdates();

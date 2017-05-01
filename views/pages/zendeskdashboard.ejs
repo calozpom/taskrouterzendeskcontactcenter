@@ -1,0 +1,595 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskRouter OmniChannel Contact Center</title>
+    <!--<link href='https://fonts.googleapis.com/css?family=Raleway:400,300,500' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/foundation.min.css">    
+    <link href="fonts/foundation-icons/foundation-icons.css" rel="stylesheet" type="text/css" />
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/motion-ui/1.1.1/motion-ui.min.css" />
+
+    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="fonts/foundation-icons">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" />
+    <link href="css/style.css" rel="stylesheet" />
+    <script src="js/modernizr.custom.js"></script>
+    <link href="css/morris.css" rel="stylesheet" />-->
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,500' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="css/foundation.css" />
+    <link href="fonts/foundation-icons/foundation-icons.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="fonts/foundation-icons">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" />
+    <link href="css/style.css" rel="stylesheet" />
+    <script src="js/modernizr.custom.js"></script>
+    <link href="css/morris.css" rel="stylesheet" />
+</head>
+<body class="fadeIn animated">
+    <div class="container">
+        <div class="fixed">
+            <ul class="gn-menu-main">
+                <li><a href="#" id="sub-menu"><i class="fi-thumbnails"></i></a></li>
+                <li><a href="index.html"><span id="logo">T</span><span>askRouter</span></a></li>
+                <li><a href="inbox.html"><span id="msg">4</span> <span>Task History</span></a></li>
+                <li><a href="inbox.html"><span id="notification">7</span> <span>Notification</span></a></li>
+                <li><a href="profile.html">
+                    <img src="img/al.jpg" alt="img" />
+                    <span>Al Cook</span></a></li>
+            </ul>
+            <div id="admin-menu" class="sub-menu close">
+                <div class="row">
+                    <div class="small-12 columns">
+                        <input id="target" type="text" placeholder="Search" />
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="index.html"><i class="fi-monitor"></i>
+                            <br />
+                            dashboard</a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="components.html"><i class="fi-graph-pie"></i>
+                            <br />
+                            components</a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="compose.html"><i class="fi-pencil"></i>
+                            <br />
+                            compose</a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="inbox.html"><i class="fi-mail"></i>
+                            <br />
+                            inbox</a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="invoice.html"><i class="fi-page-csv"></i>
+                            <br />
+                            invoice</a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="gallery.html"><i class="fi-photo"></i>
+                            <br />
+                            gallery </a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="pricing.html"><i class="fi-dollar"></i>
+                            <br />
+                            pricing</a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="product-detail.html"><i class="fi-pricetag-multiple"></i>
+                            <br />
+                            product detail</a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="product.html"><i class="fi-price-tag"></i>
+                            <br />
+                            product</a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="customer-product-details.html"><i class="fi-pricetag-multiple"></i>
+                            <br />
+                            Cx Prod Details</a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="profile-detail.html"><i class="fi-torsos-all"></i>
+                            <br />
+                            profile detail</a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="profile.html"><i class="fi-torso"></i>
+                            <br />
+                            profile</a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="projects.html"><i class="fi-graph-trend"></i>
+                            <br />
+                            Project</a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="email.html"><i class="fi-comments"></i>
+                            <br />
+                            email template </a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="login.html"><i class="fi-lock"></i>
+                            <br />
+                            login</a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="signup.html"><i class="fi-address-book"></i>
+                            <br />
+                            signup</a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="search-page.html"><i class="fi-magnifying-glass"></i>
+                            <br />
+                            search page</a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="blank.html"><i class="fi-page"></i>
+                            <br />
+                            blank </a>
+                    </div>
+                    <div class="small-12 medium-4 large-2 columns">
+                        <a href="menu2.html"><i class="fi-book"></i>
+                            <br />
+                            menu 2 </a>
+                    </div>
+                </div>
+            </div>
+            <div class="secondary-menu">
+                <div class="row">
+                    <nav class="top-bar" data-topbar role="navigation">
+  <ul class="title-area">
+    <li class="name">
+     
+    </li>
+     <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+  </ul>
+  
+                <section class="top-bar-section">
+     <ul class="left">
+      <li class="has-dropdown" id="status">
+        <a href="#">Loading...</a>
+      <ul class="dropdown">
+          <li><a href="#">Go offline</a></li>
+          <li class="active"><a href="#">Go Busy</a></li>
+        </ul>
+        </li>
+      <li class="has-dropdown">
+        <a href="#">Skills Signed In</a>
+        <ul class="dropdown">
+          <li><a href="#">SMS<span class="label radius success right">Y</span></a></li>
+          <li><a href="#">Facebook<span class="label radius success right">Y</span></a></li>
+          <li class="active"><a href="#">Voice<span class="label radius alert right">N</span></a></li>
+        </ul>
+      </li> 
+      <li class="has-dropdown">
+        <a href="#">Multitask Capacity</a>
+        <ul class="dropdown">
+          <li><a href="#" id='updateCapacityOne'>Messaging: 1</a></li>
+          <li><a href="#" id='updateCapacityTwo'>Messaging: 2</a></li>
+        </ul>
+      </li> 
+   
+    </ul>
+  </section>
+                </nav>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+        <div id="intro-dashboard">
+            <div class="row">
+                <div class="small-3 columns">
+                    <div class="stats">
+                        <div class="stats-title">
+                            <span>Tasks Today</span> <span class="label radius alert right">OK</span>
+                        </div>
+                        <div class="stats-body">
+                            <span> 100</span> <i class="fi-arrow-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="small-3 columns">
+                    <div class="stats">
+                        <div class="stats-title">
+                            <span>Average Handle </span> <span class="label radius success right">OK</span>
+                        </div>
+                        <div class="stats-body">
+                            <span> 2 mins </span><i class="fi-arrow-up"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="small-3 columns">
+                    <div class="stats">
+                        <div class="stats-title">
+                            <span>Feedback </span> <span class="label radius default right">OK</span>
+                        </div>
+                        <div class="stats-body">
+                             <span>4.3</span> <i class="fi-arrow-up"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="small-3 columns">
+                    <div class="stats">
+                        <div class="stats-title">
+                            <span>SLA</span> <span class="label radius warning right">OK</span>
+                        </div>
+                        <div class="stats-body">
+                            <span> OK</span> <i class="fi-arrow-down"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="dashboard-body">
+            <div class="row" id="addToThis">
+
+                
+        </div>
+
+
+
+
+
+
+    </div>
+    </div>
+    <script src="js/vendor/jquery.js"></script>
+    <script src="js/foundation.min.js"></script>
+    <!--<script src="js/foundation/foundation.core.js"></script>-->
+<script src="js/foundation/foundation.util.motion.js"></script>
+<script src="js/foundation/foundation.util.mediaQuery.js"></script>
+    <script src="js/plugins/morris/raphael-2.1.0.min.js" type="text/javascript"></script>
+    <script src="js/plugins/morris/morris.js" type="text/javascript"></script>
+    <script src="js/menucustom.js" type="text/javascript"></script>
+    <script>        $(document).foundation(); </script>
+    <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+
+    <script src="js/morris-demo.js"></script>
+        <script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.6/taskrouter.min.js"></script>
+    <script>
+    function registerTaskRouterCallbacks() {
+      worker.on('ready', function(worker) {
+          console.log("Successfully registered as: " + worker.friendlyName);
+          console.log("Current activity is: " + worker.activityName);
+          console.log(worker.sid);             // 'WKxxx'
+          console.log(worker.available);       // false
+
+          updateStatusMenu(worker.activityName);
+
+      });
+
+              
+     
+      worker.on('activity.update', function(worker) {
+          console.log("Worker activity changed to: " + worker.activityName);
+          updateStatusMenu(worker.activityName);
+      });
+     
+      worker.on("reservation.created", function(reservation) {
+        console.log("new reservation");
+        newTask(reservation);     
+        myFirebase.child(reservation.task.sid).on("value", function(dataSnapshot) {
+         updateTask(reservation,dataSnapshot);
+         $("#taskDiv"+reservation.task.sid).fadeIn();
+         //Foundation.Motion.animateIn($("#taskDiv"+reservation.task.sid), 'hinge-in-from-top');
+     });
+      });
+     
+      worker.on("reservation.accepted", function(reservation) {
+        console.log("Reservation " + reservation.task.sid + " accepted!");
+        var replacementText = "Task: " + taskrouterGlobals[reservation.task.sid].full_name;
+        if (taskrouterGlobals[reservation.task.sid]['address_street']) {
+            replacementText += "<br /> " + taskrouterGlobals[reservation.task.sid]['address_street'] + ", " + taskrouterGlobals[reservation.task.sid]['address_city'];
+        }
+        replacementText += "<a href='#' id='completeTask"+reservation.task.sid+"' onClick='completeTask(\"" + reservation.task.sid+"\"); return false;'><span class='label radius success right'>Complete</span></a>";
+        $("#task"+reservation.task.sid+"title").html(replacementText);
+        /*var completeButton=document.getElementById('completeTask'+reservation.task.sid);
+        completeButton.onclick = function(){
+            console.log("trying to complete task");
+            completeTask(reservation);
+        };*/
+        myFirebase.child(reservation.task.sid).off();
+        myFirebase.child(reservation.task.sid).on("value", function(dataSnapshot) {
+         updateTask(reservation);
+        });
+
+      });
+     
+      worker.on("reservation.rejected", function(reservation) {
+        console.log("Reservation " + reservation.task.sid + " rejected!");
+      });
+     
+      worker.on("reservation.timeout", function(reservation) {
+        console.log("Reservation " + reservation.task.sid + " timed out!");
+        var element = document.getElementById("taskDiv"+reservation.task.sid);
+        element.parentNode.removeChild(element);
+      });
+     
+      worker.on("reservation.canceled", function(reservation) {
+        console.log("Reservation " + reservation.task.sid + " canceled!");
+      });
+      
+    }
+   
+    window.onload = function() {
+        // We use jQuery to make an Ajax request to the server to retrieve our 
+        // Access Token
+        $.getJSON('/token', function(data) {
+
+    console.log(data.token);
+    window.worker = new Twilio.TaskRouter.Worker(data.token);
+    window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
+    window.taskrouterGlobals = {};
+    registerTaskRouterCallbacks();
+
+
+});
+      
+      
+      
+      
+
+    }
+
+    function changeState(state) {
+        console.log("trying to change state to state " + state);
+        var activitySid="WAbc57093ed33d341e926d9db5e73525ad";
+        switch (state) {
+            case "Idle":
+              activitySid="WAbc57093ed33d341e926d9db5e73525ad";
+              break;
+            case "Offline":
+              activitySid="WA7d69025af6c5acae76faad56da32698e";
+              break;
+            case "Busy":
+              activitySid="WA6492c399f88532c2935ca7fcbfe56e9b";
+              break;                
+        }
+        console.log(activitySid);
+         worker.update("ActivitySid", activitySid, function(error, worker) {
+                  if(error) {
+                    console.log(error.code);
+                    console.log(error.message);
+                  } else {
+                    console.log(worker.activityName); // "Offline"
+                  }
+                });
+    }
+
+     function updateStatusMenu(activityName) {
+      //console.log(worker);
+      //console.log(window.worker);
+      console.log("about to update status based on activityName " + activityName);
+      switch(activityName) {
+                case "Offline":
+                    $("#status").html("<a href='#'>" + activityName + "</a><ul class='dropdown'><li><a href='#' onClick='changeState(\"Online\")'>Go online</a></li><li class='active'><a href='#' id='gobusy' onClick='changeState(\"Busy\")'>Go Busy</a></li></ul>");
+                    break;
+                case "Reserved":
+                    $("#status").html("<a href='#'>" + activityName + "</a><ul class='dropdown'><li><a href='#' >Accept</a></li></ul>");
+                    break;
+                 case "Idle":
+                    $("#status").html("<a href='#'>" + activityName + "</a><ul class='dropdown'><li><a href='#' onClick='changeState(\"Offline\")'>Go offline</a></li><li class='active'><a href='#' id='gobusy' onClick='changeState(\"Busy\")'>Go Busy</a></li></ul>");
+                    break;
+                default:
+                    console.log("worker.activityName did not match any switch statement")
+                    $("#status").html("<a href='#'>" + activityName + "</a><ul class='dropdown'><li><a href='#' onClick='changeState(\"Online\")'>Go online</a></li><li class='active'><a href='#' id='gobusy' onClick='changeState(\"Busy\")'>Go Busy</a></li></ul>");
+
+            }
+        $("#updateCapacityOne").bind("click", function() {
+            console.log(worker);
+          updateCapacity(1,worker.workerSid);
+          console.log("trying to bind click event for worker " + worker.workerSid)
+        });
+        $("#updateCapacityTwo").bind("click", function() {
+          updateCapacity(2,worker.workerSid);
+        });
+        }
+
+
+    function acceptTask(tasksid, reservationsid) {
+        $.ajax({ 
+          url: 'acceptTask',
+          data: {'tasksid': tasksid, 'reservationsid':reservationsid},
+          type: 'get',
+          success: function(output) {
+                      console.log("received OK to accept task");
+
+                  }
+});
+    }
+    function completeTask(sid) {
+        console.log("completing task");
+        $.ajax({ 
+          url: 'completeTask',
+          data: {'sid': sid},
+          type: 'get',
+          success: function(output) {
+                      console.log("task completed OK");
+
+                  }
+        });
+        //used to do firebase update here but moved server side for security
+        //myFirebase.child(sid).remove();
+        var element = $("#taskDiv"+sid);
+        element.fadeOut(function(){
+            element.remove();
+        })
+        
+        /*Foundation.Motion.animateOut(element, 'hinge-out-from-bottom',function() {
+                    
+}
+            );*/
+        
+    }
+    function getHTMLforTask(reservation,dataSnapshot) {
+        var htmlToAdd ="";
+        console.log("getting html for task");
+        
+
+
+        var reservationData = myFirebase.child(reservation.task.sid);
+        
+        reservationData.once("value", function(snapshot) {
+          // The callback function will get called twice, once for "fred" and once for "barney"
+          snapshot.forEach(function(childSnapshot) {
+            var childData = childSnapshot.val();
+            htmlToAdd +="<div class='row'><div class='message-dashboard'><div class='small-2 columns'>";
+            
+            if (childData['from'] == "me") {
+                htmlToAdd += "<div class='profilePicMe"+reservation.task.sid+"'><img src='";
+                htmlToAdd+="img/al.jpg";
+                htmlToAdd +="' alt='profile' /></div></div> <div class='small-10 columns'><div class='message-desc'>";
+                htmlToAdd += "<b><div class='messageNameMe"+reservation.task.sid+"'>"
+                htmlToAdd+=childData['from'];
+
+
+            }
+            else if (childData['from'] == "MeyaBot") {
+                htmlToAdd += "<div class='profilePicMeya"+reservation.task.sid+"'><img src='";
+                htmlToAdd+="img/meya.png";
+                htmlToAdd +="' alt='profile' /></div></div> <div class='small-10 columns'><div class='message-desc'>";
+                htmlToAdd += "<b><div class='messageNameMeya"+reservation.task.sid+"'>"
+                htmlToAdd+=childData['from'];
+
+
+
+            }
+            else {
+                htmlToAdd += "<div class='profilePicSender"+reservation.task.sid+"'><img src='";
+                htmlToAdd+=taskrouterGlobals[reservation.task.sid].profile_pic
+                htmlToAdd +="' alt='profile' /></div></div> <div class='small-10 columns'><div class='message-desc'>";
+                htmlToAdd += "<b><div class='messageNameSender"+reservation.task.sid+"'>"
+                htmlToAdd += taskrouterGlobals[reservation.task.sid].first_name;
+
+
+
+                
+
+            }
+            htmlToAdd+="</div></b>  "+ childData['message'] +"<span class='right green'>now</span>";
+            htmlToAdd += "</div></div></div></div>";
+            //console.log(htmlToAdd);
+          });
+        });
+        console.log("testing if there should be a text box for task with status " + reservation.task.assignmentStatus);
+        if(reservation.task.assignmentStatus == "assigned") {
+            console.log("add text box now");
+            htmlToAdd+="<form><input type='text' id='messageText"+reservation.task.sid+"' placeholder='Reply...'><a href='#' class='button success radius' id='messageSend"+reservation.task.sid+"'><i class='fi fi-check'></i>Send</a></form>";
+        }
+     
+        return htmlToAdd;
+    }
+    function newTask(reservation) {
+        console.log("new task");
+        taskrouterGlobals[reservation.task.sid]={};
+        taskrouterGlobals[reservation.task.sid].first_name = reservation.task.attributes.message_from;
+        taskrouterGlobals[reservation.task.sid].full_name = reservation.task.attributes.message_from;
+        taskrouterGlobals[reservation.task.sid].profile_pic = "img/unknownavatar.jpeg";
+        var htmlToAdd="<div class='small-6 columns' id='taskDiv"+reservation.task.sid+"'>";
+        var id = reservation.task.attributes.message_from;
+        id = id.replace('Messenger:','');
+        myFirebase.child('profiles').child(reservation.task.sid).once("value", function(snapshot) {
+          // The callback function will get called twice, once for "fred" and once for "barney"
+          updateTaskTitle(reservation.task.sid, snapshot);
+        });
+        htmlToAdd += "<div class='custom-panel-heading'>";
+        htmlToAdd += "<h5 class='white' id='task" + reservation.task.sid + "title'>" +"<div id='titleText" + reservation.task.sid+"'>Task:" + reservation.task.attributes.message_from + "</div><span class='label radius alert right'>Reject</span>&nbsp;<a href='#' id='acceptTask"+reservation.task.sid+"' onClick='acceptTask(\"" + reservation.task.sid+"\", \"" + reservation.sid +"\"); return false;'><span class='label radius success right'>Accept</span></a></h5></div>";
+        htmlToAdd += "<div class='custom-panel-details' id='messageDiv"+reservation.task.sid+"'>";
+        htmlToAdd += "</div>";
+        htmlToAdd += "</div>";
+
+        var divToAddTo=document.getElementById('addToThis');
+        divToAddTo.innerHTML = divToAddTo.innerHTML + htmlToAdd;
+        $("#taskDiv"+reservation.task.sid).hide();   
+          
+    }
+    function updateTaskTitle(sid, snapshot) {
+        childData = snapshot.val();
+        titleDiv = document.getElementById('titleText'+sid);
+        var titleText = "Task: " + childData['first_name'] + " " + childData['last_name'];
+        if (childData['address_street']) {
+            taskrouterGlobals[sid].address_street = childData['address_street'];
+            taskrouterGlobals[sid].address_city = childData['address_city'];
+            titleText += "<br /> " + childData['address_street'] + ", " + childData['address_city'];
+         }
+        titleDiv.innerHTML = titleText;
+        $('.messageNameSender'+sid).each(function(i, obj) {
+            obj.innerHTML=childData['first_name'];
+        });
+        $('.profilePicSender'+sid).each(function(i, obj) {
+            obj.innerHTML="<img src='"+childData['profile_pic']+"' alt='profile' />";
+        });
+        taskrouterGlobals[sid].first_name = childData['first_name'];
+        taskrouterGlobals[sid].profile_pic = childData['profile_pic'];
+        taskrouterGlobals[sid].full_name = childData['first_name'] + " " + childData['last_name'];
+        
+
+    //test
+
+       
+
+    }
+
+
+    function updateTask(reservation,dataSnapshot) {
+        console.log("trying to update task");
+        var htmlToAdd = getHTMLforTask(reservation,dataSnapshot);
+        console.log("wanting to replace with this");
+        console.log(htmlToAdd);
+        var divToReplace=document.getElementById('messageDiv'+reservation.task.sid);
+        divToReplace.innerHTML = htmlToAdd; 
+         if(reservation.task.assignmentStatus == "assigned") {
+            console.log("attach on click event to button");
+            var sendButton=document.getElementById('messageSend'+reservation.task.sid);
+            sendButton.onclick = function(){
+                var messageText=document.getElementById('messageText'+reservation.task.sid).value;
+                console.log(messageText);
+                //used to do firebase push here but moved it server side for security
+                //myFirebase.child(reservation.task.sid).push({'from':'me', 'message':messageText}    );
+                sendSMS(reservation.task.attributes.message_to,reservation.task.attributes.message_from,reservation.task.sid,messageText);
+            };  
+            htmlToAdd+="<form><input type='text' placeholder='Reply...'><a href='#' class='button success radius'><i class='fi fi-check'></i>Send</a></form>";
+        }    
+    }
+   function sendSMS(from, to, sid, body) {
+        $.ajax({ 
+          url: 'sendSMS',
+          data: {'from': from, 'to':to, 'sid':sid, 'body':body},
+          type: 'get',
+          success: function(output) {
+                      console.log("SMS sent OK");
+
+                }
+    });
+
+     
+    }
+
+ 
+
+    function updateCapacity(number, workerSid) {
+       $.ajax({ 
+          url: 'updateCapacity',
+          data: {'capacity': number, 'workerSid':workerSid},
+          type: 'get',
+          success: function(output) {
+                      console.log("received OK from request to update capacity");
+
+                  }
+    });
+    }
+
+
+
+   
+
+    </script>
+</body>
+</html>
