@@ -111,7 +111,8 @@ window.onload = function() {
       console.log(task.task_channel_unique_name);
       modalText.type=task.task_channel_unique_name;
       console.log(task.attributes);
-      console.log(tasl.attributes['message_from']);
+      console.log(task.attributes['message_from']);
+      console.log(JSON.parse(task.attributes)['message_from']);
       modalText.from=task.attributes['message_from'];
 
     });
