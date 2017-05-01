@@ -288,7 +288,7 @@
             
             if (childData['from'] == "me") {
                 htmlToAdd += "<div class='profilePicMe"+reservation.task.sid+"'><img src='";
-                htmlToAdd+="img/al.jpg";
+                htmlToAdd+="https://taskrouterbot.herokuapp.com/img/al.jpg";
                 htmlToAdd +="' alt='profile' /></div></div> <div class='small-10 columns'><div class='message-desc'>";
                 htmlToAdd += "<b><div class='messageNameMe"+reservation.task.sid+"'>"
                 htmlToAdd+=childData['from'];
@@ -297,7 +297,7 @@
             }
             else if (childData['from'] == "MeyaBot") {
                 htmlToAdd += "<div class='profilePicMeya"+reservation.task.sid+"'><img src='";
-                htmlToAdd+="img/meya.png";
+                htmlToAdd+="https://taskrouterbot.herokuapp.com/img/meya.png";
                 htmlToAdd +="' alt='profile' /></div></div> <div class='small-10 columns'><div class='message-desc'>";
                 htmlToAdd += "<b><div class='messageNameMeya"+reservation.task.sid+"'>"
                 htmlToAdd+=childData['from'];
@@ -335,7 +335,7 @@
         taskrouterGlobals[reservation.task.sid]={};
         taskrouterGlobals[reservation.task.sid].first_name = reservation.task.attributes.message_from;
         taskrouterGlobals[reservation.task.sid].full_name = reservation.task.attributes.message_from;
-        taskrouterGlobals[reservation.task.sid].profile_pic = "img/unknownavatar.jpeg";
+        taskrouterGlobals[reservation.task.sid].profile_pic = "https://taskrouterbot.herokuapp.com/img/unknownavatar.jpeg";
         var htmlToAdd="<div class='small-12 columns' id='taskDiv"+reservation.task.sid+"'>";
         var id = reservation.task.attributes.message_from;
         id = id.replace('Messenger:','');
