@@ -159,6 +159,7 @@ app.get('/visualize', function(request, response) {
 
 app.post('/initiateivr', function(request,response){
   var textToSpeak = "Hello and welcome to the best customer experience you've ever had. That's right. British Customer Service. Please tell us how we can help.";
+  console.log(textToSpeak);
   var result=querystring.stringify(textToSpeak);
   console.log(result);
   var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio\"><Say>Please say ahoy to Twilio</Say></Gather></Response>";
