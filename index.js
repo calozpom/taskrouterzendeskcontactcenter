@@ -160,7 +160,7 @@ app.get('/visualize', function(request, response) {
 app.post('/initiateivr', function(request,response){
   var textToSpeak = querystring.escape("Hello and welcome to the best customer experience youve ever had. Thats right. British Customer Service. Please tell us how we can help.");
   console.log(textToSpeak);
-  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio\"><Play>https://taskrouterbot.herokuapp.com/play/Joanna/"+textToSpeak+"</Gather></Response>";
+  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio\"><Play>https://taskrouterbot.herokuapp.com/play/Joanna/"+textToSpeak+"</Play></Gather></Response>";
   console.log(responseString);
   response.send(responseString);
 })
@@ -185,15 +185,16 @@ req(options, function(error, response, body){
   try {
       //Works if Wit extracted an intent. 
       console.log(JSON.parse(body)['entities']['intent'][0]['value']);
-    var textToSpeak = querystring.escape("Hello and welcome to the best customer experience youve ever had. Thats right. British Customer Service. Please tell us how we can help.");
-  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio\"><Play>https://taskrouterbot.herokuapp.com/play/Joanna/"+textToSpeak+"</Gather></Response>";
+    var textToSpeak = querystring.escape("OK. Got it. Please stand by while I connect you to the best possible agent.");
+  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio\"><Play>https://taskrouterbot.herokuapp.com/play/Joanna/"+textToSpeak+"</Play></Gather></Response>";
     res.send(responseString);
 
 
   }
   catch (err) {
       // Failed to extract an intent. Ask the fool again. 
-      var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio\"><Say>Please say ahoy to Twilio</Say></Gather></Response>";
+    var textToSpeak = querystring.escape("Hello and welcome to the best customer experience youve ever had. Thats right. British Customer Service. Please tell us how we can help.");
+  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio\"><Play>https://taskrouterbot.herokuapp.com/play/Joanna/"+textToSpeak+"</Play></Gather></Response>";
       res.send(responseString);
   }
 });
