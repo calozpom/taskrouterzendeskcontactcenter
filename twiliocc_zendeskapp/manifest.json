@@ -1,0 +1,18 @@
+{
+  "name": "Twilio Agent Desktop",
+  "author": {
+    "name": "Al Cook",
+    "email": "al@twilio.com",
+    "url": ""
+  },
+  "defaultLocale": "en",
+  "private": true,
+  "location": {
+    "support": {
+      "ticket_sidebar": "https://taskrouterbot.herokuapp.com/zendeskdashboard",
+      "top_bar":"https://taskrouterbot.herokuapp.com/agentcontrols"
+    }
+  },
+  "version": "1.0",
+  "frameworkVersion": "2.0"
+}

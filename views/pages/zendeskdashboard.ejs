@@ -30,19 +30,11 @@
     <div class="container">
         <div class="content-body">
 
-        <div id="dashboard-body">
-            <div class="row" id="addToThis">
-
-                
+            <div id="dashboard-body">
+                <div class="row" id="addToThis">        
+                </div>
+            </div>
         </div>
-
-
-
-
-
-
-    </div>
-    </div>
     </div>
     <script src="js/vendor/jquery.js"></script>
     <script src="js/foundation.min.js"></script>
@@ -306,6 +298,7 @@
         return htmlToAdd;
     }
     function newTask(reservation) {
+        //TODO:refactor this using vue. And make it work cross channel. 
         console.log("new task");
         taskrouterGlobals[reservation.task.sid]={};
         taskrouterGlobals[reservation.task.sid].first_name = reservation.task.attributes.message_from;
