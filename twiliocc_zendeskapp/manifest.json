@@ -9,8 +9,8 @@
   "private": true,
   "location": {
     "support": {
-      "ticket_sidebar": "https://taskrouterbot.herokuapp.com/zendeskdashboard",
-      "top_bar":"https://taskrouterbot.herokuapp.com/agentcontrols"
+      "ticket_sidebar": "https://twiliozendeskcc.herokuapp.com/zendeskdashboard",
+      "top_bar":"https://twiliozendeskcc.herokuapp.com/agentcontrols"
     }
   },
   "version": "1.0",
