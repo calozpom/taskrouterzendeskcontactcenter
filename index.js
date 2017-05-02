@@ -186,7 +186,7 @@ req(options, function(error, response, body){
       //Works if Wit extracted an intent. 
       console.log(JSON.parse(body)['entities']['intent'][0]['value']);
     var textToSpeak = querystring.escape("OK. Got it. Please stand by while I connect you to the best possible agent.");
-  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://taskrouterbot.herokuapp.com/play/Joanna/"+textToSpeak+"</Play><Enqueue worflowSid='WW4d526c9041d73060ca46d4011cf34b33'><Task>{'intent':'"+JSON.parse(body)['entities']['intent'][0]['value']+"'}</Task></Enqueue></Response>";
+  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://taskrouterbot.herokuapp.com/play/Joanna/"+textToSpeak+"</Play><Enqueue workflowSid='WW4d526c9041d73060ca46d4011cf34b33'><Task>{'intent':'"+JSON.parse(body)['entities']['intent'][0]['value']+"'}</Task></Enqueue></Response>";
     res.send(responseString);
 
 
