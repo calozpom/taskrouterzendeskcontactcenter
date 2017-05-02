@@ -6,6 +6,8 @@ var FirebaseTokenGenerator = require('firebase-token-generator');
 var querystring = require("querystring");
 var Firebase = require('firebase');
 var AWS = require('aws-sdk');
+var path = require("path");
+
 var fs = require('fs')
 
 AWS.config = {
@@ -16,6 +18,8 @@ secretAccessKey: process.env.awsSecretAccessKey,
 timeout: '15000'
 };
 var polly = new AWS.Polly();
+if (!fs.existsSync('/audioFiles'))
+    fs.mkdirSync('/audioFiles');
 
 
 
