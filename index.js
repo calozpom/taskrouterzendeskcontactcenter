@@ -160,7 +160,7 @@ app.get('/visualize', function(request, response) {
 app.post('/initiateivr', function(request,response){
   var textToSpeak = querystring.escape("Hello and welcome to the best customer experience youve ever had. Thats right. British Customer Service. Please tell us how we can help.");
   console.log(textToSpeak);
-  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio\"><Play>https://taskrouterbot.herokuapp.com/play/Joanna/"+textToSpeak+"</Play></Gather></Response>";
+  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio\"><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play></Gather></Response>";
   console.log(responseString);
   response.send(responseString);
 })
@@ -186,7 +186,7 @@ req(options, function(error, response, body){
       //Works if Wit extracted an intent. 
       console.log(JSON.parse(body)['entities']['intent'][0]['value']);
     var textToSpeak = querystring.escape("OK. Got it. Please stand by while I connect you to the best possible agent.");
-  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://taskrouterbot.herokuapp.com/play/Joanna/"+textToSpeak+"</Play><Enqueue workflowSid='WW4d526c9041d73060ca46d4011cf34b33'><Task>{\"intent\":\""+JSON.parse(body)['entities']['intent'][0]['value']+"\", \"type\":\":voice\"}</Task></Enqueue></Response>";
+  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play><Enqueue workflowSid='WW4d526c9041d73060ca46d4011cf34b33'><Task>{\"intent\":\""+JSON.parse(body)['entities']['intent'][0]['value']+"\", \"type\":\":voice\"}</Task></Enqueue></Response>";
     res.send(responseString);
 
 
@@ -194,7 +194,7 @@ req(options, function(error, response, body){
   catch (err) {
       // Failed to extract an intent. Ask the fool again. 
     var textToSpeak = querystring.escape("Hello and welcome to the best customer experience youve ever had. Thats right. British Customer Service. Please tell us how we can help.");
-  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio\"><Play>https://taskrouterbot.herokuapp.com/play/Joanna/"+textToSpeak+"</Play></Gather></Response>";
+  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio\"><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play></Gather></Response>";
       res.send(responseString);
   }
 });
@@ -527,7 +527,7 @@ app.post('/botresponse', function(request, response) {
     to: meyaUserID[0].replace("M@", "Messenger:"), // Any number Twilio can deliver to
     from: meyaUserID[1].replace("M@", "Messenger:"), // A number you bought from Twilio and can use for outbound communication
     body: request.body.text, // body of the SMS message
-    statusCallback: 'https://taskrouterbot.herokuapp.com/messagestatus/'
+    statusCallback: 'https://twiliozendeskcc.herokuapp.com/messagestatus/'
 
 
     /*client.workspace.tasks(request.body.user_id).get(function(err, task) {
