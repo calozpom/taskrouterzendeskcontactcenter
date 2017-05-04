@@ -289,9 +289,14 @@
       </h5>
     </div>
     <div class='custom-panel-details'>
+    <template v-for="message in messageList">
+    From: {{message.from}}
+   </template>
     </div>
   </div>
 </template>
+
+
 
 
 
@@ -300,7 +305,11 @@ Vue.component('vue-test', {
   template: '#chatTask',
    data: function() {
      return {
-    task_title: 'task from hairy mcscary'
+    task_title: 'task from hairy mcscary',
+    messageList: [
+      {from: 'apple', price: '10'},
+      {from: 'orange', price: '12'}
+    ]
      }
   }
 })
@@ -308,6 +317,11 @@ Vue.component('vue-test', {
 new Vue({
   el: '#vue-test'
 })
+
+
+
+
+
 
 </script>
 
