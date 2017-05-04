@@ -20,8 +20,8 @@
 
       <div id="dashboard-body">
         <div class="row" id="addToThis"> 
-          <div id="vueTest">
-            <my-component>world</my-component>
+          <div id="vue-test">
+            <vue-test>world</vue-test>
           </div>       
         </div>
       </div>
@@ -296,7 +296,7 @@
 
 
 <script>
-Vue.component('vueTest', {
+Vue.component('vue-test', {
   template: '#chatTask',
    data: function() {
      return {
@@ -306,7 +306,7 @@ Vue.component('vueTest', {
 })
 
 new Vue({
-  el: '#vueTest'
+  el: '#vue-test'
 })
 
 </script>
