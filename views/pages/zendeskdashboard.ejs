@@ -20,7 +20,7 @@
 
       <div id="dashboard-body">
         <div class="row" id="addToThis"> 
-        <a href='#' class='button success radius' onclick='vueMaster.add()''><i class='fi fi-check'></i>TEST</a>
+        <a href='#' class='button success radius' @click="update"><i class='fi fi-check'></i>TEST</a>
           <div id="vue-test">
             <vue-test>world</vue-test>
           </div>       
@@ -319,6 +319,11 @@ Vue.component('vue-test', {
     ]
      }
   },
+  events: {
+              updateTasks: function() {
+                  this.accept('test');
+                }
+            },
   methods: {
     add: function() {
       this.messageList.push({from:'pear', price:'15'});
@@ -331,7 +336,12 @@ Vue.component('vue-test', {
 })
 
 window.vueMaster = new Vue({
-  el: '#vue-test'
+  el: '#vue-test',
+  methods: {
+    update: function() {
+          this.$broadcast('updateTasks');
+        }
+    }
 })
 
 
