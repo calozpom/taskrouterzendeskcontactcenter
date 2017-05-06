@@ -281,20 +281,20 @@
 
 </script>
 <template id="chatTask" >
-  <div class='small-12 columns'>
+  <div class='small-12 columns' v-for="task in taskList">
     <div class='custom-panel-heading'>
       <h5 class='white'>
         <div id='titleText'>
-          Task: {{task_title}}
+          Task: {{task.task_title}}
         </div>
         <span class='label radius alert right'>Reject</span>&nbsp;
-        <a href='#' @click="accept(task_sid)">
+        <a href='#' @click="accept(task.task_sid)">
           <span class='label radius success right'>Accept</span>
         </a>
       </h5>
     </div>
     <div class='custom-panel-details'>
-      <template v-for="message in messageList">
+      <template v-for="message in task.messageList">
         <div class='row'>
           <div class='message-dashboard'>
             <div class='small-2 columns'>
