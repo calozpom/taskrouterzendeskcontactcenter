@@ -130,7 +130,6 @@
 
           console.log(data.token);
           window.worker = new Twilio.TaskRouter.Worker(data.token);
-          window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
           window.taskrouterGlobals = {};
           registerTaskRouterCallbacks();
           window.zendeskClient = ZAFClient.init();
@@ -378,10 +377,12 @@ methods: {
 }
 })
 
+window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
+
 window.vueMaster = new Vue({
   el: '#vue-test',
   firebase:  {
-    taskList: myFirebase.ref('byWorker/al')
+    taskList: myFirebase.ref('taskList/al')
   }
 
 })
