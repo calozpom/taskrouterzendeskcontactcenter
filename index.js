@@ -575,19 +575,28 @@ app.post('/eventstream', function(request, response) {
   // This function consumes the event stream and structures it into firebase data
   // This firebase structure is then used for real time visualization of queue state
   var eventstream = myFirebase.child("eventstream");
+  var taskList = myfirebase.child("taskList");
   console.log("received event " + request.body.EventType);
-  //console.log(request.body); 
+  console.log(request.body); 
   if (request.body.TaskSid) {
     dataToSet = {};
     switch (request.body.EventType) {
+      case "task.created":
+        dataToSet['attributes'] = request.body.TaskAttributes;
+        dataToSet['sid'] = request.body.TaskSid;
+        dataToSet['status'] = request.body.TaskAssignmentStatus;
+       taskList.child("queue").setWithPriority(dataToSet, request.body.TaskAge)
       case "task.deleted":
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
+        taskList.child(request.body.)
         break;
       case "task-queue.entered":
         dataToSet['attributes'] = request.body.TaskAttributes;
         dataToSet['sid'] = request.body.TaskSid;
         dataToSet['status'] = request.body.TaskAssignmentStatus;
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
+        dataToSet['queue'] = request.body.TaskQueueName;
+        taskList.child("queue").put(dataToSet)
         break;
       case "task-queue.timeout":
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
@@ -603,6 +612,8 @@ app.post('/eventstream', function(request, response) {
         dataToSet['sid'] = request.body.TaskSid;
         dataToSet['status'] = request.body.TaskAssignmentStatus;
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
+        //TODO
+       // taskList.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         break;
       case "task.updated":
         dataToSet['attributes'] = request.body.TaskAttributes;
@@ -610,6 +621,18 @@ app.post('/eventstream', function(request, response) {
         dataToSet['status'] = request.body.TaskAssignmentStatus;
         //eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         break;
+      case "reservation.created":
+        dataToSet['status'] = request.body.TaskAssignmentStatus;
+        taskList.child(request.body.WorkerSid).setWithPriority(taskList.child("queue").child(request.body.TaskSid), request.body.TaskAge);
+        taskList.child("queue").child(request.body.TaskSid).remove();
+        taskList.child(request.body.WorkerSid).put(dataToSet);
+        break;
+      case "reservation.canceled":
+        taskList.child("queue").child(request.body.TaskSid).setWithPriority(taskList.child(request.body.WorkerSid), request.body.TaskAge);
+        taskList.child(request.body.WorkerSid).remove();
+        break;
+
+
 
 
     }
