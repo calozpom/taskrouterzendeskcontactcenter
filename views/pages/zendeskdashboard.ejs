@@ -302,11 +302,11 @@
               </div>
             </div> 
             <div class='small-10 columns'>
-              <div class='message-desc'>";
+            <div class='message-desc'>
                 <div class='messageName'>
                   <b>{{message.from}}</b>
                 </div>
-                {{message.message}
+                {{message.content}}
                 <span class='right green'>now</span>
               </div>
             </div>
@@ -331,14 +331,14 @@ Vue.component('vue-test', {
     task_title: 'task from hairy mcscary',
     task_sid: 'sidxx',
     messageList: [
-      {from: 'al', message: '10'},
-      {from: 'al', message: '12'}
+      {from: 'al', content: '10'},
+      {from: 'al', content: '12'}
     ]
      }
   },
   methods: {
     add: function() {
-      this.messageList.push({from:'message', message:'15'});
+      this.messageList.push({from:'meya', content:'15'});
     },
     accept: function(sid) {
       console.log("calling accept method with sid " + sid);
