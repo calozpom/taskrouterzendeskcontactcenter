@@ -292,6 +292,7 @@
     <template v-for="message in messageList">
     From: {{message.from}}
    </template>
+   <form><input type='text' placeholder='Reply...'><a href='#' class='button success radius'><i class='fi fi-check'></i>Send</a></form>
     </div>
   </div>
 </template>
@@ -311,6 +312,11 @@ Vue.component('vue-test', {
       {from: 'orange', price: '12'}
     ]
      }
+  },
+  methods: {
+    add: function() {
+      this.messageList.push({from:'pear', price:'15'});
+    }
   }
 })
 
