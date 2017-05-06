@@ -354,7 +354,7 @@ Vue.component('vue-test', {
 },
 methods: {
   add: function() {
-    this.messageList.push({from:'meya', content:'15'});
+    this.taskList[0].messageList.push({from:'meya', content:'15'});
   },
   accept: function(sid) {
     console.log("calling accept method with sid " + sid);
