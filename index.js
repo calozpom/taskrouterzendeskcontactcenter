@@ -582,10 +582,7 @@ app.post('/eventstream', function(request, response) {
     dataToSet = {};
     switch (request.body.EventType) {
       case "task.created":
-        dataToSet['attributes'] = request.body.TaskAttributes;
-        dataToSet['sid'] = request.body.TaskSid;
-        dataToSet['status'] = request.body.TaskAssignmentStatus;
-       taskList.child("queue").setWithPriority(dataToSet, request.body.TaskAge)
+        
       case "task.deleted":
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
         //taskList.child(request.body.)
@@ -596,7 +593,15 @@ app.post('/eventstream', function(request, response) {
         dataToSet['status'] = request.body.TaskAssignmentStatus;
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         dataToSet['queue'] = request.body.TaskQueueName;
-        taskList.child("queue").put(dataToSet)
+        try {
+                  taskList.child("queue").put(dataToSet)
+        }
+       catch (error) {
+          dataToSet['attributes'] = request.body.TaskAttributes;
+          dataToSet['sid'] = request.body.TaskSid;
+          dataToSet['status'] = request.body.TaskAssignmentStatus;
+          taskList.child("queue").setWithPriority(dataToSet, request.body.TaskAge)
+        }
         break;
       case "task-queue.timeout":
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
