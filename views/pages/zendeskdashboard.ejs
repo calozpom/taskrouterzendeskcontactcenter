@@ -23,7 +23,7 @@
         <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.add()'><i class='fi fi-check'></i>add a message</a>
         <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.removeTask()'><i class='fi fi-check'></i>remove a task</a>
           <div id="vue-test">
-            <vue-test ref="testref">world</vue-test>
+            <vue-test ref="testref"></vue-test>
           </div>       
         </div>
       </div>
@@ -281,7 +281,7 @@
 
 </script>
 <template id="chatTask" v-for='task in taskList'>
-  <div class='small-12 columns' v-if="show">
+  <div class='small-12 columns'>
     <div class='custom-panel-heading'>
       <h5 class='white'>
         <div id='titleText'>
