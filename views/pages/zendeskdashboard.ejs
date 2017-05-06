@@ -339,7 +339,7 @@ window.vueMaster = new Vue({
   el: '#vue-test',
   methods: {
     update: function() {
-          this.$broadcast('updateTasks');
+          this.$emit('updateTasks');
         }
     }
 })
