@@ -580,9 +580,7 @@ app.post('/eventstream', function(request, response) {
   console.log(request.body); 
   if (request.body.TaskSid) {
     dataToSet = {};
-    switch (request.body.EventType) {
-      case "task.created":
-        
+    switch (request.body.EventType) {        
       case "task.deleted":
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
         //taskList.child(request.body.)
