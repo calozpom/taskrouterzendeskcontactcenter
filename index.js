@@ -588,7 +588,7 @@ app.post('/eventstream', function(request, response) {
        taskList.child("queue").setWithPriority(dataToSet, request.body.TaskAge)
       case "task.deleted":
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
-        taskList.child(request.body.)
+        //taskList.child(request.body.)
         break;
       case "task-queue.entered":
         dataToSet['attributes'] = request.body.TaskAttributes;
