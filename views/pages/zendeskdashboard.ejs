@@ -283,7 +283,7 @@
           Task: {{task_title}}
         </div>
         <span class='label radius alert right'>Reject</span>&nbsp;
-        <a href='#'>
+        <a href='#' @click="accept(task_sid)">
           <span class='label radius success right'>Accept</span>
         </a>
       </h5>
@@ -307,6 +307,7 @@ Vue.component('vue-test', {
    data: function() {
      return {
     task_title: 'task from hairy mcscary',
+    task_sid: 'sidxx',
     messageList: [
       {from: 'apple', price: '10'},
       {from: 'orange', price: '12'}
@@ -316,7 +317,11 @@ Vue.component('vue-test', {
   methods: {
     add: function() {
       this.messageList.push({from:'pear', price:'15'});
+    },
+    accept: function(sid) {
+      console.log("calling accept method with sid " + sid);
     }
+
   }
 })
 
