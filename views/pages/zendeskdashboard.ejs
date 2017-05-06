@@ -280,7 +280,7 @@
 
 
 </script>
-<template id="chatTask" >
+<template id="chatTask" v-for='task in taskList'>
   <div class='small-12 columns'>
     <div class='custom-panel-heading'>
       <h5 class='white'>
@@ -358,7 +358,7 @@ methods: {
   },
   accept: function(sid) {
     console.log("calling accept method with sid " + sid);
-  }
+  },
   removeTask: function() {
     this.taskList.pop();
   }
