@@ -293,10 +293,27 @@
       </h5>
     </div>
     <div class='custom-panel-details'>
-    <template v-for="message in messageList">
-    From: {{message.from}}
-   </template>
-   <form><input type='text' placeholder='Reply...'><a href='#' class='button success radius' @click="add"><i class='fi fi-check'></i>Send</a></form>
+      <template v-for="message in messageList">
+        <div class='row'>
+          <div class='message-dashboard'>
+            <div class='small-2 columns'>
+              <div class='profilePic'>
+                <img src='https://twiliozendeskcc.herokuapp.com/img/al.jpg' alt='profile' />
+              </div>
+            </div> 
+            <div class='small-10 columns'>
+              <div class='message-desc'>";
+                <div class='messageName'>
+                  <b>{{message.from}}</b>
+                </div>
+                {{message.message}
+                <span class='right green'>now</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+      <form><input type='text' placeholder='Reply...'><a href='#' class='button success radius' @click="add"><i class='fi fi-check'></i>Send</a></form>
     </div>
   </div>
 </template>
@@ -314,19 +331,14 @@ Vue.component('vue-test', {
     task_title: 'task from hairy mcscary',
     task_sid: 'sidxx',
     messageList: [
-      {from: 'apple', price: '10'},
-      {from: 'orange', price: '12'}
+      {from: 'al', message: '10'},
+      {from: 'al', message: '12'}
     ]
      }
   },
-  events: {
-              updateTasks: function() {
-                  this.accept('test');
-                }
-            },
   methods: {
     add: function() {
-      this.messageList.push({from:'pear', price:'15'});
+      this.messageList.push({from:'message', message:'15'});
     },
     accept: function(sid) {
       console.log("calling accept method with sid " + sid);
@@ -336,12 +348,7 @@ Vue.component('vue-test', {
 })
 
 window.vueMaster = new Vue({
-  el: '#vue-test',
-  methods: {
-    update: function() {
-          this.$emit('updateTasks');
-        }
-    }
+  el: '#vue-test'
 })
 
 
