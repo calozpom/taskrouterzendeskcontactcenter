@@ -626,13 +626,17 @@ app.post('/eventstream', function(request, response) {
         break;
       case "reservation.created":
         dataToSet['status'] = request.body.TaskAssignmentStatus;
-        taskList.child(request.body.WorkerSid).setWithPriority(taskList.child("queue").child(request.body.TaskSid), request.body.TaskAge);
+        taskList.child("queue").child(request.body.TaskSid).once("value"), function(snapshot) {
+           taskList.child(request.body.WorkerSid).child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);
+        }
         taskList.child("queue").child(request.body.TaskSid).remove();
         taskList.child(request.body.WorkerSid).put(dataToSet);
         break;
       case "reservation.canceled":
-        taskList.child("queue").child(request.body.TaskSid).setWithPriority(taskList.child(request.body.WorkerSid), request.body.TaskAge);
-        taskList.child(request.body.WorkerSid).remove();
+       taskList.child(request.body.WorkerSid).child(request.body.TaskSid).once("value"), function(snapshot) {
+           taskList.child("queue").child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);
+        }
+        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).remove();
         break;
 
 
