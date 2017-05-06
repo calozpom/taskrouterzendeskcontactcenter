@@ -20,6 +20,7 @@
 
       <div id="dashboard-body">
         <div class="row" id="addToThis"> 
+        <a href='#' class='button success radius' onclick='vueMaster.add()''><i class='fi fi-check'></i>TEST</a>
           <div id="vue-test">
             <vue-test>world</vue-test>
           </div>       
@@ -27,6 +28,9 @@
       </div>
     </div>
   </div>
+
+
+
   <script src="js/vendor/jquery.js"></script>
   <script src="js/foundation.min.js"></script>
   <script src="js/foundation/foundation.util.motion.js"></script>
@@ -300,8 +304,9 @@
 
 
 
-
 <script>
+/* [{task1,{message1, message2}}, {task2, {message1, message2}}] */ 
+
 Vue.component('vue-test', {
   template: '#chatTask',
    data: function() {
