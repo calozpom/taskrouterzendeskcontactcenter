@@ -281,6 +281,7 @@
 
 </script>
 <template id="chatTask" >
+<div>
   <div class='small-12 columns' v-for="task in taskList">
     <div class='custom-panel-heading'>
       <h5 class='white'>
@@ -316,6 +317,7 @@
       </template>
       <form><input type='text' placeholder='Reply...'><a href='#' class='button success radius' @click="add"><i class='fi fi-check'></i>Send</a></form>
     </div>
+  </div>
   </div>
 </template>
 
