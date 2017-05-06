@@ -292,7 +292,7 @@
     <template v-for="message in messageList">
     From: {{message.from}}
    </template>
-   <form><input type='text' placeholder='Reply...'><a href='#' class='button success radius'><i class='fi fi-check'></i>Send</a></form>
+   <form><input type='text' placeholder='Reply...'><a href='#' class='button success radius' @click="add"><i class='fi fi-check'></i>Send</a></form>
     </div>
   </div>
 </template>
