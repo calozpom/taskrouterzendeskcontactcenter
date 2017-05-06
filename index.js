@@ -575,7 +575,7 @@ app.post('/eventstream', function(request, response) {
   // This function consumes the event stream and structures it into firebase data
   // This firebase structure is then used for real time visualization of queue state
   var eventstream = myFirebase.child("eventstream");
-  var taskList = myfirebase.child("taskList");
+  var taskList = myFirebase.child("taskList");
   console.log("received event " + request.body.EventType);
   console.log(request.body); 
   if (request.body.TaskSid) {
