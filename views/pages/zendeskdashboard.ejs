@@ -20,9 +20,9 @@
 
       <div id="dashboard-body">
         <div class="row" id="addToThis"> 
-        <a href='#' class='button success radius' onclick='vueMaster.update()'><i class='fi fi-check'></i>TEST</a>
+        <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.add()'><i class='fi fi-check'></i>TEST</a>
           <div id="vue-test">
-            <vue-test>world</vue-test>
+            <vue-test ref="testref">world</vue-test>
           </div>       
         </div>
       </div>
