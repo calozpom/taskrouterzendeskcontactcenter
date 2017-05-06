@@ -280,21 +280,21 @@
 
 
 </script>
-<template id="chatTask" v-for="task in taskList">
+<template id="chatTask" >
   <div class='small-12 columns'>
     <div class='custom-panel-heading'>
       <h5 class='white'>
         <div id='titleText'>
-          Task: {{task.task_title}}
+          Task: {{task_title}}
         </div>
         <span class='label radius alert right'>Reject</span>&nbsp;
-        <a href='#' @click="accept(task.task_sid)">
+        <a href='#' @click="accept(task_sid)">
           <span class='label radius success right'>Accept</span>
         </a>
       </h5>
     </div>
     <div class='custom-panel-details'>
-      <template v-for="message in task.messageList">
+      <template v-for="message in messageList">
         <div class='row'>
           <div class='message-dashboard'>
             <div class='small-2 columns'>
@@ -348,7 +348,14 @@ Vue.component('vue-test', {
       {from: 'meya', content: '12'}
       ]
     }
-    ]
+    ],
+    task_title: 'task from hairy mcscary',
+      task_sid: 'sidxx',
+      show: false,
+      messageList: [
+      {from: 'al', content: '10'},
+      {from: 'al', content: '12'}
+      ]
 
   }
 },
