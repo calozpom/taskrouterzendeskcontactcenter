@@ -20,7 +20,8 @@
 
       <div id="dashboard-body">
         <div class="row" id="addToThis"> 
-        <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.add()'><i class='fi fi-check'></i>TEST</a>
+        <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.add()'><i class='fi fi-check'></i>add a message</a>
+        <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.removeTask()'><i class='fi fi-check'></i>remove a task</a>
           <div id="vue-test">
             <vue-test ref="testref">world</vue-test>
           </div>       
@@ -279,8 +280,8 @@
 
 
 </script>
-<template id="chatTask">
-  <div class='small-12 columns'>
+<template id="chatTask" v-for='task in taskList'>
+  <div class='small-12 columns' v-if="show">
     <div class='custom-panel-heading'>
       <h5 class='white'>
         <div id='titleText'>
@@ -326,25 +327,43 @@
 
 Vue.component('vue-test', {
   template: '#chatTask',
-   data: function() {
-     return {
-    task_title: 'task from hairy mcscary',
-    task_sid: 'sidxx',
-    messageList: [
+  data: function() {
+   return {
+    taskList:[
+    {
+      task_title: 'task from hairy mcscary',
+      task_sid: 'sidxx',
+      show: false,
+      messageList: [
       {from: 'al', content: '10'},
       {from: 'al', content: '12'}
-    ]
-     }
-  },
-  methods: {
-    add: function() {
-      this.messageList.push({from:'meya', content:'15'});
+      ]
     },
-    accept: function(sid) {
-      console.log("calling accept method with sid " + sid);
+    {
+      task_title: 'task from donaldsons dairy',
+      task_sid: 'sidxx',
+      show: false,
+      messageList: [
+      {from: 'meya', content: '10'},
+      {from: 'meya', content: '12'}
+      ]
     }
+    ]
 
   }
+},
+methods: {
+  add: function() {
+    this.messageList.push({from:'meya', content:'15'});
+  },
+  accept: function(sid) {
+    console.log("calling accept method with sid " + sid);
+  }
+  removeTask: function() {
+    this.taskList.pop();
+  }
+
+}
 })
 
 window.vueMaster = new Vue({
