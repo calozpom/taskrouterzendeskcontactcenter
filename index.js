@@ -589,6 +589,7 @@ app.post('/eventstream', function(request, response) {
         dataToSet['attributes'] = request.body.TaskAttributes;
         dataToSet['sid'] = request.body.TaskSid;
         dataToSet['status'] = request.body.TaskAssignmentStatus;
+        dataToSet['channel'] = request.body.TaskChannelUniqueName;
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         dataToSet['queue'] = request.body.TaskQueueName;
         try {
@@ -616,6 +617,11 @@ app.post('/eventstream', function(request, response) {
         dataToSet['status'] = request.body.TaskAssignmentStatus;
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         //TODO
+        taskList.equalTo(request.body.TaskSid).once('value', function(snapshot) {
+          console.log("Found. a matching firebase entry for completed task");
+          console.log(snapshot.val());
+          console.log(snapshot.key);
+        })
        // taskList.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         break;
       case "task.updated":
@@ -640,6 +646,7 @@ app.post('/eventstream', function(request, response) {
         break;
       case "reservation.accepted":
         dataToSet['status'] = request.body.TaskAssignmentStatus;
+        dataToSet['accepted'] = "true";
         taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
         break;
 
