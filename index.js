@@ -627,12 +627,12 @@ app.post('/eventstream', function(request, response) {
       case "reservation.created":
         console.log("handling reservation created");
         dataToSet['status'] = request.body.TaskAssignmentStatus;
-        taskList.child("queue").child(request.body.TaskSid).once("value"), function(snapshot) {
+        taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
           console.log("callback worked");
            console.log("moving " +snapshot.val());
            taskList.child(request.body.WorkerSid).child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);
            taskList.child("queue").child(request.body.TaskSid).remove();
-        }
+        })
         console.log("exiting reservation created")
         
         //taskList.child(request.body.WorkerSid).update(dataToSet);
