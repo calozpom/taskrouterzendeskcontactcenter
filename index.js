@@ -422,14 +422,19 @@ function updateTaskAttributes(taskSid, attributesJson) {
   console.log(JSON.stringify(attributesJson));
   var attributes = {};
   client.workspace.tasks(taskSid).get(function(err, task) {
+    console.log("fetched a task");
+    console.log(err);
+    console.log(task);
     console.log(task.attributes);
     client.workspace.tasks(taskSid).update({
     attributes: JSON.stringify(JSON.parse(task.attributes).concat(attributesJson))
 }, function(err, task) {
     if (err) {
+      console.log("error");
       console.log(err);
     }
     else {
+      console.log("no error");
     console.log(task.attributes);
   }
 });
@@ -670,7 +675,7 @@ app.post('/eventstream', function(request, response) {
         dataToSet['accepted'] = "true";
         taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
         var newAttributes = {'worker':request.body.WorkerSid};
-        updateTaskAttributes(request.body.TaskSid, newAttributes);
+        updateTaskAttributes(request.body.TaskskSid, newAttributes);
         break;
 
 
