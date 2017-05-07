@@ -592,7 +592,7 @@ app.post('/eventstream', function(request, response) {
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         dataToSet['queue'] = request.body.TaskQueueName;
         try {
-                  taskList.child("queue").child(request.body.TaskSid).put(dataToSet)
+                  taskList.child("queue").child(request.body.TaskSid).update(dataToSet)
         }
        catch (error) {
           dataToSet['attributes'] = request.body.TaskAttributes;
@@ -630,7 +630,7 @@ app.post('/eventstream', function(request, response) {
            taskList.child(request.body.WorkerSid).child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);
         }
         taskList.child("queue").child(request.body.TaskSid).remove();
-        taskList.child(request.body.WorkerSid).put(dataToSet);
+        taskList.child(request.body.WorkerSid).update(dataToSet);
         break;
       case "reservation.canceled":
        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).once("value"), function(snapshot) {
