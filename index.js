@@ -418,6 +418,9 @@ function updateConversationPost(taskSid, request, friendlyName_first, friendlyNa
 }
 
 function updateTaskAttributes(taskSid, attributesJson) {
+  console.log("trying to update task attributes with:");
+  console.log(attributesJson);
+  console.log(JSON.stringify(attributesJson));
   client.workspace.tasks(taskSid).update({
     attributes: attributesJson
 }, function(err, task) {
@@ -662,7 +665,7 @@ app.post('/eventstream', function(request, response) {
         dataToSet['status'] = request.body.TaskAssignmentStatus;
         dataToSet['accepted'] = "true";
         taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
-        updateTaskAttributes(request.body.TaskSid, {"worker":request.body.WorkerSid});
+        updateTaskAttributes(request.body.TaskSid, {'worker':request.body.WorkerSid});
         break;
 
 
