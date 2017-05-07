@@ -627,10 +627,11 @@ app.post('/eventstream', function(request, response) {
       case "reservation.created":
         dataToSet['status'] = request.body.TaskAssignmentStatus;
         taskList.child("queue").child(request.body.TaskSid).once("value"), function(snapshot) {
+           console.log("moving " +snapshot.val())
            taskList.child(request.body.WorkerSid).child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);
         }
         taskList.child("queue").child(request.body.TaskSid).remove();
-        taskList.child(request.body.WorkerSid).update(dataToSet);
+        //taskList.child(request.body.WorkerSid).update(dataToSet);
         break;
       case "reservation.canceled":
        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).once("value"), function(snapshot) {
