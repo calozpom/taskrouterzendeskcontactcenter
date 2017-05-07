@@ -419,10 +419,10 @@ function updateConversationPost(taskSid, request, friendlyName_first, friendlyNa
 
 function updateTaskAttributes(taskSid, attributesJson) {
   console.log("trying to update task attributes with:");
-  console.log(attributesJson);
   console.log(JSON.stringify(attributesJson));
   var attributes = {};
   client.workspace.tasks(taskSid).get(function(err, task) {
+    console.log(task.attributes);
     client.workspace.tasks(taskSid).update({
     attributes: JSON.stringify(JSON.parse(task.attributes).concat(attributesJson))
 }, function(err, task) {
