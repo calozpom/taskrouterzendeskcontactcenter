@@ -625,23 +625,22 @@ app.post('/eventstream', function(request, response) {
         //eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         break;
       case "reservation.created":
-        console.log("handling reservation created");
         dataToSet['status'] = request.body.TaskAssignmentStatus;
         taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
-          console.log("callback worked");
-           console.log("moving " +snapshot.val());
            taskList.child(request.body.WorkerSid).child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);
            taskList.child("queue").child(request.body.TaskSid).remove();
+           taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
         })
-        console.log("exiting reservation created")
-        
-        //taskList.child(request.body.WorkerSid).update(dataToSet);
         break;
       case "reservation.canceled":
-       taskList.child(request.body.WorkerSid).child(request.body.TaskSid).once("value"), function(snapshot) {
+       taskList.child(request.body.WorkerSid).child(request.body.TaskSid).once("value", function(snapshot) {
            taskList.child("queue").child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);
-        }
+        })
         taskList.child(request.body.WorkerSid).child(request.body.TaskSid).remove();
+        break;
+      case "reservation.accepted":
+        dataToSet['status'] = request.body.TaskAssignmentStatus;
+        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
         break;
 
 
