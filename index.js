@@ -665,7 +665,8 @@ app.post('/eventstream', function(request, response) {
         dataToSet['status'] = request.body.TaskAssignmentStatus;
         dataToSet['accepted'] = "true";
         taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
-        updateTaskAttributes(request.body.TaskSid, {'worker':request.body.WorkerSid});
+        var newAttributes = {'worker':request.body.WorkerSid};
+        updateTaskAttributes(request.body.TaskSid, JSON.parse(newAttributes));
         break;
 
 
