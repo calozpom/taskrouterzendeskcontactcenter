@@ -421,7 +421,12 @@ function updateTaskAttributes(taskSid, attributesJson) {
   client.workspace.tasks(taskSid).update({
     attributes: attributesJson
 }, function(err, task) {
+    if (err) {
+      console.log(err);
+    }
+    else {
     console.log(task.attributes);
+  }
 });
 
 }
