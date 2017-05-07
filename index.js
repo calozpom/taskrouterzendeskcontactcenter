@@ -417,6 +417,15 @@ function updateConversationPost(taskSid, request, friendlyName_first, friendlyNa
   });
 }
 
+function updateTaskAttributes(taskSid, attributesJson) {
+  client.workspace.tasks(taskSid).update({
+    attributes: attributesJson
+}, function(err, task) {
+    console.log(task.attributes);
+});
+
+}
+
 app.get('/deletealltasks', function(request, response) {
   //this page purges all TaskRouter and Firebase content in order to reset the demo
   client.workspace.tasks.list(function(err, data) {
@@ -648,6 +657,7 @@ app.post('/eventstream', function(request, response) {
         dataToSet['status'] = request.body.TaskAssignmentStatus;
         dataToSet['accepted'] = "true";
         taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
+        updateTaskAttributes(request.body.TaskSid, {"worker":request.body.WorkerSid});
         break;
 
 
