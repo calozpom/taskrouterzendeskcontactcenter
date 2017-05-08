@@ -427,9 +427,14 @@ function updateTaskAttributes(taskSid, attributesJson) {
     console.log(task);
     console.log(task.attributes);
     attributes=JSON.parse(task.attributes)
+    console.log("received current attributes");
+    console.log(task.attributes);
      for (var key in attributesJson) {
   attributes[key] = attributesJson[key];
  }
+ console.log("new combined attributes");
+ console.log(attributes);
+ console.log(JSON.stringify(attributes));
 
     client.workspace.tasks(taskSid).update({
     attributes: attributes
