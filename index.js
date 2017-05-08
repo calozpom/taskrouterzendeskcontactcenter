@@ -437,7 +437,7 @@ function updateTaskAttributes(taskSid, attributesJson) {
  console.log(JSON.stringify(attributes));
 
     client.workspace.tasks(taskSid).update({
-    attributes: attributes
+    attributes: JSON.stringify(attributes)
 }, function(err, task) {
     if (err) {
       console.log("error");
