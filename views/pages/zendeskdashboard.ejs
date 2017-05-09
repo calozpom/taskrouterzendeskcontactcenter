@@ -356,7 +356,7 @@ window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
 window.vueMaster = new Vue({
   el: '#vue-test',
   firebase:  {
-    taskList: myFirebase.ref('taskList/WTc2b11a7edbc4f7956eb0d491f8f293fb')
+    taskList: myFirebase.child("taskList").child("WTc2b11a7edbc4f7956eb0d491f8f293fb");
   }
 
 })
