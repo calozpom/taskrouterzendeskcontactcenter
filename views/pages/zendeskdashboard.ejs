@@ -379,7 +379,7 @@ window.vueMaster = new Vue({
 myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('value', function(snapshot) {
   console.log('task List structure changed');
   console.log(JSON.stringify(snapshot.val()));
-  vueMaster.$refs.testref.update()(snapshot.val());
+  vueMaster.$refs.testref.update(snapshot.val());
 });
 
 
