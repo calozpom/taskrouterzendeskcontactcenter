@@ -388,6 +388,12 @@ function updateConversationPost(taskSid, request, friendlyName_first, friendlyNa
     'first': friendlyName_first,
     'last': friendlyName_last
   });
+  myFirebase.child("taskList").child("queue").child(taskSid).child("messageList").push({
+    'from': request.body['From'],
+    'message': request.body['Body'],
+    'first': friendlyName_first,
+    'last': friendlyName_last
+    });
   var meyaUserID = {};
   //We munge multiple parameters together to pass all the context to Meya. I had to shorten the Messenger prefix to stay within character count limits.
   meyaUserID['from'] = request.body['From'].replace("Messenger:", "M@");
@@ -579,6 +585,10 @@ app.post('/botresponse', function(request, response) {
       'from': 'MeyaBot',
       'message': request.body.text
     });
+    myFirebase.child("taskList").child("queue").child("messageList").child(meyaUserID[2]).push({
+      'from': 'MeyaBot',
+      'message': request.body.text
+    });
 
     //});
 
@@ -649,6 +659,13 @@ app.post('/eventstream', function(request, response) {
         dataToSet['sid'] = request.body.TaskSid;
         dataToSet['status'] = request.body.TaskAssignmentStatus;
         //eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
+        try {
+          taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
+        }
+        catch (err) {
+          taskList.child("queue").child(request.body.TaskSid).update(dataToSet);
+
+        }
         break;
       case "reservation.created":
         dataToSet['status'] = request.body.TaskAssignmentStatus;
