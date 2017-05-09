@@ -327,6 +327,7 @@
 
 <script>
 /* [{task1,{message1, message2}}, {task2, {message1, message2}}] */ 
+window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
 
 Vue.component('vue-test', {
   template: '#chatTask',
@@ -335,7 +336,11 @@ Vue.component('vue-test', {
    
 
   }
+
 },
+firebase:  {
+    taskList: myFirebase.child("taskList").child("WTc2b11a7edbc4f7956eb0d491f8f293fb")
+  }
 
 methods: {
   add: function() {
@@ -351,13 +356,10 @@ methods: {
 }
 })
 
-window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
 
 window.vueMaster = new Vue({
   el: '#vue-test',
-  firebase:  {
-    taskList: myFirebase.child("taskList").child("WTc2b11a7edbc4f7956eb0d491f8f293fb")
-  }
+  
 
 })
 
