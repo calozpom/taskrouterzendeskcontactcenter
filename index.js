@@ -641,7 +641,7 @@ app.post('/eventstream', function(request, response) {
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         //TODO
         taskAttributes=JSON.parse(request.body.TaskAttributes);
-        taskList.child(taskAttributes['worker']).child('request.body.TaskSid').remove();
+        taskList.child(taskAttributes['worker']).child(request.body.TaskSid).remove();
        // taskList.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         break;
       case "task.updated":
