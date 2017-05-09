@@ -45,7 +45,7 @@
   <script type="text/javascript" src="https://assets.zendesk.com/apps/sdk/2.0/zaf_sdk.js"></script>
 
   <script src="js/al-twilio-helper-funcs.js" type="text/javascript"></script>
-  <script src="https://unpkg.com/vue"></script>
+  <script src="https://cdn.jsdelivr.net/vuefire/1.0.0/vuefire.min.js"></script>
   <script src="https://unpkg.com/vuefire/dist/vuefire.js"></script>
   <script src="js/vueAgentComponents.js" type="text/javascript"></script>
 
@@ -338,7 +338,10 @@ Vue.component('vue-test', {
   }
 
 },
-
+firebase: {
+      taskList: myFirebase.child("taskList").child("WTc2b11a7edbc4f7956eb0d491f8f293fb")
+    
+  },
 methods: {
   add: function() {
     this.taskList[0].messageList.push({from:'meya', content:'15'});
@@ -355,11 +358,7 @@ methods: {
 
 
 window.vueMaster = new Vue({
-  el: '#vue-test',
-  firebase: {
-      taskList: myFirebase.child("taskList").child("WTc2b11a7edbc4f7956eb0d491f8f293fb")
-    
-  }
+  el: '#vue-test'
   
 
 })
