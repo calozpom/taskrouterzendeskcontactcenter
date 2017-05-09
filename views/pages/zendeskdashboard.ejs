@@ -375,9 +375,8 @@ window.vueMaster = new Vue({
 
 })
 
-window.taskListDB = myFirebase.ref("taskList/WKc9fb44a68905d751dded01581d3fe50c");
 //technically vuefire should do this but it doesn't seem to work reliably and is impossible to debug
-taskListDB.on('value', function(snapshot) {
+myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('value', function(snapshot) {
   console.log('task List structure changed');
   console.log(JSON.stringify(snapshot.val()));
   vueMaster.$refs.testref.update()(snapshot.val());
