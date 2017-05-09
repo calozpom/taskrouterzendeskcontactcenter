@@ -337,25 +337,16 @@ var config = {
     messagingSenderId: "132789793599"
   };
 
-firebase.initializeApp(config);
-
-window.myFirebase = firebase.database().ref();
 
 Vue.component('vue-test', {
   template: '#chatTask',
   data: function() {
    return {
-   
+   taskList: []
 
   }
 
 },
-firebase: function() {
-  return {
-      taskList: myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c")
-    }
-    
-  },
 methods: {
   add: function() {
     this.taskList[0].messageList.push({from:'meya', content:'15'});
@@ -365,6 +356,10 @@ methods: {
   },
   removeTask: function() {
     this.taskList.pop();
+  }
+  update: function(newTaskList) {
+    console.log("updating vue database");
+    this.taskList = newTaskList;
   }
 
 }
@@ -376,7 +371,16 @@ window.vueMaster = new Vue({
   
 
 })
-console.log(myFirebase.child("taskList").child("WTc2b11a7edbc4f7956eb0d491f8f293fb"));
+firebase.initializeApp(config);
+
+window.myFirebase = firebase.database().ref();
+window.taskListDB = myFirebase.ref("taskList/WKc9fb44a68905d751dded01581d3fe50c");
+taskListDB.on('value', function(snapshot) {
+  console.log('task List structure changed');
+  console.log(JSON.stringify(snapshot.val()));
+  vueMaster.$refs.testref.update()(snapshot.val());
+});
+
 
 
 

@@ -259,13 +259,29 @@ app.post('/initiatebot', function(request, response) {
           task.assignmentStatus == "reserved" ||
           task.assignmentStatus == "assigned") {
           foundTask = 1;
-          console.log("found an existing task from that user which is still active. Trying to list attributes");
-          console.log(task.attributes);
-          taskConversationSid = task.sid;
-          console.log("will use this existing task sid for this conversation " + taskConversationSid);
-          updateConversationPost(taskConversationSid, request, friendlyName_first, friendlyName_last);
+        if (task.assignmentStatus == "pending") {
+          myFirebase.child("taskList").child("queue").child(task.sid).child("messageList").push({
+            'from': request.body['From'],
+            'message': request.body['Body'],
+            'first': friendlyName_first,
+            'last': friendlyName_last
+          });
         }
-      });
+        else {
+          myFirebase.child("taskList").child(task.workerSid).child(task.sid).child("messageList").push({
+            'from': request.body['From'],
+            'message': request.body['Body'],
+            'first': friendlyName_first,
+            'last': friendlyName_last
+          });
+        }
+        console.log("found an existing task from that user which is still active. Trying to list attributes");
+        console.log(task.attributes);
+        taskConversationSid = task.sid;
+        console.log("will use this existing task sid for this conversation " + taskConversationSid);
+        updateConversationPost(taskConversationSid, request, friendlyName_first, friendlyName_last);
+      }
+    });
 
       if (!foundTask) {
         console.log("did not find an existing active task for this messenger");
@@ -343,7 +359,7 @@ app.post('/initiatebot', function(request, response) {
   });
 
 
-  response.send('');
+response.send('');
 
 
 
@@ -388,12 +404,8 @@ function updateConversationPost(taskSid, request, friendlyName_first, friendlyNa
     'first': friendlyName_first,
     'last': friendlyName_last
   });
-  myFirebase.child("taskList").child("queue").child(taskSid).child("messageList").push({
-    'from': request.body['From'],
-    'message': request.body['Body'],
-    'first': friendlyName_first,
-    'last': friendlyName_last
-    });
+
+
   var meyaUserID = {};
   //We munge multiple parameters together to pass all the context to Meya. I had to shorten the Messenger prefix to stay within character count limits.
   meyaUserID['from'] = request.body['From'].replace("Messenger:", "M@");
@@ -585,7 +597,7 @@ app.post('/botresponse', function(request, response) {
       'from': 'MeyaBot',
       'message': request.body.text
     });
-    myFirebase.child("taskList").child("queue").child("messageList").child(meyaUserID[2]).push({
+    myFirebase.child("taskList").child("queue").child(meyaUserID[2]).child("messageList").push({
       'from': 'MeyaBot',
       'message': request.body.text
     });
