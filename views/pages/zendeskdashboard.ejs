@@ -336,6 +336,7 @@ var config = {
     storageBucket: "firebase-taskrouter.appspot.com",
     messagingSenderId: "132789793599"
   };
+window.myFirebase = firebase.database().ref();
 
 
 Vue.component('vue-test', {
@@ -373,8 +374,8 @@ window.vueMaster = new Vue({
 })
 firebase.initializeApp(config);
 
-window.myFirebase = firebase.database().ref();
 window.taskListDB = myFirebase.ref("taskList/WKc9fb44a68905d751dded01581d3fe50c");
+//technically vuefire should do this but it doesn't seem to work reliably and is impossible to debug
 taskListDB.on('value', function(snapshot) {
   console.log('task List structure changed');
   console.log(JSON.stringify(snapshot.val()));
