@@ -336,6 +336,8 @@ var config = {
     storageBucket: "firebase-taskrouter.appspot.com",
     messagingSenderId: "132789793599"
   };
+  firebase.initializeApp(config);
+
 window.myFirebase = firebase.database().ref();
 
 
@@ -372,7 +374,6 @@ window.vueMaster = new Vue({
   
 
 })
-firebase.initializeApp(config);
 
 window.taskListDB = myFirebase.ref("taskList/WKc9fb44a68905d751dded01581d3fe50c");
 //technically vuefire should do this but it doesn't seem to work reliably and is impossible to debug
