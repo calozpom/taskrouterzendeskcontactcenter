@@ -287,7 +287,7 @@
     <div class='custom-panel-heading'>
       <h5 class='white'>
         <div id='titleText'>
-          Task: {{task.task_title}}
+          Task: {{task.sid}}
         </div>
         <span class='label radius alert right'>Reject</span>&nbsp;
         <a href='#' @click="accept(task.task_sid)">
@@ -332,33 +332,7 @@ Vue.component('vue-test', {
   template: '#chatTask',
   data: function() {
    return {
-    taskList:[
-    {
-      task_title: 'task from hairy mcscary',
-      task_sid: 'sidxx',
-      show: false,
-      messageList: [
-      {from: 'al', content: '10'},
-      {from: 'al', content: '12'}
-      ]
-    },
-    {
-      task_title: 'task from donaldsons dairy',
-      task_sid: 'sidxx',
-      show: false,
-      messageList: [
-      {from: 'meya', content: '10'},
-      {from: 'meya', content: '12'}
-      ]
-    }
-    ],
-    task_title: 'task from hairy mcscary',
-      task_sid: 'sidxx',
-      show: false,
-      messageList: [
-      {from: 'al', content: '10'},
-      {from: 'al', content: '12'}
-      ]
+   
 
   }
 },
@@ -382,7 +356,7 @@ window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
 window.vueMaster = new Vue({
   el: '#vue-test',
   firebase:  {
-    taskList: myFirebase.ref('taskList/al')
+    taskList: myFirebase.ref('taskList/WTc2b11a7edbc4f7956eb0d491f8f293fb')
   }
 
 })
