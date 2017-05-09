@@ -338,10 +338,7 @@ Vue.component('vue-test', {
   }
 
 },
-firebase: {
-      taskList: myFirebase.child("taskList").child("WTc2b11a7edbc4f7956eb0d491f8f293fb")
-    
-  },
+
 methods: {
   add: function() {
     this.taskList[0].messageList.push({from:'meya', content:'15'});
@@ -358,7 +355,11 @@ methods: {
 
 
 window.vueMaster = new Vue({
-  el: '#vue-test'
+  el: '#vue-test',
+  firebase: {
+      taskList: myFirebase.child("taskList").child("WTc2b11a7edbc4f7956eb0d491f8f293fb")
+    
+  }
   
 
 })
