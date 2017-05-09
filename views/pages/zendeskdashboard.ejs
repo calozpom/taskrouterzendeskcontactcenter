@@ -350,8 +350,10 @@ Vue.component('vue-test', {
   }
 
 },
-firebase: {
+firebase: function() {
+  return {
       taskList: myFirebase.child("taskList").child("WTc2b11a7edbc4f7956eb0d491f8f293fb")
+    }
     
   },
 methods: {
