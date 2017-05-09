@@ -418,37 +418,23 @@ function updateConversationPost(taskSid, request, friendlyName_first, friendlyNa
 }
 
 function updateTaskAttributes(taskSid, attributesJson) {
-  console.log("trying to update task attributes with:");
-  console.log(JSON.stringify(attributesJson));
   var attributes = {};
   client.workspace.tasks(taskSid).get(function(err, task) {
-    console.log("fetched a task");
-    console.log(err);
-    console.log(task);
-    console.log(task.attributes);
     attributes=JSON.parse(task.attributes)
-    console.log("received current attributes");
-    console.log(task.attributes);
-     for (var key in attributesJson) {
-  attributes[key] = attributesJson[key];
- }
- console.log("new combined attributes");
- console.log(attributes);
- console.log(JSON.stringify(attributes));
-
-    client.workspace.tasks(taskSid).update({
-    attributes: JSON.stringify(attributes)
-}, function(err, task) {
-    if (err) {
-      console.log("error");
-      console.log(err);
+    for (var key in attributesJson) {
+      attributes[key] = attributesJson[key];
     }
-    else {
-      console.log("no error");
-    console.log(task.attributes);
-  }
-});
-});
+    client.workspace.tasks(taskSid).update({
+      attributes: JSON.stringify(attributes)
+    }, function(err, task) {
+      if (err) {
+        console.log("error");
+        console.log(err);
+      }
+      else {
+      }
+    });
+  });
   
 
 }
@@ -646,6 +632,7 @@ app.post('/eventstream', function(request, response) {
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
         break;
       case "task.canceled":
+       taskList.child("queue").child('request.body.TaskSid').remove();
         break;
       case "task.completed":
         dataToSet['attributes'] = request.body.TaskAttributes;
@@ -653,11 +640,8 @@ app.post('/eventstream', function(request, response) {
         dataToSet['status'] = request.body.TaskAssignmentStatus;
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         //TODO
-        taskList.equalTo(request.body.TaskSid).once('value', function(snapshot) {
-          console.log("Found. a matching firebase entry for completed task");
-          console.log(snapshot.val());
-          console.log(snapshot.key);
-        })
+        taskAttributes=JSON.parse(request.body.TaskAttributes);
+        taskList.child(taskAttributes['worker']).child('request.body.TaskSid').remove();
        // taskList.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         break;
       case "task.updated":
