@@ -367,7 +367,7 @@ methods: {
     console.log(JSON.stringify(this.taskList));
   },
   reset: function() {
-    this.taskList = [{}];
+    this.taskList = [];
     console.log("reset vue to zero");
     console.log(JSON.stringify(this.taskList));
   }
@@ -387,7 +387,7 @@ myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('val
   console.log('task List structure changed');
   console.log(JSON.stringify(snapshot.val()));
   var taskListData = snapshot.val();
-  var dataToReturn = [{}];
+  var dataToReturn = [];
   if (taskListData != null){
     dataToReturn = [taskListData];
   }
