@@ -20,7 +20,7 @@
 
       <div id="dashboard-body">
         <div class="row" id="addToThis"> 
-        <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.add()'><i class='fi fi-check'></i>add a message</a>
+        <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.reset()'><i class='fi fi-check'></i>Reset Vue/a>
         <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.removeTask()'><i class='fi fi-check'></i>remove a task</a>
           <div id="vue-test">
             <vue-test ref="testref"></vue-test>
@@ -365,6 +365,9 @@ methods: {
     console.log("updating to " + newTaskList);
     this.taskList = newTaskList;
   }
+  reset: function() {
+    this.taskList = [];
+  }
 
 }
 })
@@ -383,7 +386,7 @@ myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('val
   var taskListData = snapshot.val();
   var dataToReturn = [];
   if (taskListData != null){
-    dataToReturn = taskListData;
+    dataToReturn = [taskListData];
   }
 
   vueMaster.$refs.testref.update(dataToReturn);
