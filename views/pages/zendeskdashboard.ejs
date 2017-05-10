@@ -364,9 +364,12 @@ methods: {
     console.log("updating vue database");
     console.log("updating to " + newTaskList);
     this.taskList = newTaskList;
+    console.log(this.taskList);
   },
   reset: function() {
     this.taskList = [];
+    console.log("reset vue to zero");
+    console.log(this.taskList);
   }
 
 }
