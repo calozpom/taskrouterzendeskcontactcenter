@@ -44,6 +44,9 @@
                 <span class='label radius success right'>Accept</span>
               </a>
             </template>
+            <template v-if="task.data.status === 'assigned'">
+            <a href='#' @Click="completeTask(task.data.sid)'><span class='label radius success right'>Complete</span></a>
+            </template>
           </h5>
         </div>
         <div class='custom-panel-details'>
@@ -182,6 +185,10 @@ methods: {
   accept: function(sid, reservationSid) {
     console.log("calling accept method with sid " + sid + " and reservationSid " + reservationSid);
     acceptTask(sid, reservationSid);
+  },
+  completeTask: function(sid) {
+    console.log("Completing task " + sid);
+    completeTask(sid);
   },
   removeTask: function() {
     this.taskList.pop();
