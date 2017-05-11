@@ -255,29 +255,17 @@ app.post('/initiatebot', function(request, response) {
   client.workspace.tasks.get(queryJson, function(err, data) {
     if (!err) {
       data.tasks.forEach(function(task) {
+        myFirebase.child("messageList").child(task.sid).push({
+            'from': request.body['From'],
+            'message': request.body['Body'],
+            'first': friendlyName_first,
+            'last': friendlyName_last
+          });
         if (task.assignmentStatus == "pending" ||
           task.assignmentStatus == "reserved" ||
           task.assignmentStatus == "assigned") {
           foundTask = 1;
-        if (task.assignmentStatus == "pending") {
-          myFirebase.child("taskList").child("queue").child(task.sid).child("messageList").push({
-            'from': request.body['From'],
-            'message': request.body['Body'],
-            'first': friendlyName_first,
-            'last': friendlyName_last
-          });
-        }
-        else {
-          console.log(task);
-          console.log(JSON.stringify(task));
-          console.log(task.workerSid);
-          myFirebase.child("taskList").child(task.workerSid).child(task.sid).child("messageList").push({
-            'from': request.body['From'],
-            'message': request.body['Body'],
-            'first': friendlyName_first,
-            'last': friendlyName_last
-          });
-        }
+        
         console.log("found an existing task from that user which is still active. Trying to list attributes");
         console.log(task.attributes);
         taskConversationSid = task.sid;
@@ -323,7 +311,12 @@ app.post('/initiatebot', function(request, response) {
           //console.log(body);
           var newTaskResponse = JSON.parse(body);
           console.log("created a new tasks with Sid " + newTaskResponse.sid);
-
+          myFirebase.child("messageList").child(newTaskResponse.sid).push({
+            'from': request.body['From'],
+            'message': request.body['Body'],
+            'first': friendlyName_first,
+            'last': friendlyName_last
+          });
           var id = request.body['From'];
           if (id.substr(0, 10) == "Messenger:") {
             id = id.replace('Messenger:', '');
@@ -601,7 +594,7 @@ app.post('/botresponse', function(request, response) {
       'from': 'MeyaBot',
       'message': request.body.text
     });
-    myFirebase.child("taskList").child("queue").child(meyaUserID[2]).child("messageList").push({
+    myFirebase.child("messageList").child(meyaUserID[2]).push({
       'from': 'MeyaBot',
       'message': request.body.text
     });
@@ -645,29 +638,9 @@ app.post('/eventstream', function(request, response) {
           dataToSet['channel'] = request.body.TaskChannelUniqueName;
           eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
           dataToSet['queue'] = request.body.TaskQueueName;
-          try {
-            taskList.child("queue").child(request.body.TaskSid).update(dataToSet)
-            taskList.child("queue").child(request.body.TaskSid).child("messageList").push({
-            'from': attributes["message_from"],
-            'message': attributes["message_body"]
-          });
-          }
-          catch (error) {
-            console.log("there wasn't already any data for this task");
-            taskList.child("queue").child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
-            if (request.body.TaskChannelUniqueName == 'chat') {
-              console.log("its a chat task!")
-              client.workspace.tasks(request.body.TaskSid).get(function(err, task) {
-                attributes=JSON.parse(task.attributes);
-                console.log("fetched attributes " + task.attributes);
-            taskList.child("queue").child(request.body.TaskSid).child("messageList").push({
-            'from': attributes["message_from"],
-            'message': attributes["message_body"]
-          });
-          });
-          }
-        }
-        });
+          taskList.child("queue").child(request.body.TaskSid).update(dataToSet)
+            });
+          
         break;
         case "task-queue.timeout":
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
@@ -838,6 +811,10 @@ app.get('/sendsms', function(request, response) {
     }
   });
   myFirebase.child(request.query.sid).push({'from':'me', 'message':request.query.body}    );
+  myFirebase.child("messageList").child(request.query.sid).push({
+            'from': 'me',
+            'message': request.query.body
+          });
   response.send('');
 
 });

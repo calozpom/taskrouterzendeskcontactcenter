@@ -47,7 +47,8 @@
       </h5>
     </div>
     <div class='custom-panel-details'>
-      <template v-for="message in task.data.messageList">
+      <template v-for="message in fetchMessagesForTask(task.data.sid)">
+      {{message}}
       <template v-for="(key, val) in message">
         <div class='row'>
           <div class='message-dashboard'>
@@ -175,7 +176,8 @@ Vue.component('vue-test', {
   data: function() {
    return {
    taskList: [],
-   messageText: ""
+   messageText: "",
+   messageList:{}
 
   }
 
@@ -196,6 +198,14 @@ methods: {
     console.log("updating to " + newTaskList);
     this.taskList = newTaskList;
     console.log(JSON.stringify(this.taskList));
+  },
+  updateMessages: function(newMessageData) {
+    console.log("Updating message data");
+    console.log("Updating to " + JSON.stringify(newMessageData));
+    this.messageList=newMessageData;
+  },
+  fetchMessagesForTask: function(taskSid) {
+    return this.messageList['taskSid'];
   },
   reset: function() {
     this.taskList = [];
@@ -248,6 +258,19 @@ myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('val
   }
 
   vueMaster.$refs.testref.update(dataToReturn);
+});
+
+myFirebase.child("messageList").on('value', function(snapshot) {
+
+  console.log('message structure changed');
+  console.log(JSON.stringify(snapshot.val()));
+  var messageListData = snapshot.val();
+  var dataToReturn = {};
+  if (messageListData != null){
+    dataToReturn = taskListData;
+  }
+
+  vueMaster.$refs.testref.updateMessages(dataToReturn);
 });
 
 
