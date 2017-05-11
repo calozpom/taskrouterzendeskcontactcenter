@@ -617,7 +617,9 @@ app.post('/botresponse', function(request, response) {
 
 app.post('/eventstream', function(request, response) {
   // This function consumes the event stream and structures it into firebase data
-  // This firebase structure is then used for real time visualization of queue state
+  // The eventstream firebase structure is then used for real time visualization of queue state
+ // The taskList firebase structure is then used for the agent UI rendering using vue.js
+
   var eventstream = myFirebase.child("eventstream");
   var taskList = myFirebase.child("taskList");
   console.log("received event " + request.body.EventType);
@@ -640,9 +642,6 @@ app.post('/eventstream', function(request, response) {
                   taskList.child("queue").child(request.body.TaskSid).update(dataToSet)
         }
        catch (error) {
-          dataToSet['attributes'] = request.body.TaskAttributes;
-          dataToSet['sid'] = request.body.TaskSid;
-          dataToSet['status'] = request.body.TaskAssignmentStatus;
           taskList.child("queue").child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         }
         break;
@@ -671,11 +670,19 @@ app.post('/eventstream', function(request, response) {
         dataToSet['sid'] = request.body.TaskSid;
         dataToSet['status'] = request.body.TaskAssignmentStatus;
         //eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
+        if (request.body.TaskAssignmentStatus == "pending") {
+            taskList.child("queue").child(request.body.TaskSid).update(dataToSet);
+        }
+        else {
+          client.workspace.tasks(request.body.TaskSid.get(function(err, task) {
+               attributes=JSON.parse(task.attributes)
+               taskList.child(attributes["worker"]).child(request.body.TaskSid).update(dataToSet);
+             }
+
+        }
         try {
-          taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
         }
         catch (err) {
-          taskList.child("queue").child(request.body.TaskSid).update(dataToSet);
 
         }
         break;
