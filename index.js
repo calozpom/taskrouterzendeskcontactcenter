@@ -632,6 +632,9 @@ app.post('/eventstream', function(request, response) {
         //taskList.child(request.body.)
         break;
       case "task-queue.entered":
+      taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
+        console.log("received task queue entered event. firebase before changing anything is");
+        console.log(JSON.stringify(snapshot.val()));
         dataToSet['attributes'] = request.body.TaskAttributes;
         dataToSet['sid'] = request.body.TaskSid;
         dataToSet['status'] = request.body.TaskAssignmentStatus;
@@ -644,6 +647,7 @@ app.post('/eventstream', function(request, response) {
        catch (error) {
           taskList.child("queue").child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         }
+      }
         break;
       case "task-queue.timeout":
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
@@ -671,14 +675,22 @@ app.post('/eventstream', function(request, response) {
         dataToSet['status'] = request.body.TaskAssignmentStatus;
         //eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         if (request.body.TaskAssignmentStatus == "pending") {
+                taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
+        console.log("received task updated  event for pending task. firebase before changing anything is");
+        console.log(JSON.stringify(snapshot.val()));
             taskList.child("queue").child(request.body.TaskSid).update(dataToSet);
         }
+      }
         else {
           // the task updated event does not include the worker sid, which is the key in the taskList data structure
           // so we first get it out of the task attributes, where we have saved it
           client.workspace.tasks(request.body.TaskSid).get(function(err, task) {
                attributes=JSON.parse(task.attributes);
+               taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
+        console.log("received task updated  event for non-pending task. firebase before changing anything is");
+        console.log(JSON.stringify(snapshot.val()));
                taskList.child(attributes["worker"]).child(request.body.TaskSid).update(dataToSet);
+             }
              })
 
         }
