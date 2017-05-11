@@ -205,6 +205,8 @@ methods: {
     this.messageList=newMessageData;
   },
   fetchMessagesForTask: function(taskSid) {
+    console.log("Being asked for message data for task " + taskSid);
+    console.log("Returning " + JSON.stringify(this.messageList['taskSid']))
     return this.messageList['taskSid'];
   },
   reset: function() {
