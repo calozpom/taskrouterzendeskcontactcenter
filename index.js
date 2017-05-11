@@ -646,7 +646,16 @@ app.post('/eventstream', function(request, response) {
           }
           catch (error) {
             taskList.child("queue").child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
+            if (request.body.TaskChannelUniqueName == 'chat') {
+              client.workspace.tasks(request.body.TaskSid).get(function(err, task) {
+                attributes=JSON.parse(task.attributes);
+            taskList.child("queue").child(request.body.TaskSid).child("messageList").push({
+            'from': attributes["message_from"],
+            'message': attributes["message_body"]
+          });
+          });
           }
+        }
         });
         break;
         case "task-queue.timeout":
