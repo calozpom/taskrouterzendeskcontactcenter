@@ -21,7 +21,7 @@
       <div id="dashboard-body">
         <div class="row" id="addToThis"> 
         <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.reset()'><i class='fi fi-check'></i>Reset Vue</a>
-        <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.removeTask()'><i class='fi fi-check'></i>remove a task</a>
+        <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.addTask()'><i class='fi fi-check'></i>Add a task</a>
           <div id="vue-test">
             <vue-test ref="testref"></vue-test>
           </div>       
@@ -226,7 +226,7 @@
         htmlToAdd += "</div>";
 
         var divToAddTo=document.getElementById('addToThis');
-        divToAddTo.innerHTML = divToAddTo.innerHTML + htmlToAdd;
+        //divToAddTo.innerHTML = divToAddTo.innerHTML + htmlToAdd;
         $("#taskDiv"+reservation.task.sid).hide();   
 
       }
@@ -369,6 +369,11 @@ methods: {
   reset: function() {
     this.taskList = [];
     console.log("reset vue to zero");
+    console.log(JSON.stringify(this.taskList));
+  },
+  addTask: function(){
+    this.taskList=[{"WTad1d78700f4931ee276cde3177aa002b":{"attributes":"{\"message_from\":\"+14152791216\",\"message_body\":\"hi\",\"message_to\":\"+18559798881\",\"bot_qualified\":\"true\",\"message_sid\":\"SMc7c31c3eaada52dc452effa389fcf366\"}","channel":"chat","queue":"Other Customers","sid":"WTad1d78700f4931ee276cde3177aa002b","status":"reserved"}}]
+    console.log("adding a task");
     console.log(JSON.stringify(this.taskList));
   }
 
