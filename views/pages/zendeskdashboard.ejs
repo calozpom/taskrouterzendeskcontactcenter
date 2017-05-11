@@ -207,6 +207,7 @@ methods: {
   fetchMessagesForTask: function(taskSid) {
     console.log("Being asked for message data for task " + taskSid);
     var arr=[]
+    console.log(this.messageList);
     var msgList = JSON.parse(this.messageList);
     console.log(JSON.stringify(msgList));
     for (key in msgList[taskSid]) {
