@@ -227,6 +227,8 @@ myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('val
       taskListData["data"]=taskListData[key];
       delete taskListData[key];
     }
+    console.log("wanting to parse task attributes:");
+    console.log(taskListData["attributes"]);
     taskListData["attributes"]=JSON.parse(taskListData["attributes"]);
     dataToReturn = [taskListData];
   }
