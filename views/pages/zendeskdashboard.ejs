@@ -36,7 +36,7 @@
     <div class='custom-panel-heading'>
       <h5 class='white'>
         <div id='titleText'>
-          Task: {{task.data.sid}}
+          Task: {{task.data.attributes.message_from}}
         </div>
         <template v-if="task.data.status === 'reserved'">
         <span class='label radius alert right'>Reject</span>&nbsp;
@@ -67,7 +67,7 @@
           </div>
         </div>
       </template>
-      <template v-if="task.data.accepted==='true'"
+      <template v-if="task.data.accepted==='true'">
       <form><input type='text' placeholder='Reply...'><a href='#' class='button success radius' @click="add"><i class='fi fi-check'></i>Send</a></form>
     </template>
   </div>
@@ -227,6 +227,7 @@ myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('val
       taskListData["data"]=taskListData[key];
       delete taskListData[key];
     }
+    taskListData["attributes"]=JSON.parse(taskListData["attributes"]);
     dataToReturn = [taskListData];
   }
 
