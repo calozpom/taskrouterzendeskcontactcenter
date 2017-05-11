@@ -268,6 +268,8 @@ app.post('/initiatebot', function(request, response) {
           });
         }
         else {
+          console.log(task);
+          console.log(JSON.stringify(task));
           myFirebase.child("taskList").child(task.workerSid).child(task.sid).child("messageList").push({
             'from': request.body['From'],
             'message': request.body['Body'],
