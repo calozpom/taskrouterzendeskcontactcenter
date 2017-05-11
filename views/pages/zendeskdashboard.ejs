@@ -68,7 +68,7 @@
             </div>
         </template>
         <template v-if="task.data.accepted==='true'">
-          <form><input type='text' v-model="messageText" @keyup.enter="submit" placeholder='Reply...'><a href='#' class='button success radius' @click="sendMessage(task.data.attributes.message_to, task.data.attributes.message_from, task.data.sid, messageText)"><i class='fi fi-check'></i>Send</a></form>
+          <form><input type='text' v-model="messageText" @keyup.enter="sendMessage(task.data.attributes.message_to, task.data.attributes.message_from, task.data.sid, messageText)" placeholder='Reply...'><a href='#' class='button success radius' @click="sendMessage(task.data.attributes.message_to, task.data.attributes.message_from, task.data.sid, messageText)"><i class='fi fi-check'></i>Send</a></form>
         </template>
       </div>
     </template>
@@ -226,7 +226,9 @@ methods: {
   sendMessage: function(from, to, sid, body) {
     console.log("trying to send message " + from + to + sid + body);
      sendSMS(from, to, sid, body);
+     this.messageText="";
   }
+
 
 }
 })
