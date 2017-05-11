@@ -620,46 +620,46 @@ app.post('/eventstream', function(request, response) {
   // The eventstream firebase structure is then used for real time visualization of queue state
  // The taskList firebase structure is then used for the agent UI rendering using vue.js
 
-  var eventstream = myFirebase.child("eventstream");
-  var taskList = myFirebase.child("taskList");
-  console.log("received event " + request.body.EventType);
-  console.log(request.body); 
-  if (request.body.TaskSid) {
-    dataToSet = {};
-    switch (request.body.EventType) {        
-      case "task.deleted":
-        eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
+ var eventstream = myFirebase.child("eventstream");
+ var taskList = myFirebase.child("taskList");
+ console.log("received event " + request.body.EventType);
+ console.log(request.body); 
+ if (request.body.TaskSid) {
+  dataToSet = {};
+  switch (request.body.EventType) {        
+    case "task.deleted":
+    eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
         //taskList.child(request.body.)
         break;
-      case "task-queue.entered":
-      taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
-        console.log("received task queue entered event. firebase before changing anything is");
-        console.log(JSON.stringify(snapshot.val()));
-        dataToSet['attributes'] = request.body.TaskAttributes;
-        dataToSet['sid'] = request.body.TaskSid;
-        dataToSet['status'] = request.body.TaskAssignmentStatus;
-        dataToSet['channel'] = request.body.TaskChannelUniqueName;
-        eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
-        dataToSet['queue'] = request.body.TaskQueueName;
-        try {
-                  taskList.child("queue").child(request.body.TaskSid).update(dataToSet)
-        }
-       catch (error) {
-          taskList.child("queue").child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
-        }
-      }
+        case "task-queue.entered":
+        taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
+          console.log("received task queue entered event. firebase before changing anything is");
+          console.log(JSON.stringify(snapshot.val()));
+          dataToSet['attributes'] = request.body.TaskAttributes;
+          dataToSet['sid'] = request.body.TaskSid;
+          dataToSet['status'] = request.body.TaskAssignmentStatus;
+          dataToSet['channel'] = request.body.TaskChannelUniqueName;
+          eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
+          dataToSet['queue'] = request.body.TaskQueueName;
+          try {
+            taskList.child("queue").child(request.body.TaskSid).update(dataToSet)
+          }
+          catch (error) {
+            taskList.child("queue").child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
+          }
+        });
         break;
-      case "task-queue.timeout":
+        case "task-queue.timeout":
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
 
         break;
-      case "task-queue.moved":
+        case "task-queue.moved":
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
         break;
-      case "task.canceled":
-       taskList.child("queue").child('request.body.TaskSid').remove();
+        case "task.canceled":
+        taskList.child("queue").child('request.body.TaskSid').remove();
         break;
-      case "task.completed":
+        case "task.completed":
         dataToSet['attributes'] = request.body.TaskAttributes;
         dataToSet['sid'] = request.body.TaskSid;
         dataToSet['status'] = request.body.TaskAssignmentStatus;
@@ -668,65 +668,65 @@ app.post('/eventstream', function(request, response) {
         taskAttributes=JSON.parse(request.body.TaskAttributes);
         taskList.child(taskAttributes['worker']).child(request.body.TaskSid).remove();
        // taskList.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
-        break;
-      case "task.updated":
-        dataToSet['attributes'] = request.body.TaskAttributes;
-        dataToSet['sid'] = request.body.TaskSid;
-        dataToSet['status'] = request.body.TaskAssignmentStatus;
+       break;
+       case "task.updated":
+       dataToSet['attributes'] = request.body.TaskAttributes;
+       dataToSet['sid'] = request.body.TaskSid;
+       dataToSet['status'] = request.body.TaskAssignmentStatus;
         //eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
         if (request.body.TaskAssignmentStatus == "pending") {
-                taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
-        console.log("received task updated  event for pending task. firebase before changing anything is");
-        console.log(JSON.stringify(snapshot.val()));
+          taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
+            console.log("received task updated  event for pending task. firebase before changing anything is");
+            console.log(JSON.stringify(snapshot.val()));
             taskList.child("queue").child(request.body.TaskSid).update(dataToSet);
+          });
         }
-      }
         else {
           // the task updated event does not include the worker sid, which is the key in the taskList data structure
           // so we first get it out of the task attributes, where we have saved it
           client.workspace.tasks(request.body.TaskSid).get(function(err, task) {
-               attributes=JSON.parse(task.attributes);
-               taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
-        console.log("received task updated  event for non-pending task. firebase before changing anything is");
-        console.log(JSON.stringify(snapshot.val()));
-               taskList.child(attributes["worker"]).child(request.body.TaskSid).update(dataToSet);
-             }
-             })
+           attributes=JSON.parse(task.attributes);
+           taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
+            console.log("received task updated  event for non-pending task. firebase before changing anything is");
+            console.log(JSON.stringify(snapshot.val()));
+            taskList.child(attributes["worker"]).child(request.body.TaskSid).update(dataToSet);
+          });
+        })
 
-        }
-        try {
-        }
-        catch (err) {
+         }
+         try {
+         }
+         catch (err) {
 
-        }
-        break;
-      case "reservation.created":
-        dataToSet['status'] = request.body.TaskAssignmentStatus;
-        dataToSet['reservationSid'] = request.body.ReservationSid;
-        taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
+         }
+         break;
+         case "reservation.created":
+         dataToSet['status'] = request.body.TaskAssignmentStatus;
+         dataToSet['reservationSid'] = request.body.ReservationSid;
+         taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
            taskList.child(request.body.WorkerSid).child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);
            taskList.child("queue").child(request.body.TaskSid).remove();
            taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
-        })
-        break;
-      case "reservation.canceled":
-       taskList.child(request.body.WorkerSid).child(request.body.TaskSid).once("value", function(snapshot) {
+         })
+         break;
+         case "reservation.canceled":
+         taskList.child(request.body.WorkerSid).child(request.body.TaskSid).once("value", function(snapshot) {
            taskList.child("queue").child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);
-        })
-        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).remove();
-        break;
-      case "reservation.accepted":
-        dataToSet['status'] = request.body.TaskAssignmentStatus;
-        dataToSet['accepted'] = "true";
-        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
-        var newAttributes = {'worker':request.body.WorkerSid};
-        updateTaskAttributes(request.body.TaskSid, newAttributes);
-        break;
+         })
+         taskList.child(request.body.WorkerSid).child(request.body.TaskSid).remove();
+         break;
+         case "reservation.accepted":
+         dataToSet['status'] = request.body.TaskAssignmentStatus;
+         dataToSet['accepted'] = "true";
+         taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
+         var newAttributes = {'worker':request.body.WorkerSid};
+         updateTaskAttributes(request.body.TaskSid, newAttributes);
+         break;
 
 
 
 
-    }
+       }
     //eventstream.child(request.body.TaskSid).push({'update':request.body});
   }
   response.send('');
