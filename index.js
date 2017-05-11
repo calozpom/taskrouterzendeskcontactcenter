@@ -320,6 +320,7 @@ app.post('/initiatebot', function(request, response) {
           //console.log(body);
           var newTaskResponse = JSON.parse(body);
           console.log("created a new tasks with Sid " + newTaskResponse.sid);
+
           var id = request.body['From'];
           if (id.substr(0, 10) == "Messenger:") {
             id = id.replace('Messenger:', '');
@@ -643,6 +644,10 @@ app.post('/eventstream', function(request, response) {
           dataToSet['queue'] = request.body.TaskQueueName;
           try {
             taskList.child("queue").child(request.body.TaskSid).update(dataToSet)
+            taskList.child("queue").child(request.body.TaskSid).child("messageList").push({
+            'from': attributes["message_from"],
+            'message': attributes["message_body"]
+          });
           }
           catch (error) {
             console.log("there wasn't already any data for this task");
