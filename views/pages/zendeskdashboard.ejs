@@ -48,7 +48,7 @@
     </div>
     <div class='custom-panel-details'>
       <template v-for="message in task.data.messageList">
-      <div v-for="(key, val) in message">
+      <template v-for="(key, val) in message">
         <div class='row'>
           <div class='message-dashboard'>
             <div class='small-2 columns'>
@@ -67,13 +67,13 @@
             </div>
           </div>
         </div>
-        </div>
+        </div>  
       </template>
       <template v-if="task.data.accepted==='true'">
       <form><input type='text' v-model="messageText" placeholder='Reply...'><a href='#' class='button success radius' @click="sendMessage(task.data.attributes.message_from, task.data.attributes.message_to, task.data.sid, messageText)"><i class='fi fi-check'></i>Send</a></form>
     </template>
   </div>
-  </div>
+  </template>
 </template>
 
   <script src="js/vendor/jquery.js"></script>
@@ -171,7 +171,8 @@ Vue.component('vue-test', {
   template: '#chatTask',
   data: function() {
    return {
-   taskList: []
+   taskList: [],
+   messageText: ""
 
   }
 
