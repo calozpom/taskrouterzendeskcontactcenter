@@ -373,7 +373,7 @@ methods: {
   },
   addTask: function(){
     this.taskList=[{"WTad1d78700f4931ee276cde3177aa002b":{"attributes":"{\"message_from\":\"+14152791216\",\"message_body\":\"hi\",\"message_to\":\"+18559798881\",\"bot_qualified\":\"true\",\"message_sid\":\"SMc7c31c3eaada52dc452effa389fcf366\"}","channel":"chat","queue":"Other Customers","sid":"WTad1d78700f4931ee276cde3177aa002b","status":"reserved"}}]
-    for key in this.taskList {
+    for (var key in this.taskList) {
       this.taskList["data"]=thistaskList[key];
       delete this.taskList[key];
     }
@@ -398,7 +398,7 @@ myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('val
   var taskListData = snapshot.val();
   var dataToReturn = [];
   if (taskListData != null){
-    for key in taskListData {
+    for (var key in taskListData) {
       taskListData["data"]=taskListData[key];
       delete taskListData[key];
     }
