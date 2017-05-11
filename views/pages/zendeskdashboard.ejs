@@ -38,10 +38,12 @@
         <div id='titleText'>
           Task: {{task.data.sid}}
         </div>
+        <template v-if="task.data.status === 'reserved'"
         <span class='label radius alert right'>Reject</span>&nbsp;
         <a href='#' @click="accept(task.data.sid, task.data.reservationSid)">
           <span class='label radius success right'>Accept</span>
         </a>
+        </template>
       </h5>
     </div>
     <div class='custom-panel-details'>
@@ -65,8 +67,9 @@
           </div>
         </div>
       </template>
+      <template v-if="task.data.accepted==='accepted'"
       <form><input type='text' placeholder='Reply...'><a href='#' class='button success radius' @click="add"><i class='fi fi-check'></i>Send</a></form>
-    </div>
+    </template>
   </div>
   </div>
 </template>
@@ -118,7 +121,10 @@
 
 
       worker.on("reservation.accepted", function(reservation) {
-        modalClient.invoke('destroy');
+        try {
+          modalClient.invoke('destroy');
+        }
+        catch (err) {}
       });
 
       worker.on("reservation.rejected", function(reservation) {
