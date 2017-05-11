@@ -48,6 +48,7 @@
     </div>
     <div class='custom-panel-details'>
       <template v-for="message in task.data.messageList">
+      <div v-for="(key, val) in message">
         <div class='row'>
           <div class='message-dashboard'>
             <div class='small-2 columns'>
@@ -58,17 +59,18 @@
             <div class='small-10 columns'>
             <div class='message-desc'>
                 <div class='messageName'>
-                  <b>{{message.from}}</b>
+                  <b>{{val.from}}</b>
                 </div>
-                {{message.content}}
+                {{val.content}}
                 <span class='right green'>now</span>
               </div>
             </div>
           </div>
         </div>
+        </div>
       </template>
       <template v-if="task.data.accepted==='true'">
-      <form><input type='text' placeholder='Reply...'><a href='#' class='button success radius' @click="add"><i class='fi fi-check'></i>Send</a></form>
+      <form><input type='text' v-model="messageText" placeholder='Reply...'><a href='#' class='button success radius' @click="sendMessage(task.data.attributes.message_from, task.data.attributes.message_to, task.data.sid, messageText)"><i class='fi fi-check'></i>Send</a></form>
     </template>
   </div>
   </div>
@@ -204,6 +206,10 @@ methods: {
     }
     console.log("adding a task");
     console.log(JSON.stringify(this.taskList));
+  },
+  sendMessage: function(from, to, sid, body) {
+    console.log("trying to send message " + from + to + sid + body);
+     sendSMS(from, to, sid, body);
   }
 
 }
@@ -218,6 +224,10 @@ window.vueMaster = new Vue({
 
 //technically vuefire should do this but it doesn't seem to work reliably and is impossible to debug
 myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('value', function(snapshot) {
+  // This function does a bit of normalization on the app data we retrieve from firebase
+  // the data is structured in JSON under task SID, but it's easier in vue to not need to know the task sid
+  // so we replace it with "Data"
+  // we also parse the JSON attributes which are escaped string into actual JSON
   console.log('task List structure changed');
   console.log(JSON.stringify(snapshot.val()));
   var taskListData = snapshot.val();
