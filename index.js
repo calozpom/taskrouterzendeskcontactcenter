@@ -674,10 +674,12 @@ app.post('/eventstream', function(request, response) {
             taskList.child("queue").child(request.body.TaskSid).update(dataToSet);
         }
         else {
-          client.workspace.tasks(request.body.TaskSid.get(function(err, task) {
-               attributes=JSON.parse(task.attributes)
+          // the task updated event does not include the worker sid, which is the key in the taskList data structure
+          // so we first get it out of the task attributes, where we have saved it
+          client.workspace.tasks(request.body.TaskSid).get(function(err, task) {
+               attributes=JSON.parse(task.attributes);
                taskList.child(attributes["worker"]).child(request.body.TaskSid).update(dataToSet);
-             }
+             })
 
         }
         try {
