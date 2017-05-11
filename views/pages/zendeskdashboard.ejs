@@ -207,10 +207,12 @@ methods: {
   fetchMessagesForTask: function(taskSid) {
     console.log("Being asked for message data for task " + taskSid);
     var arr=[]
-    for (key in this.messageList[taskSid]) {
-      arr.push(messageList[taskSid][key]);
+    var msgList = JSON.parse(this.messageList);
+    console.log(JSON.stringify(msgList));
+    for (key in msgList[taskSid]) {
+      arr.push(msgList[taskSid][key]);
     }
-    console.log("Returning " + JSON.stringify(arr))
+    console.log("Returning " + JSON.stringify(arr));
     return arr;
   },
   reset: function() {
