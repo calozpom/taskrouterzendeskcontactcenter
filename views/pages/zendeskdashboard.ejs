@@ -267,7 +267,7 @@ myFirebase.child("messageList").on('value', function(snapshot) {
   var messageListData = snapshot.val();
   var dataToReturn = {};
   if (messageListData != null){
-    dataToReturn = taskListData;
+    dataToReturn = messageListData;
   }
 
   vueMaster.$refs.testref.updateMessages(dataToReturn);
