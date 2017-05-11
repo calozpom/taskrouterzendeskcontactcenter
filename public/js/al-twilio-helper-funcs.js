@@ -64,6 +64,8 @@ function acceptTask(tasksid, reservationsid) {
     });
 }
 
+
+
 function completeTask(sid) {
     console.log("completing task");
     $.ajax({
@@ -85,27 +87,4 @@ function completeTask(sid) {
 
 }
 
-function changeState(state) {
-    console.log("trying to change state to state " + state);
-    var activitySid = "WAbc57093ed33d341e926d9db5e73525ad";
-    switch (state) {
-        case "Idle":
-            activitySid = "WAbc57093ed33d341e926d9db5e73525ad";
-            break;
-        case "Offline":
-            activitySid = "WA7d69025af6c5acae76faad56da32698e";
-            break;
-        case "Busy":
-            activitySid = "WA6492c399f88532c2935ca7fcbfe56e9b";
-            break;
-    }
-    console.log(activitySid);
-    worker.update("ActivitySid", activitySid, function(error, worker) {
-        if (error) {
-            console.log(error.code);
-            console.log(error.message);
-        } else {
-            console.log(worker.activityName); // "Offline"
-        }
-    });
-}
+

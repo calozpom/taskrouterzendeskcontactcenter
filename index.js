@@ -681,6 +681,7 @@ app.post('/eventstream', function(request, response) {
         break;
       case "reservation.created":
         dataToSet['status'] = request.body.TaskAssignmentStatus;
+        dataToSet['reservationSid'] = request.body.ReservationSid;
         taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
            taskList.child(request.body.WorkerSid).child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);
            taskList.child("queue").child(request.body.TaskSid).remove();

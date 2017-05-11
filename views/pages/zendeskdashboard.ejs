@@ -39,7 +39,7 @@
           Task: {{task.data.sid}}
         </div>
         <span class='label radius alert right'>Reject</span>&nbsp;
-        <a href='#' @click="accept(task.task_sid)">
+        <a href='#' @click="accept(task.data.sid, task.data.reservationSid)">
           <span class='label radius success right'>Accept</span>
         </a>
       </h5>
@@ -172,8 +172,9 @@ methods: {
   add: function() {
     this.taskList[0].messageList.push({from:'meya', content:'15'});
   },
-  accept: function(sid) {
-    console.log("calling accept method with sid " + sid);
+  accept: function(sid, reservationSid) {
+    console.log("calling accept method with sid " + sid + " and reservationSid " + reservationSid);
+    acceptTask(sid, reservationSid);
   },
   removeTask: function() {
     this.taskList.pop();
