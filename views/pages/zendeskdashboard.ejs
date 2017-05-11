@@ -30,55 +30,48 @@
     </div>
   </div>
 
-<template id="chatTask" >
-<div>
-  <div class='small-12 columns' v-for="task in taskList">
-    <div class='custom-panel-heading'>
-      <h5 class='white'>
-        <div id='titleText'>
-          Task: {{task.data.attributes.message_from}}
+  <template id="chatTask" >
+    <div>
+      <div class='small-12 columns' v-for="task in taskList">
+        <div class='custom-panel-heading'>
+          <h5 class='white'>
+            <div id='titleText'>
+              Task: {{task.data.attributes.message_from}}
+            </div>
+            <template v-if="task.data.status === 'reserved'">
+              <span class='label radius alert right'>Reject</span>&nbsp;
+              <a href='#' @click="accept(task.data.sid, task.data.reservationSid)">
+                <span class='label radius success right'>Accept</span>
+              </a>
+            </template>
+          </h5>
         </div>
-        <template v-if="task.data.status === 'reserved'">
-        <span class='label radius alert right'>Reject</span>&nbsp;
-        <a href='#' @click="accept(task.data.sid, task.data.reservationSid)">
-          <span class='label radius success right'>Accept</span>
-        </a>
-        </template>
-      </h5>
-    </div>
-    <div class='custom-panel-details'>
-      <template v-for="message in fetchMessagesForTask(task.data.sid)">
-      {{message}}
-      <template v-for="(key, val) in message">
-        <div class='row'>
-          <div class='message-dashboard'>
-            <div class='small-2 columns'>
-              <div class='profilePic'>
-                <img src='https://twiliozendeskcc.herokuapp.com/img/al.jpg' alt='profile' />
-              </div>
-            </div> 
-            <div class='small-10 columns'>
-            <div class='message-desc'>
-                <div class='messageName'>
-                val {{val}}
-                key {{key}}
-                message {{message}}
-                  <b>{{val.from}}</b>
+        <div class='custom-panel-details'>
+          <template v-for="message in fetchMessagesForTask(task.data.sid)">
+            <div class='row'>
+              <div class='message-dashboard'>
+                <div class='small-2 columns'>
+                  <div class='profilePic'>
+                    <img src='https://twiliozendeskcc.herokuapp.com/img/al.jpg' alt='profile' />
+                  </div>
+                </div> 
+                <div class='small-10 columns'>
+                  <div class='message-desc'>
+                    <div class='messageName'>
+                      <b>{{message.from}}</b>
+                    </div>
+                    {{message.message}}
+                    <span class='right green'>now</span>
+                  </div>
                 </div>
-                {{val.content}}
-                <span class='right green'>now</span>
               </div>
             </div>
-          </div>
-        </div>
-        </div>  
-      </template>
-      <template v-if="task.data.accepted==='true'">
-      <form><input type='text' v-model="messageText" placeholder='Reply...'><a href='#' class='button success radius' @click="sendMessage(task.data.attributes.message_from, task.data.attributes.message_to, task.data.sid, messageText)"><i class='fi fi-check'></i>Send</a></form>
+        </template>
+        <template v-if="task.data.accepted==='true'">
+          <form><input type='text' v-model="messageText" placeholder='Reply...'><a href='#' class='button success radius' @click="sendMessage(task.data.attributes.message_from, task.data.attributes.message_to, task.data.sid, messageText)"><i class='fi fi-check'></i>Send</a></form>
+        </template>
+      </div>
     </template>
-  </div>
-  </template>
-</template>
 
   <script src="js/vendor/jquery.js"></script>
   <script src="js/foundation.min.js"></script>
