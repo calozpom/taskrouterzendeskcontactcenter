@@ -283,11 +283,11 @@
 </script>
 <template id="chatTask" >
 <div>
-  <div class='small-12 columns' v-for="task in taskList">
+  <div class='small-12 columns' v-for="(task,key) in taskList">
     <div class='custom-panel-heading'>
       <h5 class='white'>
         <div id='titleText'>
-          Task: {{task[0].sid}}
+          Task: {{task.key.sid}}
         </div>
         <span class='label radius alert right'>Reject</span>&nbsp;
         <a href='#' @click="accept(task.task_sid)">
