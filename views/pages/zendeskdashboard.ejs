@@ -208,7 +208,7 @@ methods: {
     console.log("Being asked for message data for task " + taskSid);
     var arr=[]
     console.log(this.messageList);
-    var msgList = JSON.parse(this.messageList);
+    var msgList = this.messageList;
     console.log(JSON.stringify(msgList));
     for (key in msgList[taskSid]) {
       arr.push(msgList[taskSid][key]);
