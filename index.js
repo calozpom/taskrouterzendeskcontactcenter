@@ -645,10 +645,13 @@ app.post('/eventstream', function(request, response) {
             taskList.child("queue").child(request.body.TaskSid).update(dataToSet)
           }
           catch (error) {
+            console.log("there wasn't already any data for this task");
             taskList.child("queue").child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
             if (request.body.TaskChannelUniqueName == 'chat') {
+              console.log("its a chat task!")
               client.workspace.tasks(request.body.TaskSid).get(function(err, task) {
                 attributes=JSON.parse(task.attributes);
+                console.log("fetched attributes " + task.attributes);
             taskList.child("queue").child(request.body.TaskSid).child("messageList").push({
             'from': attributes["message_from"],
             'message': attributes["message_body"]
