@@ -38,7 +38,7 @@
         <div id='titleText'>
           Task: {{task.data.sid}}
         </div>
-        <template v-if="task.data.status === 'reserved'"
+        <template v-if="task.data.status === 'reserved'">
         <span class='label radius alert right'>Reject</span>&nbsp;
         <a href='#' @click="accept(task.data.sid, task.data.reservationSid)">
           <span class='label radius success right'>Accept</span>
@@ -67,7 +67,7 @@
           </div>
         </div>
       </template>
-      <template v-if="task.data.accepted==='accepted'"
+      <template v-if="task.data.accepted==='true'"
       <form><input type='text' placeholder='Reply...'><a href='#' class='button success radius' @click="add"><i class='fi fi-check'></i>Send</a></form>
     </template>
   </div>
