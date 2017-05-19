@@ -159,7 +159,11 @@ app.get('/visualize', function(request, response) {
 });
 
 
-
+app.post('/voicenoivr', function(request,response){
+  var textToSpeak = querystring.escape("Please hold while we connect you");
+  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play><Enqueue workflowSid='WW4d526c9041d73060ca46d4011cf34b33'><Task>{\"type\":\":voice\"}</Task></Enqueue></Response>";
+    response.send(responseString);
+})
 app.post('/initiateivr', function(request,response){
   var textToSpeak = querystring.escape("Hello and welcome to the best customer experience youve ever had. Thats right. British Customer Service. Please tell us how we can help.");
   console.log(textToSpeak);
@@ -643,7 +647,7 @@ app.post('/eventstream', function(request, response) {
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
 
 
-        
+
         break;
         case "task-queue.timeout":
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
