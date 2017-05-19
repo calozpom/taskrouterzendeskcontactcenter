@@ -20,17 +20,17 @@
 
       <div id="dashboard-body">
         <div class="row" id="addToThis"> 
-        <a href='#' class='button success radius' onclick='vueMaster.$refs.agentui.reset()'><i class='fi fi-check'></i>Reset Vue</a>
-        <a href='#' class='button success radius' onclick='vueMaster.$refs.agentui.addTask()'><i class='fi fi-check'></i>Add a task</a>
-          <div id="agentui">
-            <agentui ref="agentui"></agentui>
+        <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.reset()'><i class='fi fi-check'></i>Reset Vue</a>
+        <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.addTask()'><i class='fi fi-check'></i>Add a task</a>
+          <div id="vue-test">
+            <vue-test ref="testref"></vue-test>
           </div>       
         </div>
       </div>
     </div>
   </div>
 
-  <template id="Task" >
+  <template id="chatTask" >
     <div>
       <div class='small-12 columns' v-for="task in taskList">
         <div class='custom-panel-heading'>
@@ -172,8 +172,8 @@ var config = {
 window.myFirebase = firebase.database().ref();
 
 
-Vue.component('agentui', {
-  template: '#Task',
+Vue.component('vue-test', {
+  template: '#chatTask',
   data: function() {
    return {
    taskList: [],
@@ -247,7 +247,7 @@ methods: {
 
 
 window.vueMaster = new Vue({
-  el: '#agentui'
+  el: '#vue-test'
   
 
 })
@@ -273,7 +273,7 @@ myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('val
     }
       }
 
-  vueMaster.$refs.agentui.update(dataToReturn);
+  vueMaster.$refs.testref.update(dataToReturn);
 });
 
 myFirebase.child("messageList").on('value', function(snapshot) {
@@ -286,7 +286,7 @@ myFirebase.child("messageList").on('value', function(snapshot) {
     dataToReturn = messageListData;
   }
 
-  vueMaster.$refs.agentui.updateMessages(dataToReturn);
+  vueMaster.$refs.testref.updateMessages(dataToReturn);
 });
 
 
