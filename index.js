@@ -721,6 +721,8 @@ app.post('/eventstream', function(request, response) {
        dataToSet['queue'] = request.body.TaskQueueName;
        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge);
        taskList.child("queue").child(request.body.TaskSid).remove();
+       var newAttributes = {'worker':request.body.WorkerSid};
+       updateTaskAttributes(request.body.TaskSid, newAttributes);
        break;
        case "reservation.canceled":
        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).once("value", function(snapshot) {
