@@ -633,17 +633,16 @@ app.post('/eventstream', function(request, response) {
         //taskList.child(request.body.)
         break;
         case "task-queue.entered":
-        taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
-          console.log("received task queue entered event. firebase before changing anything is");
-          console.log(JSON.stringify(snapshot.val()));
+
           dataToSet['attributes'] = request.body.TaskAttributes;
           dataToSet['sid'] = request.body.TaskSid;
           dataToSet['status'] = request.body.TaskAssignmentStatus;
           dataToSet['channel'] = request.body.TaskChannelUniqueName;
-          eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
           dataToSet['queue'] = request.body.TaskQueueName;
           taskList.child("queue").child(request.body.TaskSid).update(dataToSet)
-            });
+          eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
+
+
           
         break;
         case "task-queue.timeout":
@@ -654,7 +653,8 @@ app.post('/eventstream', function(request, response) {
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
         break;
         case "task.canceled":
-        taskList.child("queue").child('request.body.TaskSid').remove();
+        //todo need to update this to support tasks currently reserved too
+        taskList.child("queue").child(request.body.TaskSid).remove();
         break;
         case "task.completed":
         dataToSet['attributes'] = request.body.TaskAttributes;
@@ -700,11 +700,12 @@ app.post('/eventstream', function(request, response) {
          case "reservation.created":
          dataToSet['status'] = request.body.TaskAssignmentStatus;
          dataToSet['reservationSid'] = request.body.ReservationSid;
-         taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
-           taskList.child(request.body.WorkerSid).child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);
+         dataToSet['attributes'] = request.body.TaskAttributes;
+         dataToSet['sid'] = request.body.TaskSid;
+         dataToSet['channel'] = request.body.TaskChannelUniqueName;
+         dataToSet['queue'] = request.body.TaskQueueName;
+           taskList.child(request.body.WorkerSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge);
            taskList.child("queue").child(request.body.TaskSid).remove();
-           taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
-         })
          break;
          case "reservation.canceled":
          taskList.child(request.body.WorkerSid).child(request.body.TaskSid).once("value", function(snapshot) {
