@@ -634,16 +634,16 @@ app.post('/eventstream', function(request, response) {
         break;
         case "task-queue.entered":
 
-          dataToSet['attributes'] = request.body.TaskAttributes;
-          dataToSet['sid'] = request.body.TaskSid;
-          dataToSet['status'] = request.body.TaskAssignmentStatus;
-          dataToSet['channel'] = request.body.TaskChannelUniqueName;
-          dataToSet['queue'] = request.body.TaskQueueName;
-          taskList.child("queue").child(request.body.TaskSid).update(dataToSet)
-          eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
+        dataToSet['attributes'] = request.body.TaskAttributes;
+        dataToSet['sid'] = request.body.TaskSid;
+        dataToSet['status'] = request.body.TaskAssignmentStatus;
+        dataToSet['channel'] = request.body.TaskChannelUniqueName;
+        dataToSet['queue'] = request.body.TaskQueueName;
+        taskList.child("queue").child(request.body.TaskSid).update(dataToSet)
+        eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
 
 
-          
+        
         break;
         case "task-queue.timeout":
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
@@ -688,43 +688,54 @@ app.post('/eventstream', function(request, response) {
             console.log(JSON.stringify(snapshot.val()));
             taskList.child(attributes["worker"]).child(request.body.TaskSid).update(dataToSet);
           });
-        })
-
-         }
-         try {
-         }
-         catch (err) {
-
-         }
-         break;
-         case "reservation.created":
-         dataToSet['status'] = request.body.TaskAssignmentStatus;
-         dataToSet['reservationSid'] = request.body.ReservationSid;
-         dataToSet['attributes'] = request.body.TaskAttributes;
-         dataToSet['sid'] = request.body.TaskSid;
-         dataToSet['channel'] = request.body.TaskChannelUniqueName;
-         dataToSet['queue'] = request.body.TaskQueueName;
-           taskList.child(request.body.WorkerSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge);
-           taskList.child("queue").child(request.body.TaskSid).remove();
-         break;
-         case "reservation.canceled":
-         taskList.child(request.body.WorkerSid).child(request.body.TaskSid).once("value", function(snapshot) {
-           taskList.child("queue").child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);
          })
-         taskList.child(request.body.WorkerSid).child(request.body.TaskSid).remove();
-         break;
-         case "reservation.accepted":
-         dataToSet['status'] = request.body.TaskAssignmentStatus;
-         dataToSet['accepted'] = "true";
-         taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
-         var newAttributes = {'worker':request.body.WorkerSid};
-         updateTaskAttributes(request.body.TaskSid, newAttributes);
-         break;
 
+        }
+        try {
+        }
+        catch (err) {
 
-
+        }
+        break;
+        case "reservation.created":
+        dataToSet['status'] = request.body.TaskAssignmentStatus;
+        dataToSet['reservationSid'] = request.body.ReservationSid;
+        dataToSet['attributes'] = request.body.TaskAttributes;
+        dataToSet['sid'] = request.body.TaskSid;
+        if (request.body.TaskChannelUniqueName) {
+         dataToSet['channel'] = request.body.TaskChannelUniqueName;
+       }
+       else if (request.body.TaskChannelSid == "TC01161b9bce4a1f1a8d0475308c6220fa") {
+         dataToSet['channel'] = "voice";
 
        }
+       else if (request.body.TaskChannelSid == "TC8bc8560bd2175dc05e4fb8893fbb76a5") {
+         dataToSet['channel'] = "chat";
+
+       }
+
+       dataToSet['queue'] = request.body.TaskQueueName;
+       taskList.child(request.body.WorkerSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge);
+       taskList.child("queue").child(request.body.TaskSid).remove();
+       break;
+       case "reservation.canceled":
+       taskList.child(request.body.WorkerSid).child(request.body.TaskSid).once("value", function(snapshot) {
+         taskList.child("queue").child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);
+       })
+       taskList.child(request.body.WorkerSid).child(request.body.TaskSid).remove();
+       break;
+       case "reservation.accepted":
+       dataToSet['status'] = request.body.TaskAssignmentStatus;
+       dataToSet['accepted'] = "true";
+       taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
+       var newAttributes = {'worker':request.body.WorkerSid};
+       updateTaskAttributes(request.body.TaskSid, newAttributes);
+       break;
+
+
+
+
+     }
     //eventstream.child(request.body.TaskSid).push({'update':request.body});
   }
   response.send('');
