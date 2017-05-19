@@ -739,7 +739,10 @@ app.post('/eventstream', function(request, response) {
        break;
        case "task.wrapup":
        dataToSet['status'] = request.body.TaskAssignmentStatus;
-       taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
+       client.workspace.tasks(request.body.TaskSid).get(function(err, task) {
+           attributes=JSON.parse(task.attributes);
+            taskList.child(attributes["worker"]).child(request.body.TaskSid).update(dataToSet);
+          });
 
        break;
 
