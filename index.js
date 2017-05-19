@@ -862,7 +862,7 @@ app.post('/voice', function (request, response) {
 function isAValidPhoneNumber(number) {
   return /^[\d\+\-\(\) ]+$/.test(number);
 }
-}
+
 
 app.get('/play/:voiceId/:textToConvert', function (req, res) {
 var pollyCallback = function (err, data) {
