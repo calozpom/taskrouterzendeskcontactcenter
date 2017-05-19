@@ -40,7 +40,7 @@
             </div>
             <template v-if="task.data.status === 'reserved'">
               <span class='label radius alert right'>Reject</span>&nbsp;
-              <a href='#' @click="accept(task.data.sid, task.data.reservationSid)">
+              <a href='#' @click="accept(task.data.sid, task.data.reservationSid, task.data.channel)">
                 <span class='label radius success right'>Accept</span>
               </a>
             </template>
