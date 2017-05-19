@@ -187,7 +187,7 @@
           window.zendeskClient = ZAFClient.init();
           zendeskClient.invoke('resize', { width: '100%', height: '600px' });
         });
-        $.getJSON('/clienttoken', function(data.token) {
+        $.getJSON('/clienttoken', function(data) {
           console.log('Got a token for client.');
           console.log('Token: ' + data.token);
           Twilio.Device.setup(data.token);
