@@ -55,6 +55,8 @@ myFirebase.authWithCustomToken(firebaseToken, function(error, authData) {
 
 var client = new twilio.TaskRouterClient(accountSid, authToken, workspaceSid);
 var smsclient = new twilio.RestClient(accountSid, authToken);
+const ClientCapability = require('twilio').jwt.ClientCapability;
+const VoiceResponse = require('twilio').twiml.VoiceResponse;
 
 
 
@@ -137,6 +139,27 @@ app.get('/workspacetoken', function(request, response) {
   capability.allowReservationUpdates();
   var token = capability.generate(86400);
   response.send({workspacetoken:workspacetoken,token:token});
+});
+
+app.get('/clienttoken',function(request, response) {
+  const identity = "al";
+  const capability = new ClientCapability({
+    accountSid: accountSid,
+    authToken: authToken
+  });
+
+  capability.addScope(new ClientCapability.IncomingClientScope(identity));
+  capability.addScope(new ClientCapability.OutgoingClientScope({
+    applicationSid: config.twimlAppSid,
+    clientName: identity,
+  }));
+
+  // Include identity and token in a JSON response
+  response.send({
+    identity: identity,
+    token: capability.toJwt(),
+  });
+
 });
 
 app.get('/visualize', function(request, response) {
@@ -810,6 +833,36 @@ app.get('/sendsms', function(request, response) {
   response.send('');
 
 });
+
+app.post('/voice', function (request, response) {
+
+  const twiml = new VoiceResponse();
+
+  if(request.toNumber) {
+    // Wrap the phone number or client name in the appropriate TwiML verb
+    // if is a valid phone number
+    const attr = isAValidPhoneNumber(request.toNumber) ? 'number' : 'client';
+
+    twiml.dial({
+      [attr]: toNumber,
+      callerId: "+14152791216",
+    });
+  } else {
+    twiml.say('Thanks for calling!');
+  }
+
+  response.send(twiml.toString());
+});
+
+/**
+* Checks if the given value is valid as phone number
+* @param {Number|String} number
+* @return {Boolean}
+*/
+function isAValidPhoneNumber(number) {
+  return /^[\d\+\-\(\) ]+$/.test(number);
+}
+}
 
 app.get('/play/:voiceId/:textToConvert', function (req, res) {
 var pollyCallback = function (err, data) {
