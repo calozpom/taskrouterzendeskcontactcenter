@@ -46,7 +46,7 @@
                 <span class='label radius success right'>Accept</span>
               </a>
             </template>
-            <template v-if="task.data.status === 'assigned'">
+            <template v-if="task.data.status === 'assigned' || task.data.status ==='wrapping'">
             <a href='#' @Click="completeTask(task.data.sid)"><span class='label radius success right'>Complete</span></a>
             </template>
           </h5>
@@ -78,11 +78,14 @@
         </template>
         </template>
         <template v-if="task.data.channel ==='voice'">
+        <div class='small-6 columns'>
         <label>Mic Volume</label>
          <div class="volume-wrapper" id="mic-wrapper"></div>
-
+         </div>
+         <div class='small-6 columns'>
         <label>Speaker Volume</label>
          <div class="volume-wrapper" id="speaker-wrapper"></div>
+         </div>
         </template>
       </div>
     </template>
