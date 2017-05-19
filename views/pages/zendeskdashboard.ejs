@@ -20,17 +20,17 @@
 
       <div id="dashboard-body">
         <div class="row" id="addToThis"> 
-        <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.reset()'><i class='fi fi-check'></i>Reset Vue</a>
-        <a href='#' class='button success radius' onclick='vueMaster.$refs.testref.addTask()'><i class='fi fi-check'></i>Add a task</a>
-          <div id="vue-test">
-            <vue-test ref="testref"></vue-test>
+        <a href='#' class='button success radius' onclick='vueMaster.$refs.agent-ui.reset()'><i class='fi fi-check'></i>Reset Vue</a>
+        <a href='#' class='button success radius' onclick='vueMaster.$refs.agent-ui.addTask()'><i class='fi fi-check'></i>Add a task</a>
+          <div id="agent-ui">
+            <agent-ui ref="agent-ui"></agent-ui>
           </div>       
         </div>
       </div>
     </div>
   </div>
 
-  <template id="chatTask" >
+  <template id="Task" >
     <div>
       <div class='small-12 columns' v-for="task in taskList">
         <div class='custom-panel-heading'>
@@ -50,6 +50,7 @@
           </h5>
         </div>
         <div class='custom-panel-details'>
+        <template v-if="task.channel ==='chat'">
           <template v-for="message in fetchMessagesForTask(task.data.sid)">
             <div class='row'>
               <div class='message-dashboard'>
@@ -73,6 +74,9 @@
         <template v-if="task.data.accepted==='true'">
           <form><input type='text' v-model="messageText" @keyup.enter="sendMessage(task.data.attributes.message_to, task.data.attributes.message_from, task.data.sid, messageText); return false;" placeholder='Reply...'><a href='#' class='button success radius' @click="sendMessage(task.data.attributes.message_to, task.data.attributes.message_from, task.data.sid, messageText)" onclick="return false" ><i class='fi fi-check'></i>Send</a></form>
         </template>
+        </template>
+        <template v-if="task.channel ==='voice'">
+        </template>
       </div>
     </template>
 
@@ -92,6 +96,7 @@
   <script src="https://unpkg.com/vue"></script>
   <script src="https://unpkg.com/vuefire/dist/vuefire.js"></script>
   <script src="js/vueAgentComponents.js" type="text/javascript"></script>
+  <script type="text/javascript" src="//media.twiliocdn.com/sdk/js/client/v1.4/twilio.min.js"></script>
 
 
 
@@ -167,8 +172,8 @@ var config = {
 window.myFirebase = firebase.database().ref();
 
 
-Vue.component('vue-test', {
-  template: '#chatTask',
+Vue.component('agent-ui', {
+  template: '#Task',
   data: function() {
    return {
    taskList: [],
@@ -242,7 +247,7 @@ methods: {
 
 
 window.vueMaster = new Vue({
-  el: '#vue-test'
+  el: '#agent-ui'
   
 
 })
@@ -268,7 +273,7 @@ myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('val
     }
       }
 
-  vueMaster.$refs.testref.update(dataToReturn);
+  vueMaster.$refs.agent-ui.update(dataToReturn);
 });
 
 myFirebase.child("messageList").on('value', function(snapshot) {
@@ -281,7 +286,7 @@ myFirebase.child("messageList").on('value', function(snapshot) {
     dataToReturn = messageListData;
   }
 
-  vueMaster.$refs.testref.updateMessages(dataToReturn);
+  vueMaster.$refs.agent-ui.updateMessages(dataToReturn);
 });
 
 
