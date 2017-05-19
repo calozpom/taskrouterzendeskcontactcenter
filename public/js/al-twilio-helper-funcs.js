@@ -52,10 +52,10 @@ function updateCapacity(number, workerSid) {
     });
 }
 
-function acceptTask(tasksid, reservationsid) {
+function acceptTask(tasksid, reservationsid, channel) {
     $.ajax({
         url: 'acceptTask',
-        data: { 'tasksid': tasksid, 'reservationsid': reservationsid },
+        data: { 'tasksid': tasksid, 'reservationsid': reservationsid, 'channel':channel },
         type: 'get',
         success: function(output) {
             console.log("received OK to accept task");
