@@ -737,7 +737,11 @@ app.post('/eventstream', function(request, response) {
        var newAttributes = {'worker':request.body.WorkerSid};
        updateTaskAttributes(request.body.TaskSid, newAttributes);
        break;
+       case "task.wrapup":
+       dataToSet['status'] = request.body.TaskAssignmentStatus;
+       taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
 
+       break;
 
 
 

@@ -37,6 +37,8 @@
           <h5 class='white'>
             <div id='titleText'>
               Task: {{task.data.attributes.from}}
+              <br />
+              Status: {{task.data.status}}
             </div>
             <template v-if="task.data.status === 'reserved'">
               <span class='label radius alert right'>Reject</span>&nbsp;

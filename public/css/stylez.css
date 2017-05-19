@@ -1055,10 +1055,10 @@ button:hover, button:focus, .button:hover, .button:focus
 
 
 .volume-wrapper {
-  width: 300px;
-  height: 40px;
-  border: 2px solid black;
-  margin-bottom: 25px;
+  width: 100px;
+  height: 15px;
+  border: 1px solid black;
+  margin-bottom: 5px;
   display: block;
 }
 
