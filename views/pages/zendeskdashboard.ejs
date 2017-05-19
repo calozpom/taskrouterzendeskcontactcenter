@@ -164,10 +164,10 @@
 
       Twilio.Device.connect(function (conn) {
         console.log('Successfully established call!');
-        const micIndicator = new VolumeIndicator();
+        window.micIndicator = new VolumeIndicator();
         document.getElementById('mic-wrapper').appendChild(micIndicator.element);
 
-        const speakerIndicator = new VolumeIndicator();
+        window.speakerIndicator = new VolumeIndicator();
         document.getElementById('speaker-wrapper').appendChild(speakerIndicator.element);
         conn.on('volume', setVolumes);
 
