@@ -196,8 +196,9 @@
           registerClientCallbacks();
 
         })
-        .fail(function () {
+        .fail(function (data) {
           console.log('Could not get a client token from server!');
+          console.log(data);
         });
       }
 

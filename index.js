@@ -141,10 +141,12 @@ app.get('/workspacetoken', function(request, response) {
 });
 
 app.get('/clienttoken',function(request, response) {
+  console.log("trying to generate a client token");
   const identity = "al";
   var capability = new twilio.Capability(accountSid, authToken);
-  capability.allowClientIncoming("al");
+  capability.allowClientIncoming(identity);
   var token = capability.generate();
+  console.log("generated token " + token);
 
   response.set('Content-Type', 'application/jwt')
   response.send(token);
