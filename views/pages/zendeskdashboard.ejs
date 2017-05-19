@@ -225,9 +225,9 @@ methods: {
   add: function() {
     this.taskList[0].messageList.push({from:'meya', content:'15'});
   },
-  accept: function(sid, reservationSid) {
+  accept: function(sid, reservationSid, channel) {
     console.log("calling accept method with sid " + sid + " and reservationSid " + reservationSid);
-    acceptTask(sid, reservationSid);
+    acceptTask(sid, reservationSid, channel);
   },
   completeTask: function(sid) {
     console.log("Completing task " + sid);
