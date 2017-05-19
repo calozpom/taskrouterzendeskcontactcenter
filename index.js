@@ -506,27 +506,26 @@ app.get('/acceptTask', function(request, response) {
   console.log("received request to accept task ");
   console.log(request.query.tasksid);
   console.log(request.query.reservationsid)
+  console.log(request.query.channel)
 
-  //POST /v1/Workspaces/{WorkspaceSid}/Tasks/{TaskSid}/Reservations/{ReservationSid}
-  var options = {
-    method: 'POST',
-    url: 'https://taskrouter.twilio.com/v1/Workspaces/' + workspaceSid + '/Tasks/' + request.query.tasksid + '/Reservations/' + request.query.reservationsid,
-    auth: {
-      username: accountSid,
-      password: authToken
-    },
-    form: {
-      ReservationStatus: 'accepted'
-    }
-  };
-  console.log(options);
+  if (request.query.channel == "voice") {
+    client.workspace.tasks(request.query.tasksid).reservations(request.query.reservationsid).update({
+    instruction: 'conference',
+    dequeueFrom: '+18552226811'
+}, function(err, reservation) {
+    console.log(reservation.reservation_status);
+    console.log(reservation.worker_name);
+});
+  }
+  if (request.query.channel == "chat") {
+    client.workspace.tasks(request.query.tasksid).reservations(request.query.reservationsid).update({
+    reservationStatus: 'accepted'
+}, function(err, reservation) {
+    console.log(reservation.reservation_status);
+    console.log(reservation.worker_name);
+});
+  }
 
-  req(options, function(error, response, body) {
-    if (error) throw new Error(error);
-    //console.log(body);
-    console.log("accepted task" + body);
-
-  });
   response.send('');
 });
 
