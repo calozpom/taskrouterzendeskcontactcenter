@@ -148,8 +148,7 @@ app.get('/clienttoken',function(request, response) {
   var token = capability.generate();
   console.log("generated token " + token);
 
-  response.set('Content-Type', 'application/jwt')
-  response.send(token);
+  response.send({token:token});
 
 });
 
