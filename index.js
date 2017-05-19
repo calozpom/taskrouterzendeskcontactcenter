@@ -55,8 +55,7 @@ myFirebase.authWithCustomToken(firebaseToken, function(error, authData) {
 
 var client = new twilio.TaskRouterClient(accountSid, authToken, workspaceSid);
 var smsclient = new twilio.RestClient(accountSid, authToken);
-const ClientCapability = require('twilio').jwt.ClientCapability;
-const VoiceResponse = require('twilio').twiml.VoiceResponse;
+
 
 
 
@@ -143,22 +142,12 @@ app.get('/workspacetoken', function(request, response) {
 
 app.get('/clienttoken',function(request, response) {
   const identity = "al";
-  const capability = new ClientCapability({
-    accountSid: accountSid,
-    authToken: authToken
-  });
+  var capability = new twilio.Capability(accountSid, authToken);
+  capability.allowClientIncoming("al");
+  var token = capability.generate();
 
-  capability.addScope(new ClientCapability.IncomingClientScope(identity));
-  capability.addScope(new ClientCapability.OutgoingClientScope({
-    applicationSid: config.twimlAppSid,
-    clientName: identity,
-  }));
-
-  // Include identity and token in a JSON response
-  response.send({
-    identity: identity,
-    token: capability.toJwt(),
-  });
+  response.set('Content-Type', 'application/jwt')
+  response.send(token);
 
 });
 
