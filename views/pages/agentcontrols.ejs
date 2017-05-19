@@ -73,6 +73,7 @@
 <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
 
 <script src="js/morris-demo.js"></script>
+<script src="https://unpkg.com/vue"></script>
 <script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.6/taskrouter.min.js"></script>
 <script type="text/javascript" src="https://assets.zendesk.com/apps/sdk/2.0/zaf_sdk.js"></script>
 
@@ -87,21 +88,21 @@
           vueAgentControls.$refs.agentcontrols.updateCurrentStatus(worker.activityName);
 
         });  
-    
+
     worker.on('activity.update', function(worker) {
       console.log("Worker activity changed to: " + worker.activityName);
       vueAgentControls.$refs.agentcontrols.updateCurrentStatus(worker.activityName);
 
-      
+
     }
   });
-    
 
-    
-    
-    
+
+
+
+
   }
-  
+
   window.onload = function() {
         // We use jQuery to make an Ajax request to the server to retrieve our 
         // Access Token
@@ -148,7 +149,7 @@
 
         window.vueAgentControls = new Vue({
           el: '#agentcontrols'
-          
+
 
         })
 
@@ -180,9 +181,9 @@
 
 
 
-        
 
-        
+
+
 
         function updateCapacity(number, workerSid) {
          $.ajax({ 
@@ -199,7 +200,7 @@
 
 
 
-       
+
 
      </script>
    </body>
