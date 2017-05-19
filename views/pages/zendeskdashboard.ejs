@@ -76,6 +76,11 @@
         </template>
         </template>
         <template v-if="task.data.channel ==='voice'">
+        <label>Mic Volume</label>
+         <div class="volume-wrapper" id="mic-wrapper"></div>
+
+        <label>Speaker Volume</label>
+         <div class="volume-wrapper" id="speaker-wrapper"></div>
         </template>
       </div>
     </template>
@@ -91,7 +96,7 @@
 
   <script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.6/taskrouter.min.js"></script>
   <script type="text/javascript" src="https://assets.zendesk.com/apps/sdk/2.0/zaf_sdk.js"></script>
-
+  <script src="js/VolumeIndicator.js" type="text/javascript"></script>
   <script src="js/al-twilio-helper-funcs.js" type="text/javascript"></script>
   <script src="https://unpkg.com/vue"></script>
   <script src="https://unpkg.com/vuefire/dist/vuefire.js"></script>
@@ -159,11 +164,14 @@
 
       Twilio.Device.connect(function (conn) {
         console.log('Successfully established call!');
+        conn.on('volume', setVolumes);
 
       });
 
       Twilio.Device.disconnect(function (conn) {
         console.log('Call ended.');
+        conn.removeListener('volume', setVolumes);
+        setVolumes(0, 0);
 
       });
 
