@@ -1,213 +1,206 @@
 ﻿<!DOCTYPE html>
 <html lang="en" class="no-js">
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaskRouter OmniChannel Contact Center</title>
-    <!--<link href='https://fonts.googleapis.com/css?family=Raleway:400,300,500' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/foundation.min.css">    
-    <link href="fonts/foundation-icons/foundation-icons.css" rel="stylesheet" type="text/css" />
-    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/motion-ui/1.1.1/motion-ui.min.css" />
-
-    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
-    <link rel="stylesheet" type="text/css" href="fonts/foundation-icons">
-    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" />
-    <link href="css/style.css" rel="stylesheet" />
-    <script src="js/modernizr.custom.js"></script>
-    <link href="css/morris.css" rel="stylesheet" />-->
-    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,500' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="css/foundationz.css" />
-    <link href="fonts/foundation-icons/foundation-icons.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="css/normalize.css" />
-    <!--<link rel="stylesheet" type="text/css" href="fonts/foundation-icons">-->
-    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" />
-    <link href="css/stylez.css" rel="stylesheet" />
-    <script src="js/modernizr.custom.js"></script>
-    <link href="css/morris.css" rel="stylesheet" />
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskRouter Status Control</title>
+  <link href='https://fonts.googleapis.com/css?family=Raleway:400,300,500' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="css/foundationz.css" />
+  <link href="fonts/foundation-icons/foundation-icons.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="css/normalize.css" />
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" />
+  <link href="css/stylez.css" rel="stylesheet" />
+  <script src="js/modernizr.custom.js"></script>
 </head>
 <body class="fadeIn animated">
-    <div class="container">
-        <div class="fixed">
-            
-            <div class="secondary-menu">
-                <div class="row">
-                    <nav class="top-bar" data-topbar role="navigation">
-  
-                <section class="top-bar-section">
-     <ul class="left">
-      <li class="has-dropdown" id="status">
-        <a href="#">Loading...</a>
-      <ul class="dropdown">
-          <li><a href="#">Go offline</a></li>
-          <li class="active"><a href="#">Go Busy</a></li>
-        </ul>
-        </li><br />
-      <li class="has-dropdown">
-        <a href="#">Skills Signed In</a>
-        <ul class="dropdown">
-          <li><a href="#">SMS<span class="label radius success right">Y</span></a></li>
-          <li><a href="#">Facebook<span class="label radius success right">Y</span></a></li>
-          <li class="active"><a href="#">Voice<span class="label radius alert right">N</span></a></li>
-        </ul>
-      </li> <br />
-      <li class="has-dropdown">
-        <a href="#">Multitask Capacity</a>
-        <ul class="dropdown">
-          <li><a href="#" id='updateCapacityOne'>Messaging: 1</a></li>
-          <li><a href="#" id='updateCapacityTwo'>Messaging: 2</a></li>
-        </ul>
-      </li> 
-   
-    </ul>
-  </section>
-                </nav>
-                </div>
-            </div>
-        </div>
-        
+  <div class="container">
+    <div class="fixed">
+      <div id="agentcontrols">
+        <agentcontrols ref="agentcontrols"></agentcontrols>
+      </div> 
     </div>
-    <script src="js/vendor/jquery.js"></script>
-    <script src="js/foundation.min.js"></script>
-    <!--<script src="js/foundation/foundation.core.js"></script>-->
+  </div>  
+
+  <template id="controls">
+   <div class="secondary-menu">
+    <div class="row">
+      <nav class="top-bar" data-topbar role="navigation">
+
+        <section class="top-bar-section">
+         <ul class="left">
+          <li class="has-dropdown" id="status">
+            <a href="#">Status: {{status}}</a>
+            <ul class="dropdown">
+              <template v-if="status === 'Idle'">
+                <li><a href="#" @Click="gooffline()">Go offline</a></li>
+              </template>
+              <template v-if="status ==='Offline'">
+                <li><a href="#" @Click="goonline()">Go online</a></li>
+              </template>
+            </ul>
+          </li>
+          <li class="has-dropdown">
+            <a href="#">Skills Signed In</a>
+            <ul class="dropdown">
+              <li><a href="#">SMS<span class="label radius success right">Y</span></a></li>
+              <li><a href="#">Facebook<span class="label radius success right">Y</span></a></li>
+              <li class="active"><a href="#">Voice<span class="label radius alert right">N</span></a></li>
+            </ul>
+          </li>
+          <li class="has-dropdown">
+            <a href="#">Multitask Capacity</a>
+            <ul class="dropdown">
+              <li><a href="#" @Click="updatecapacity(1)">Messaging: 1</a></li>
+              <li><a href="#" @Click="updatecapacity(2)">Messaging: 2</a></li>
+            </ul>
+          </li> 
+
+        </ul>
+      </section>
+    </nav>
+  </div>
+</div>
+
+<script src="js/vendor/jquery.js"></script>
+<script src="js/foundation.min.js"></script>
 <script src="js/foundation/foundation.util.motion.js"></script>
 <script src="js/foundation/foundation.util.mediaQuery.js"></script>
-    <script src="js/plugins/morris/raphael-2.1.0.min.js" type="text/javascript"></script>
-    <script src="js/plugins/morris/morris.js" type="text/javascript"></script>
-    <script src="js/menucustom.js" type="text/javascript"></script>
-    <script>        $(document).foundation(); </script>
-    <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+<script src="js/plugins/morris/raphael-2.1.0.min.js" type="text/javascript"></script>
+<script src="js/plugins/morris/morris.js" type="text/javascript"></script>
+<script src="js/menucustom.js" type="text/javascript"></script>
+<script>        $(document).foundation(); </script>
+<script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
 
-    <script src="js/morris-demo.js"></script>
-        <script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.6/taskrouter.min.js"></script>
-        <script type="text/javascript" src="https://assets.zendesk.com/apps/sdk/2.0/zaf_sdk.js"></script>
+<script src="js/morris-demo.js"></script>
+<script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.6/taskrouter.min.js"></script>
+<script type="text/javascript" src="https://assets.zendesk.com/apps/sdk/2.0/zaf_sdk.js"></script>
 
-    <script>
-    function registerTaskRouterCallbacks() {
-      worker.on('ready', function(worker) {
-          console.log("Successfully registered as: " + worker.friendlyName);
-          console.log("Current activity is: " + worker.activityName);
+<script>
+  function registerTaskRouterCallbacks() {
+    worker.on('ready', function(worker) {
+      console.log("Successfully registered as: " + worker.friendlyName);
+      console.log("Current activity is: " + worker.activityName);
           console.log(worker.sid);             // 'WKxxx'
           console.log(worker.available);       // false
+          vueAgentControls.$refs.agentcontrols.updateWorkerSid(worker.sid);
+          vueAgentControls.$refs.agentcontrols.updateCurrentStatus(worker.activityName);
 
-          updateStatusMenu(worker.activityName);
+        });  
+    
+    worker.on('activity.update', function(worker) {
+      console.log("Worker activity changed to: " + worker.activityName);
+      vueAgentControls.$refs.agentcontrols.updateCurrentStatus(worker.activityName);
 
-      });
-
-              
-     
-      worker.on('activity.update', function(worker) {
-          console.log("Worker activity changed to: " + worker.activityName);
-          updateStatusMenu(worker.activityName);
-      });
-     
-
-     
-  
       
     }
-   
-    window.onload = function() {
+  });
+    
+
+    
+    
+    
+  }
+  
+  window.onload = function() {
         // We use jQuery to make an Ajax request to the server to retrieve our 
         // Access Token
         $.getJSON('/token', function(data) {
 
-    console.log(data.token);
-    window.worker = new Twilio.TaskRouter.Worker(data.token);
-    window.myFirebase = new Firebase("https://taskrouter.firebaseio.com/");
-    window.taskrouterGlobals = {};
-    registerTaskRouterCallbacks();
-    window.zendeskClient = ZAFClient.init();
-    zendeskClient.invoke('resize', { width: '100%', height: '600px' });
+          console.log(data.token);
+          window.worker = new Twilio.TaskRouter.Worker(data.token);
+          registerTaskRouterCallbacks();
+          window.zendeskClient = ZAFClient.init();
+          zendeskClient.invoke('resize', { width: '100%', height: '600px' });
 
 
-});
-      
-      
-      
-      
+        });
 
-    }
+        Vue.component('agentcontrols', {
+          template: '#controls',
+          data: function() {
+           return {
+             status: "Loading...",
+             worker:""
+           }
 
-    function changeState(state) {
-        console.log("trying to change state to state " + state);
-        var activitySid="WAbc57093ed33d341e926d9db5e73525ad";
-        switch (state) {
+         },
+         methods: {
+          goonline: function() {
+            changeState("Idle");
+          },
+          gooffline: function() {
+            changeState("Offline");
+          },
+          updatecapacity: function(capacity) {
+            updatecapacity(capacity, worker);
+          },
+          updateCurrentStatus: function(status) {
+            this.status=status;
+          },
+          updateWorkerSid: function(sid) {
+            this.worker=sid;
+          }
+
+        }
+      })
+
+
+        window.vueAgentControls = new Vue({
+          el: '#agentcontrols'
+          
+
+        })
+
+        function changeState(state) {
+          console.log("trying to change state to state " + state);
+          var activitySid="WAbc57093ed33d341e926d9db5e73525ad";
+          switch (state) {
             case "Idle":
-              activitySid="WAbc57093ed33d341e926d9db5e73525ad";
-              break;
+            activitySid="WAbc57093ed33d341e926d9db5e73525ad";
+            break;
             case "Offline":
-              activitySid="WA7d69025af6c5acae76faad56da32698e";
-              break;
+            activitySid="WA7d69025af6c5acae76faad56da32698e";
+            break;
             case "Busy":
-              activitySid="WA6492c399f88532c2935ca7fcbfe56e9b";
-              break;                
-        }
-        console.log(activitySid);
-         worker.update("ActivitySid", activitySid, function(error, worker) {
-                  if(error) {
-                    console.log(error.code);
-                    console.log(error.message);
-                  } else {
-                    console.log(worker.activityName); // "Offline"
-                  }
-                });
-    }
-
-     function updateStatusMenu(activityName) {
-      //console.log(worker);
-      //console.log(window.worker);
-      console.log("about to update status based on activityName " + activityName);
-      switch(activityName) {
-                case "Offline":
-                    $("#status").html("<a href='#'>" + activityName + "</a><ul class='dropdown'><li><a href='#' onClick='changeState(\"Online\")'>Go online</a></li><li class='active'><a href='#' id='gobusy' onClick='changeState(\"Busy\")'>Go Busy</a></li></ul>");
-                    break;
-                case "Reserved":
-                    $("#status").html("<a href='#'>" + activityName + "</a><ul class='dropdown'><li><a href='#' >Accept</a></li></ul>");
-                    break;
-                 case "Idle":
-                    $("#status").html("<a href='#'>" + activityName + "</a><ul class='dropdown'><li><a href='#' onClick='changeState(\"Offline\")'>Go offline</a></li><li class='active'><a href='#' id='gobusy' onClick='changeState(\"Busy\")'>Go Busy</a></li></ul>");
-                    break;
-                default:
-                    console.log("worker.activityName did not match any switch statement")
-                    $("#status").html("<a href='#'>" + activityName + "</a><ul class='dropdown'><li><a href='#' onClick='changeState(\"Online\")'>Go online</a></li><li class='active'><a href='#' id='gobusy' onClick='changeState(\"Busy\")'>Go Busy</a></li></ul>");
-
+            activitySid="WA6492c399f88532c2935ca7fcbfe56e9b";
+            break;                
+          }
+          console.log(activitySid);
+          worker.update("ActivitySid", activitySid, function(error, worker) {
+            if(error) {
+              console.log(error.code);
+              console.log(error.message);
+            } else {
+              console.log(worker.activityName); 
             }
-        $("#updateCapacityOne").bind("click", function() {
-            console.log(worker);
-          updateCapacity(1,worker.workerSid);
-          console.log("trying to bind click event for worker " + worker.workerSid)
-        });
-        $("#updateCapacityTwo").bind("click", function() {
-          updateCapacity(2,worker.workerSid);
-        });
+          });
         }
 
 
-   
 
- 
 
-    function updateCapacity(number, workerSid) {
-       $.ajax({ 
+        
+
+        
+
+        function updateCapacity(number, workerSid) {
+         $.ajax({ 
           url: 'updateCapacity',
           data: {'capacity': number, 'workerSid':workerSid},
           type: 'get',
           success: function(output) {
-                      console.log("received OK from request to update capacity");
+            console.log("received OK from request to update capacity");
 
-                  }
-    });
-    }
-    $(function() {
-  var client = ZAFClient.init();
-  client.invoke('resize', { width: '100%', height: '600px' });
-});
+          }
+        });
+       }
 
 
 
-   
 
-    </script>
-</body>
-</html>
+       
+
+     </script>
+   </body>
+   </html>
