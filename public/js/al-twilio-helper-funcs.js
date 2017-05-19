@@ -88,12 +88,7 @@ function completeTask(sid) {
 }
 
 
-// Create VolumeIndicators for input/output streams and append them to the page.
-const micIndicator = new VolumeIndicator();
-document.getElementById('mic-wrapper').appendChild(micIndicator.element);
 
-const speakerIndicator = new VolumeIndicator();
-document.getElementById('speaker-wrapper').appendChild(speakerIndicator.element);
 
 
 
