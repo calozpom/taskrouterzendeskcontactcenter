@@ -27,7 +27,7 @@
     <div class="row">
       <nav class="top-bar" data-topbar role="navigation">
 
-        <div class="section top-bar-section">
+        <section class="top-bar-section">
          <ul class="left">
           <li class="has-dropdown" id="status">
             <a href="#">Status: {{status}}</a>
@@ -57,7 +57,7 @@
           </li> 
 
         </ul>
-      </div>
+      </section>
     </nav>
   </div>
 </div>
@@ -77,7 +77,7 @@
 <script src="https://unpkg.com/vue"></script>
 <script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.6/taskrouter.min.js"></script>
 <script type="text/javascript" src="https://assets.zendesk.com/apps/sdk/2.0/zaf_sdk.js"></script>
-<script>        $(document).foundation(); </script>
+<script>         </script>
 
 <script>
   function registerTaskRouterCallbacks() {
@@ -153,6 +153,7 @@
 
 
 })
+ $(document).foundation();
 
  function changeState(state) {
   console.log("trying to change state to state " + state);
