@@ -18,13 +18,13 @@
   <div id="agentcontrols">
  <h1>Status: {{status}}</h1>
  <template v-if="status === 'Idle'">
-<a href="#" class="button" @Click="gooffline()">Go offline</a><br />
+<a href="#" class="button success radius" @Click="gooffline()">Go offline</a><br />
 </template>
 <template v-if="status ==='Offline'">
-<a href="#" class="button" @Click="goonline()">Go online</a><br />
+<a href="#" class="button success radius" @Click="goonline()">Go online</a><br />
 </template>
-<a href="#" class="button" @Click="updatecapacity(1)">Capacity: 1</a><br />
-<a href="#" class="button" @Click="updatecapacity(2)">Capacity: 2</a>
+<a href="#" class="button success radius" @Click="updatecapacity(1)">Capacity: 1</a><br />
+<a href="#" class="button success radius" @Click="updatecapacity(2)">Capacity: 2</a>
 
 </div>                
 
@@ -85,7 +85,7 @@
     window.worker = new Twilio.TaskRouter.Worker(data.token);
     registerTaskRouterCallbacks();
     window.zendeskClient = ZAFClient.init();
-    zendeskClient.invoke('resize', { width: '200px', height: '250px' });
+    zendeskClient.invoke('resize', { width: '250px', height: '240px' });
 
 
   });
