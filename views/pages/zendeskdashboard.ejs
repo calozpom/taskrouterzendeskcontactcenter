@@ -128,8 +128,12 @@
         console.log(reservation.task.addons)
         var addons=JSON.parse(reservation.task.addons)
         console.log(addons.nextcaller_advanced_caller_id)  
-        if (addons.nextcaller_advanced_caller_id.records[0].name) {
-          vueMaster.$refs.agentui.name = addons.nextcaller_advanced_caller_id.records[0].name;
+        try {
+          vueMaster.$refs.agentui.setname(addons.nextcaller_advanced_caller_id.records[0].name);
+        }
+        catch (err)
+        {
+          vueMaster.$refs.agentui.setname(reservation.task.from)
         }
         zendeskClient.invoke('instances.create', {
           location: 'modal',
@@ -291,6 +295,9 @@ methods: {
     console.log("reset vue to zero");
     console.log(JSON.stringify(this.taskList));
   },
+  setname:function(name) {
+    this.name = name;
+  }
   addTask: function(){
     this.taskList=[{"WTad1d78700f4931ee276cde3177aa002b":{"attributes":"{\"message_from\":\"+14152791216\",\"message_body\":\"hi\",\"message_to\":\"+18559798881\",\"bot_qualified\":\"true\",\"message_sid\":\"SMc7c31c3eaada52dc452effa389fcf366\"}","channel":"chat","queue":"Other Customers","sid":"WTad1d78700f4931ee276cde3177aa002b","status":"reserved"}}]
     for (var key in this.taskList[0]) {
