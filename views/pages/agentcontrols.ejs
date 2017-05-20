@@ -70,13 +70,14 @@
 <script src="js/plugins/morris/raphael-2.1.0.min.js" type="text/javascript"></script>
 <script src="js/plugins/morris/morris.js" type="text/javascript"></script>
 <script src="js/menucustom.js" type="text/javascript"></script>
-<script>        $(document).foundation(); </script>
+
 <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
 
 <script src="js/morris-demo.js"></script>
 <script src="https://unpkg.com/vue"></script>
 <script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.6/taskrouter.min.js"></script>
 <script type="text/javascript" src="https://assets.zendesk.com/apps/sdk/2.0/zaf_sdk.js"></script>
+<script>        $(document).foundation(); </script>
 
 <script>
   function registerTaskRouterCallbacks() {
@@ -105,80 +106,78 @@
   }
 
   window.onload = function() {
-        // We use jQuery to make an Ajax request to the server to retrieve our 
-        // Access Token
-        $.getJSON('/token', function(data) {
+   $.getJSON('/token', function(data) {
 
-          console.log(data.token);
-          window.worker = new Twilio.TaskRouter.Worker(data.token);
-          registerTaskRouterCallbacks();
-          window.zendeskClient = ZAFClient.init();
-          zendeskClient.invoke('resize', { width: '100%', height: '600px' });
+    console.log(data.token);
+    window.worker = new Twilio.TaskRouter.Worker(data.token);
+    registerTaskRouterCallbacks();
+    window.zendeskClient = ZAFClient.init();
+    zendeskClient.invoke('resize', { width: '100%', height: '600px' });
 
 
-        });
-      }
+  });
+ }
 
-      Vue.component('agentcontrols', {
-        template: '#controls',
-        data: function() {
-         return {
-           status: "Loading...",
-           worker:""
-         }
+ Vue.component('agentcontrols', {
+  template: '#controls',
+  data: function() {
+   return {
+     status: "Loading...",
+     worker:""
+   }
 
-       },
-       methods: {
-        goonline: function() {
-          changeState("Idle");
-        },
-        gooffline: function() {
-          changeState("Offline");
-        },
-        updatecapacity: function(capacity) {
-          updatecapacity(capacity, worker);
-        },
-        updateCurrentStatus: function(status) {
-          this.status=status;
-        },
-        updateWorkerSid: function(sid) {
-          this.worker=sid;
-        }
+ },
+ methods: {
+  goonline: function() {
+    changeState("Idle");
+  },
+  gooffline: function() {
+    changeState("Offline");
+  },
+  updatecapacity: function(capacity) {
+    updatecapacity(capacity, worker);
+  },
+  updateCurrentStatus: function(status) {
+    this.status=status;
+  },
+  updateWorkerSid: function(sid) {
+    this.worker=sid;
+  }
 
-      }
-    })
-
-
-      window.vueAgentControls = new Vue({
-        el: '#agentcontrols'
+}
+})
 
 
-      })
+ window.vueAgentControls = new Vue({
+  el: '#agentcontrols'
 
-      function changeState(state) {
-        console.log("trying to change state to state " + state);
-        var activitySid="WAbc57093ed33d341e926d9db5e73525ad";
-        switch (state) {
-          case "Idle":
-          activitySid="WAbc57093ed33d341e926d9db5e73525ad";
-          break;
-          case "Offline":
-          activitySid="WA7d69025af6c5acae76faad56da32698e";
-          break;
-          case "Busy":
-          activitySid="WA6492c399f88532c2935ca7fcbfe56e9b";
-          break;                
-        }
-        console.log(activitySid);
-        worker.update("ActivitySid", activitySid, function(error, worker) {
-          if(error) {
-            console.log(error.code);
-            console.log(error.message);
-          } else {
-            console.log(worker.activityName); 
-          }
-        });
-      }
+
+})
+
+ function changeState(state) {
+  console.log("trying to change state to state " + state);
+  var activitySid="WAbc57093ed33d341e926d9db5e73525ad";
+  switch (state) {
+    case "Idle":
+    activitySid="WAbc57093ed33d341e926d9db5e73525ad";
+    break;
+    case "Offline":
+    activitySid="WA7d69025af6c5acae76faad56da32698e";
+    break;
+    case "Busy":
+    activitySid="WA6492c399f88532c2935ca7fcbfe56e9b";
+    break;                
+  }
+  console.log(activitySid);
+  worker.update("ActivitySid", activitySid, function(error, worker) {
+    if(error) {
+      console.log(error.code);
+      console.log(error.message);
+    } else {
+      console.log(worker.activityName); 
+    }
+  });
+}
 
 
 
@@ -187,23 +186,23 @@
 
 
 
-      function updateCapacity(number, workerSid) {
-       $.ajax({ 
-        url: 'updateCapacity',
-        data: {'capacity': number, 'workerSid':workerSid},
-        type: 'get',
-        success: function(output) {
-          console.log("received OK from request to update capacity");
+function updateCapacity(number, workerSid) {
+ $.ajax({ 
+  url: 'updateCapacity',
+  data: {'capacity': number, 'workerSid':workerSid},
+  type: 'get',
+  success: function(output) {
+    console.log("received OK from request to update capacity");
 
-        }
-      });
-     }
-
-
+  }
+});
+}
 
 
 
 
-   </script>
- </body>
- </html>
+
+
+</script>
+</body>
+</html>
