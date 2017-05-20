@@ -121,7 +121,7 @@ app.get('/reservationmodal', function(request, response) {
   response.render('pages/zendeskmodal', {
     taskSid: request.query.taskSid,
     reservationSid: request.query.reservationSid,
-     taskchannel: request.query.channel});
+    channel: request.query.channel});
 });
 
 app.get('/token', function(request, response) {
