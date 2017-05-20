@@ -120,7 +120,8 @@ app.get('/reservationmodal', function(request, response) {
   console.log(request.query.taskSid);
   response.render('pages/zendeskmodal', {
     taskSid: request.query.taskSid,
-    reservationSid: request.query.reservationSid});
+    reservationSid: request.query.reservationSid,
+     taskchannel: request.query.channel});
 });
 
 app.get('/token', function(request, response) {
