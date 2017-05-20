@@ -731,7 +731,23 @@ app.post('/eventstream', function(request, response) {
        taskList.child("queue").child(request.body.TaskSid).remove();
        var newAttributes = {'worker':request.body.WorkerSid};
        updateTaskAttributes(request.body.TaskSid, newAttributes);
+
+       var addons = JSON.parse(request.body.TaskAddons)
+       dataToSet={};
+       try {
+         dataToSet['name']=addons.nextcaller_advanced_caller_id.records[0].name;
+         dataToSet['address']=addons.nextcaller_advanced_caller_id.records[0].address[0].line1 + " " + addons.nextcaller_advanced_caller_id.records[0].address[0].city + " " + addons.nextcaller_advanced_caller_id.records[0].address[0].zip_code;
+         
+       }
+       catch (err) {
+          attributes=JSON.parse(task.attributes);
+          dataToSet['name']=attributes.from;
+       }
+       dataToSet['profile_pic']="img/unknownavatar.jpeg"
+       taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
        break;
+       
+
        case "reservation.canceled":
        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).once("value", function(snapshot) {
          taskList.child("queue").child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);

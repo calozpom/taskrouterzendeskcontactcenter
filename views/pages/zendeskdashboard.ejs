@@ -34,7 +34,10 @@
         <div class='custom-panel-heading'>
           <h5 class='white'>
             <div id='titleText'>
-              Task: {{task.data.attributes.from}} {{name}}
+              <img src={{task.data.profile_pic}}>
+              Task: {{task.data.name}} 
+              <br />
+              Address: {{task.data.address}}
               <br />
               Status: {{task.data.status}}
             </div>
@@ -124,17 +127,7 @@
 
       worker.on("reservation.created", function(reservation) {
         console.log("new reservation")  
-        console.log(reservation.task); 
-        console.log(reservation.task.addons)
-        var addons=JSON.parse(reservation.task.addons)
-        console.log(addons.nextcaller_advanced_caller_id)  
-        try {
-          vueMaster.$refs.agentui.setname(addons.nextcaller_advanced_caller_id.records[0].name);
-        }
-        catch (err)
-        {
-          vueMaster.$refs.agentui.setname(reservation.task.from)
-        }
+        
         zendeskClient.invoke('instances.create', {
           location: 'modal',
           url: 'https://twiliozendeskcc.herokuapp.com/reservationmodal?reservationSid='+reservation.sid+'&taskSid='+reservation.task.sid+'&channel='+reservation.task.taskChannelUniqueName
@@ -243,11 +236,7 @@ Vue.component('agentui', {
    return {
    taskList: [],
    messageText: "",
-   messageList:{},
-   name:"",
-   address:"",
-   spokentext:"",
-   intent:""
+   messageList:{}
 
   }
 
@@ -295,18 +284,6 @@ methods: {
     console.log("reset vue to zero");
     console.log(JSON.stringify(this.taskList));
   },
-  setname:function(name) {
-    this.name = name;
-  }, 
-  addTask: function(){
-    this.taskList=[{"WTad1d78700f4931ee276cde3177aa002b":{"attributes":"{\"message_from\":\"+14152791216\",\"message_body\":\"hi\",\"message_to\":\"+18559798881\",\"bot_qualified\":\"true\",\"message_sid\":\"SMc7c31c3eaada52dc452effa389fcf366\"}","channel":"chat","queue":"Other Customers","sid":"WTad1d78700f4931ee276cde3177aa002b","status":"reserved"}}]
-    for (var key in this.taskList[0]) {
-      this.taskList[0]["data"]=this.taskList[0][key];
-      delete this.taskList[0][key];
-    }
-    console.log("adding a task");
-    console.log(JSON.stringify(this.taskList));
-  },
   sendMessage: function(from, to, sid, body) {
     console.log("trying to send message " + from + to + sid + body);
      sendSMS(from, to, sid, body);
@@ -341,6 +318,7 @@ myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('val
       console.log("wanting to parse task attributes:");
       console.log(tempJson["data"]["attributes"]);
       tempJson["data"]["attributes"]=JSON.parse(tempJson["data"]["attributes"]);
+
       dataToReturn.push(tempJson)
     }
       }
