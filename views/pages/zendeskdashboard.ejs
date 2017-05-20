@@ -34,7 +34,7 @@
         <div class='custom-panel-heading'>
           <h5 class='white'>
             <div id='titleText'>
-              Task: {{task.data.attributes.from}}
+              Task: {{task.data.attributes.from}} {{name}}
               <br />
               Status: {{task.data.status}}
             </div>
@@ -125,6 +125,9 @@
       worker.on("reservation.created", function(reservation) {
         console.log("new reservation")  
         console.log(reservation.task);   
+        if (reservation.task.addons.nextcaller_advanced_caller_id.records[0].name) {
+          vueMaster.$refs.agentui.name = reservation.task.addons.nextcaller_advanced_caller_id.records[0].name;
+        }
         zendeskClient.invoke('instances.create', {
           location: 'modal',
           url: 'https://twiliozendeskcc.herokuapp.com/reservationmodal?reservationSid='+reservation.sid+'&taskSid='+reservation.task.sid+'&channel='+reservation.task.taskChannelUniqueName
@@ -233,7 +236,11 @@ Vue.component('agentui', {
    return {
    taskList: [],
    messageText: "",
-   messageList:{}
+   messageList:{},
+   name:"",
+   address:"",
+   spokentext:"",
+   intent:""
 
   }
 
