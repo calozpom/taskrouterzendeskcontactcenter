@@ -84,14 +84,14 @@
       console.log("Current activity is: " + worker.activityName);
           console.log(worker.sid);             // 'WKxxx'
           console.log(worker.available);       // false
-          vueAgentControls.$refs.agentcontrols.updateWorkerSid(worker.sid);
-          vueAgentControls.$refs.agentcontrols.updateCurrentStatus(worker.activityName);
+          vueAgentControls.updateWorkerSid(worker.sid);
+          vueAgentControls.updateCurrentStatus(worker.activityName);
 
         });  
 
     worker.on('activity.update', function(worker) {
       console.log("Worker activity changed to: " + worker.activityName);
-      vueAgentControls.$refs.agentcontrols.updateCurrentStatus(worker.activityName);
+      vueAgentControls.updateCurrentStatus(worker.activityName);
 
 
 
