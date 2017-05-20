@@ -18,12 +18,12 @@
   <div id="agentcontrols">
  <h1>Status: {{status}}</h1>
  <template v-if="status === 'Idle'">
-<a href="#" class="button" @Click="goonline()"">Go online</a>
+<a href="#" class="button" @Click="goonline()">Go online</a><br />
 </template>
 <template v-if="status ==='Offline'">
-<a href="#" class="button" @Click="goonline()">Go online</a>
+<a href="#" class="button" @Click="goonline()">Go online</a><br />
 </template>
-<a href="#" class="button" @Click="updatecapacity(1)">Capacity: 1</a>
+<a href="#" class="button" @Click="updatecapacity(1)">Capacity: 1</a><br />
 <a href="#" class="button" @Click="updatecapacity(2)">Capacity: 2</a>
 
 </div>                
