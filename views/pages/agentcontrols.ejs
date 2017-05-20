@@ -18,7 +18,7 @@
   <div id="agentcontrols">
  <h1>Status: {{status}}</h1>
  <template v-if="status === 'Idle'">
-<a href="#" class="button" @Click="goonline()">Go online</a><br />
+<a href="#" class="button" @Click="gooffline()">Go offline</a><br />
 </template>
 <template v-if="status ==='Offline'">
 <a href="#" class="button" @Click="goonline()">Go online</a><br />
