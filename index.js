@@ -118,6 +118,7 @@ app.get('/reservationmodal', function(request, response) {
   console.log("calling modal dialog.");
   console.log(request.query.reservationSid);
   console.log(request.query.taskSid);
+  console.log(request.query.channel);
   response.render('pages/zendeskmodal', {
     taskSid: request.query.taskSid,
     reservationSid: request.query.reservationSid,
@@ -292,6 +293,7 @@ app.post('/initiatebot', function(request, response) {
 
         var attributesJson = {};
         attributesJson['message_from'] = request.body['From'];
+        attributesJson['from'] = request.body['From'];
         attributesJson['message_body'] = request.body['Body'];
         attributesJson['message_to'] = request.body['To'];
         attributesJson['message_sid'] = request.body['MessageSid'];
