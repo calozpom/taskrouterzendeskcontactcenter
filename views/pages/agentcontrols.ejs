@@ -17,12 +17,6 @@
   <div class="container">
     <div class="fixed">
       <div id="agentcontrols">
-        <agentcontrols ref="agentcontrols"></agentcontrols>
-      </div> 
-    </div>
-  </div>  
-
-  <template id="controls">
    <div class="secondary-menu">
     <div class="row">
       <nav class="top-bar" data-topbar role="navigation">
@@ -61,7 +55,11 @@
     </nav>
   </div>
 </div>
-</template>
+      </div> 
+    </div>
+  </div>  
+
+  
 
 <script src="js/vendor/jquery.js"></script>
 <script src="js/foundation.min.js"></script>
@@ -118,8 +116,11 @@
   });
  }
 
- Vue.component('agentcontrols', {
-  template: '#controls',
+
+
+
+ window.vueAgentControls = new Vue({
+  el: '#agentcontrols',
   data: function() {
    return {
      status: "Loading...",
@@ -145,11 +146,6 @@
   }
 
 }
-})
-
-
- window.vueAgentControls = new Vue({
-  el: '#agentcontrols'
 
 
 })
