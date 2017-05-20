@@ -17,43 +17,24 @@
   <div class="container">
     <div class="fixed">
       <div id="agentcontrols">
-   <div class="secondary-menu">
-    <div class="row">
-      <nav class="top-bar" data-topbar role="navigation">
-
-
-         <ul class="vertical dropdown menu" data-dropdown-menu style="max-width: 250px;">
-          <li class="has-dropdown" id="status">
-            <a href="#">Status: {{status}}</a>
-            <ul class="dropdown">
-              <template v-if="status === 'Idle'">
+ <a href="#" class="button" data-dropdown="drop">Status: {{status}} &raquo;</a>
+<ul id="drop" class="[tiny small medium large content]f-dropdown" data-dropdown-content>
+  <template v-if="status === 'Idle'">
                 <li><a href="#" @Click="gooffline()">Go offline</a></li>
               </template>
               <template v-if="status ==='Offline'">
                 <li><a href="#" @Click="goonline()">Go online</a></li>
               </template>
-            </ul>
-          </li>
-          <li class="has-dropdown">
-            <a href="#">Skills Signed In</a>
-            <ul class="dropdown">
-              <li><a href="#">SMS<span class="label radius success right">Y</span></a></li>
-              <li><a href="#">Facebook<span class="label radius success right">Y</span></a></li>
-              <li class="active"><a href="#">Voice<span class="label radius alert right">N</span></a></li>
-            </ul>
-          </li>
-          <li class="has-dropdown">
-            <a href="#">Multitask Capacity</a>
-            <ul class="dropdown">
-              <li><a href="#" @Click="updatecapacity(1)">Messaging: 1</a></li>
+</ul>
+<a href="#" class="button" data-dropdown="drop">Capacity &raquo;</a>
+<ul id="drop" class="[tiny small medium large content]f-dropdown" data-dropdown-content>
+               <li><a href="#" @Click="updatecapacity(1)">Messaging: 1</a></li>
               <li><a href="#" @Click="updatecapacity(2)">Messaging: 2</a></li>
-            </ul>
-          </li> 
+</ul>
 
-        </ul>
-    </nav>
-  </div>
-</div>
+       
+          
+      
       </div> 
     </div>
   </div>  
