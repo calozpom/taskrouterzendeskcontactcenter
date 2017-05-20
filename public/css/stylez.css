@@ -1040,6 +1040,33 @@ ul.pagination li.current a, ul.pagination li.current button
         text-align: center;
     }
 }
+
+ .top-bar{
+   height:100%;
+   width:150px;
+ }
+ul.right > li{
+  display:block;
+  float:none;
+  border-bottom:1px solid #444;  
+}
+
+ul.right > li:last-child{
+  border-bottom:none;
+}
+.has-dropdown ul.dropdown{
+  position:absolute !important;
+  left:100% !important;
+  top:0px;
+  border-left:1px solid #444;
+}
+.top-bar-section .has-dropdown > a:after {
+  top:45%;
+  border-left:4px solid #aaa;
+  border-top:4px solid transparent;
+  border-bottom:4px solid transparent;
+}    
+
 /************************************end Messages************************************/
 
 .button
