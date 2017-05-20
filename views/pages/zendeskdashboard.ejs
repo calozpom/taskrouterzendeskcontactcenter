@@ -131,15 +131,16 @@
 
       worker.on("reservation.created", function(reservation) {
         console.log("new reservation")  
+        zendeskClient.invoke('notify','New Task For You!',alert);
         
-        zendeskClient.invoke('instances.create', {
+        /*zendeskClient.invoke('instances.create', {
           location: 'modal',
           url: 'https://twiliozendeskcc.herokuapp.com/reservationmodal?reservationSid='+reservation.sid+'&taskSid='+reservation.task.sid+'&channel='+reservation.task.taskChannelUniqueName
         }).then(function(modalContext) {
           window.modalClient = zendeskClient.instance(modalContext['instances.create'][0].instanceGuid);
           modalClient.on('modal.close', function() {
           });
-        });
+        });*/
       });
 
 
