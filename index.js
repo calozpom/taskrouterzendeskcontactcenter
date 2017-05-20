@@ -108,6 +108,11 @@ app.get('/agentcontrols', function(request, response) {
   response.render('pages/agentcontrols');
 });
 
+app.get('/grr', function(request, response) {
+  // dashboard is the main page for the demo
+  response.render('pages/whywontyouwork');
+});
+
 app.get('/reservationmodal', function(request, response) {
   // dashboard is the main page for the demo
   console.log("calling modal dialog.");
