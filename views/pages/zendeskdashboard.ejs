@@ -34,7 +34,7 @@
         <div class='custom-panel-heading'>
           <h5 class='white'>
             <div id='titleText'>
-              <img src={{task.data.profile_pic}}>
+              <img v-bind:src="task.data.profile_pic">
               Task: {{task.data.name}} 
               <br />
               Address: {{task.data.address}}
