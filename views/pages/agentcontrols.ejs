@@ -15,20 +15,18 @@
 </head>
 <body class="fadeIn animated">
   <div class="container">
- 
-<button data-dropdown="drop" aria-controls="drop" aria-expanded="true" class="tiny button dropdown">Dropdown Button</button>
-<ul id="drop" class="[tiny small medium large content]f-dropdown" data-dropdown-content>
-  <li><a href="#">This is a link</a></li>
-  <li><a href="#">This is another</a></li>
-  <li><a href="#">Yet another</a></li>
-</ul>
-<br />
-<button data-dropdown="drop" aria-controls="drop" aria-expanded="true" class="tiny button dropdown">Dropdown Button</button>
-<ul id="drop" class="[tiny small medium large content]f-dropdown" data-dropdown-content>
-  <li><a href="#">This is a link</a></li>
-  <li><a href="#">This is another</a></li>
-  <li><a href="#">Yet another</a></li>
-</ul>
+ <h1>Status: {{status}}</h1>
+ <template v-if="status === 'Idle'">
+<a href="#" class="button" @Click="goonline()"">Go online</a>
+</template>
+<template v-if="status ==='Offline'">
+<a href="#" class="button" @Click="goonline()">Go online</a>
+</template>
+<a href="#" class="button" @Click="changecapacity(1)">Capacity: 1</a>
+<a href="#" class="button" @Click="changecapacity(2)">Capacity: 2</a>
+
+                
+
 
 
 
