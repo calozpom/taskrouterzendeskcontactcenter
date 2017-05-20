@@ -28,7 +28,7 @@
                <h5 class='white'>
                  <div id='modalText'>New Task from {{from}} of type {{type}}<br />
                    <span class='label radius alert right'>Reject</span>&nbsp;<a href='#' 
-                   onClick='acceptTask("<%= taskSid %>","<%= reservationSid %>", "<% channel %>"); return false;'><span class='label radius success right'>Accept</span></a>
+                   onClick='acceptTask("<%= taskSid %>","<%= reservationSid %>", "<%= channel %>"); return false;'><span class='label radius success right'>Accept</span></a>
                    
                  </div>
                </h5>
@@ -61,19 +61,11 @@
 
    <!-- <script src="js/morris-demo.js"></script>-->
    <script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.6/taskrouter.min.js"></script>
+     <script src="js/al-twilio-helper-funcs.js" type="text/javascript"></script>
+
    <script type="text/javascript" src="https://assets.zendesk.com/apps/sdk/2.0/zaf_sdk.js"></script>
    <script>
-    function acceptTask(tasksid, reservationsid, channel) {
-      $.ajax({ 
-        url: 'acceptTask',
-        data: {'tasksid': tasksid, 'reservationsid':reservationsid, 'channnel':channel},
-        type: 'get',
-        success: function(output) {
-          console.log("received OK to accept task");
 
-        }
-      });
-    }
 
     function getTaskDetails(tasksid, fn) {
       $.ajax({ 
