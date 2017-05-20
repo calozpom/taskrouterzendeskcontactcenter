@@ -43,7 +43,7 @@
               <br />
               Status: {{task.data.status}}
               <br />
-              Intent: {{task.data.attributes.intent}}
+              Intent: {{task.data.attributes.bot_intent}}
             </div>
             <template v-if="task.data.status === 'reserved'">
               <span class='label radius alert right'>Reject</span>&nbsp;
