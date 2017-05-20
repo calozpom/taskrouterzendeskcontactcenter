@@ -22,7 +22,7 @@
 <nav class="top-bar docs-bar hide-for-small" data-topbar="">
   <ul class="title-area">
     <li class="name">
-      <h1><a href="http://foundation.zurb.com/">Foundation</a></h1>
+      <h1><a href="#">Agent Controls</a></h1>
     </li>
   </ul>
 
@@ -30,48 +30,28 @@
 <section class="top-bar-section">
     <ul class="right">
       <li class="has-dropdown not-click">
-        <a href="http://foundation.zurb.com/learn/features.html" class="">Learn</a>
+        <a href="http://foundation.zurb.com/learn/features.html" class="">Status: {{status}}</a>
         <ul class="dropdown"><li class="title back js-generated"><h5><a   href="javascript:void(0)">Back</a></h5></li>
-          <li><a href="http://foundation.zurb.com/learn/features.html">Features</a></li>
-          <li><a href="http://foundation.zurb.com/learn/faq.html">FAQ</a></li>
-          <li><a href="http://foundation.zurb.com/learn/case-washington-post.html">Case Studies</a></li>
-          <li><a href="http://foundation.zurb.com/learn/website-examples.html">Website Examples</a></li>
-          <li><a href="http://foundation.zurb.com/learn/video-started-with-foundation.html">Videos</a></li>
-          <li><a href="http://foundation.zurb.com/learn/training.html">Training</a></li>
-          <li><a href="http://foundation.zurb.com/learn/about.html">About</a></li>
+          <template v-if="status === 'Idle'">
+                <li><a href="#" @Click="gooffline()">Go offline</a></li>
+              </template>
+              <template v-if="status ==='Offline'">
+                <li><a href="#" @Click="goonline()">Go online</a></li>
+              </template>
         </ul>
       </li>
       <li class="has-dropdown not-click">
-        <a href="http://foundation.zurb.com/templates.html" class="">Develop</a>
+        <a href="http://foundation.zurb.com/templates.html" class="">Capacity</a>
         <ul class="dropdown"><li class="title back js-generated"><h5><a href="javascript:void(0)">Back</a></h5></li>
-          <li><a href="http://foundation.zurb.com/templates.html">Add-ons</a></li>
-          <li><a href="http://foundation.zurb.com/docs">Docs</a></li>
-          <li><a href="http://foundation.zurb.com/develop/download.html">Download</a></li>
-          <li><a href="http://foundation.zurb.com/develop/contribute.html">Contribute</a></li>
-          <li><a href="http://foundation.zurb.com/develop/tools.html">Tools</a></li>
+                 <li><a href="#" @Click="updatecapacity(1)">Messaging: 1</a></li>
+              <li><a href="#" @Click="updatecapacity(2)">Messaging: 2</a></li>
         </ul>
       </li>
-      <li class="has-dropdown not-click">
-        <a href="http://foundation.zurb.com/support/support.html" class="">Support</a>
-        <ul class="dropdown"><li class="title back js-generated"><h5><a href="javascript:void(0)">Back</a></h5></li>
-          <li><a href="http://foundation.zurb.com/support/support.html">Support Channels</a></li>
-          <li><a href="http://foundation.zurb.com/forum">Foundation Forum</a></li>
-          <li><a href="http://foundation.zurb.com/support/images-and-badges.html">Images &amp; Badges</a></li>
-        </ul>
-      </li>
-      <li>
-        <a href="http://foundation.zurb.com/business/services.html" class="">Business</a>
-      </li>
-      <li>
-        <a href="http://foundation.zurb.com/docs" class="">Docs</a>
-      </li>
-      <li class="has-form">
-        <a href="http://foundation.zurb.com/docs" class="small button">Getting Started</a>
-    </li></ul>
+      </ul>
   </section></nav>
 
 
-    
+
      
   </div>
 </div>
