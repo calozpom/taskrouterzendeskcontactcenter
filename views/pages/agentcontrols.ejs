@@ -19,36 +19,12 @@
       <div id="agentcontrols">
    <div class="secondary-menu">
     <div class="row">
-<nav class="top-bar docs-bar hide-for-small" data-topbar="">
-  <ul class="title-area">
-    <li class="name">
-      <h1><a href="#">Agent Controls</a></h1>
-    </li>
-  </ul>
-
-  
-<section class="top-bar-section">
-    <ul class="right">
-      <li class="has-dropdown not-click">
-        <a href="http://foundation.zurb.com/learn/features.html" class="">Status: {{status}}</a>
-        <ul class="dropdown"><li class="title back js-generated"><h5><a   href="javascript:void(0)">Back</a></h5></li>
-          <template v-if="status === 'Idle'">
-                <li><a href="#" @Click="gooffline()">Go offline</a></li>
-              </template>
-              <template v-if="status ==='Offline'">
-                <li><a href="#" @Click="goonline()">Go online</a></li>
-              </template>
-        </ul>
-      </li>
-      <li class="has-dropdown not-click">
-        <a href="http://foundation.zurb.com/templates.html" class="">Capacity</a>
-        <ul class="dropdown"><li class="title back js-generated"><h5><a href="javascript:void(0)">Back</a></h5></li>
-                 <li><a href="#" @Click="updatecapacity(1)">Messaging: 1</a></li>
-              <li><a href="#" @Click="updatecapacity(2)">Messaging: 2</a></li>
-        </ul>
-      </li>
-      </ul>
-  </section></nav>
+<a href="#" class="button" data-dropdown="drop">Link Dropdown &raquo;</a>
+<ul id="drop" class="[tiny small medium large content]f-dropdown" data-dropdown-content>
+  <li><a href="#">This is a link</a></li>
+  <li><a href="#">This is another</a></li>
+  <li><a href="#">Yet another</a></li>
+</ul>
 
 
 
