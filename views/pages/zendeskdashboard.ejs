@@ -124,7 +124,9 @@
 
       worker.on("reservation.created", function(reservation) {
         console.log("new reservation")  
-        console.log(reservation.task);   
+        console.log(reservation.task); 
+        console.log(reservation.task.addons)
+        console.log(reservation.task.addons.nextcaller_advanced_caller_id)  
         if (reservation.task.addons.nextcaller_advanced_caller_id.records[0].name) {
           vueMaster.$refs.agentui.name = reservation.task.addons.nextcaller_advanced_caller_id.records[0].name;
         }
