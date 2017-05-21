@@ -174,7 +174,7 @@ app.post('/voicenoivr', function(request,response){
 app.post('/initiateivr', function(request,response){
   var textToSpeak = querystring.escape("Hello and welcome to the best customer experience youve ever had. Thats right. British Customer Service. Please tell us how we can help.");
   console.log(textToSpeak);
-  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" timeout=\"2\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio, hate, love, awesome, help, british, marmite, suck, terrible, awful, assistance, exports\"><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play></Gather></Response>";
+  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" timeout=\"2\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio, hate, love, awesome, help, british, marmite, suck, terrible, awful, assistance, exports\"><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play><Pause length=\"5\"/></Gather></Response>";
   console.log(responseString);
   response.send(responseString);
 })
@@ -222,7 +222,7 @@ req(options, function(error, response, body){
 
       }
     var textToSpeak = querystring.escape("OK. Got it. Please stand by while I connect you to the best possible agent.");
-  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play><Enqueue workflowSid='WW4d526c9041d73060ca46d4011cf34b33'><Task>{\"intent\":\""+JSON.parse(body)['entities']['intent'][0]['value']+"\", \"type\":\"voice\", \"asrtext\":\""+request.body['SpeechResult']+"\"}</Task></Enqueue></Response>";
+  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play><Enqueue workflowSid='WW4d526c9041d73060ca46d4011cf34b33'><Task>{\"bot_intent\":\""+JSON.parse(body)['entities']['intent'][0]['value']+"\", \"type\":\"voice\", \"asrtext\":\""+request.body['SpeechResult']+"\"}</Task></Enqueue></Response>";
     res.send(responseString);
 
 
