@@ -205,7 +205,7 @@ req(options, function(error, response, body){
         textToSpeak = querystring.escape("Great. Glad to hear things are going well. We will go ahead and send you a t-shirt to say thank you. Hold on the line for a second if there is anything else we can do.");
         break;
         case "needs_help":
-        textToSpeak = querystring.escape("OK - let me get sa support representative who can help you immediately.")
+        textToSpeak = querystring.escape("OK - let me get a support representative who can help you immediately.")
         break;
         case "problem":
         textToSpeak = querystring.escape("Hmmm. Sounds like a problem. We can help you with that - one moment. I will escalate your case to a technician.");
@@ -219,7 +219,8 @@ req(options, function(error, response, body){
         case "service_question":
         textToSpeak = querystring.escape("Good question. We have a good answer. Stand by.")
         break;
-
+        default:
+        console.log("Could not match " + JSON.parse(body)['entities']['intent'][0]['value'] + " to any switch statement")
       }
     var textToSpeak = querystring.escape("OK. Got it. Please stand by while I connect you to the best possible agent.");
   var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play><Enqueue workflowSid='WW4d526c9041d73060ca46d4011cf34b33'><Task>{\"bot_intent\":\""+JSON.parse(body)['entities']['intent'][0]['value']+"\", \"type\":\"voice\", \"asrtext\":\""+request.body['SpeechResult']+"\"}</Task></Enqueue></Response>";
