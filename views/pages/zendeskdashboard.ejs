@@ -63,7 +63,7 @@
               <div class='message-dashboard'>
                 <div class='small-2 columns'>
                   <div class='profilePic'>
-                    <img src='https://twiliozendeskcc.herokuapp.com/img/al.jpg' alt='profile' />
+                    <img v-bind:src="task.data.profile_pic" alt='profile' />
                   </div>
                 </div> 
                 <div class='small-10 columns'>
@@ -90,6 +90,23 @@
          <div class='small-6 columns'>
         <label>Speaker Volume</label>
          <div class="volume-wrapper" id="speaker-wrapper"></div>
+         </div>
+         <div class='message-dashboard'>
+                <div class='small-2 columns'>
+                  <div class='profilePic'>
+                    <img v-bind:src="task.data.profile_pic" alt='profile' />
+                  </div>
+                </div> 
+                <div class='small-10 columns'>
+                  <div class='message-desc'>
+                    <div class='messageName'>
+                      <b>IVR Text</b>
+                    </div>
+                    {{task.data.attributes.asrtext}}
+                  </div>
+                </div>
+              </div>
+
          </div>
         </template>
       </div>
