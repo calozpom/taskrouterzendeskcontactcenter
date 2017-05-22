@@ -165,6 +165,7 @@
       worker.on("reservation.accepted", function(reservation) {
         try {
           modalClient.invoke('destroy');
+          zendeskClient.invoke('routeTo', 'ticket', 'new')
         }
         catch (err) {}
       });
