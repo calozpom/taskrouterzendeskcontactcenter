@@ -10,6 +10,7 @@
   "location": {
     "support": {
       "ticket_sidebar": "https://twiliozendeskcc.herokuapp.com/zendeskdashboard",
+      "new_ticket_sidebar" : "https://twiliozendeskcc.herokuapp.com/zendeskdashboard",
       "top_bar":"https://twiliozendeskcc.herokuapp.com/agentcontrols"
     }
   },
