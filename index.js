@@ -222,7 +222,6 @@ req(options, function(error, response, body){
         default:
         console.log("Could not match " + JSON.parse(body)['entities']['intent'][0]['value'] + " to any switch statement")
       }
-    var textToSpeak = querystring.escape("OK. Got it. Please stand by while I connect you to the best possible agent.");
   var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play><Enqueue workflowSid='WW4d526c9041d73060ca46d4011cf34b33'><Task>{\"bot_intent\":\""+JSON.parse(body)['entities']['intent'][0]['value']+"\", \"type\":\"voice\", \"asrtext\":\""+request.body['SpeechResult']+"\"}</Task></Enqueue></Response>";
     res.send(responseString);
 
