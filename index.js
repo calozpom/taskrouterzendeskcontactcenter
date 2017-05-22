@@ -657,7 +657,10 @@ app.post('/eventstream', function(request, response) {
 
  var eventstream = myFirebase.child("eventstream");
  var taskList = myFirebase.child("taskList");
+ try {
  console.log("received event " + request.body.EventType);
+}
+catch (err){}
  console.log(request.body); 
  if (request.body.TaskSid) {
   dataToSet = {};
