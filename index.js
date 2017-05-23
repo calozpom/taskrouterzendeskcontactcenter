@@ -26,6 +26,8 @@ if (!fs.existsSync('/tmp'))
 
 var accountSid = process.env.accountSid;
 var authToken = process.env.authToken;
+var secondAccountSid = process.env.secondAccountSid;
+var secondAuthToken = process.env.secondAuthToken;
 var workspaceSid = process.env.workspaceSid;
 var workerSid = process.env.workerSid;
 var meyaAPIKey = process.env.meyaAPIKey;
@@ -55,6 +57,7 @@ myFirebase.authWithCustomToken(firebaseToken, function(error, authData) {
 
 var client = new twilio.TaskRouterClient(accountSid, authToken, workspaceSid);
 var smsclient = new twilio.RestClient(accountSid, authToken);
+var secondsmsclient = new twilio.RestClient(secondAccountSid, secondAuthToken);
 
 
 
@@ -594,8 +597,13 @@ app.post('/botresponse', function(request, response) {
   //var meyaUserID = JSON.parse(request.body.user_id);
   //console.log("received message from bot originally from" + meyaUserID['from'])
   var meyaUserID = request.body.user_id.split("@@");
+  var smsclienttouse = smsclient;
+  //Temporary hack to send facebook messages from a different account
+  if (meyaUserID[0].contains("M@")) {
+    smsclienttouse = secondsmsclient;
+  }
 
-  smsclient.sendMessage({
+  smsclienttouse.sendMessage({
 
     to: meyaUserID[0].replace("M@", "Messenger:"), // Any number Twilio can deliver to
     from: meyaUserID[1].replace("M@", "Messenger:"), // A number you bought from Twilio and can use for outbound communication
