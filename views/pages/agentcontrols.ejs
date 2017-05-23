@@ -25,6 +25,7 @@
 </template>
 <a href="#" class="button success" @Click="updatecapacity(1)">Capacity: 1</a><br />
 <a href="#" class="button success" @Click="updatecapacity(2)">Capacity: 2</a>
+<a href="#" class="button success" @Click="shownumbers()">Show Numbers</a>
 <a href="#" class="button alert" @Click="resetdemo()">RESET!</a>
 
 </div>                
@@ -119,6 +120,9 @@
   },
   updateWorkerSid: function(sid) {
     this.worker=sid;
+  },
+  shownumbers: function() {
+      zendeskClient.invoke('notify','<h1>SMS: 855-222-6811<br/>Voice: 855-222-6811<br />Facebook: /britishexports</h1>',alert,{sticky: true});
   },
   resetdemo: function() {
     $.ajax({ 
