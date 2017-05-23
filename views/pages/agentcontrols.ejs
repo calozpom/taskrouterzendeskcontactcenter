@@ -122,8 +122,8 @@
     this.worker=sid;
   },
   shownumbers: function() {
-    var msg = 'Are you sure?<br/>Your request won\'t be sent.';
-      zendeskClient.invoke(msg,alert,{sticky: true});
+    var msg = '<strong>Are you sure?</strong><br/>Your request won\'t be sent.';
+      zendeskClient.invoke('notify',msg,alert,{sticky: true});
   },
   resetdemo: function() {
     $.ajax({ 
