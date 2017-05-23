@@ -176,8 +176,9 @@ app.post('/voicenoivr', function(request,response){
 })
 app.post('/initiateivr', function(request,response){
   var textToSpeak = querystring.escape("Hello and welcome to the best customer experience youve ever had. Thats right. British Customer Service. Please tell us how we can help.");
+  var didNotHear = querystring.escape("Did you say anything?"); 
   console.log(textToSpeak);
-  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" timeout=\"2\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio, hate, love, awesome, help, british, marmite, suck, terrible, awful, assistance, exports\"><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play><Pause length=\"5\"/></Gather></Response>";
+  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" timeout=\"2\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio, hate, love, awesome, help, british, marmite, suck, terrible, awful, assistance, exports\"><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play><Pause length=\"10\"/></Gather><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+didNotHear+"</Play><Redirect method=\"POST\">/initiateivr</Redirect></Response>";
   console.log(responseString);
   response.send(responseString);
 })
