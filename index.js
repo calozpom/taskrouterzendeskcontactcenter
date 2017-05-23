@@ -545,6 +545,10 @@ app.get('/acceptTask', function(request, response) {
   console.log(request.query.reservationsid)
   console.log(request.query.channel)
 
+  //wrap this whole thing in a try in case we're dealing with a revoked reservation
+
+  try {
+
   if (request.query.channel == "voice") {
     client.workspace.tasks(request.query.tasksid).reservations(request.query.reservationsid).update({
     instruction: 'conference',
@@ -562,6 +566,8 @@ app.get('/acceptTask', function(request, response) {
     console.log(reservation.worker_name);
 });
   }
+}
+catch (err) {console.log("accept task failed. maybe an old reservation?");}
 
   response.send('');
 });
@@ -780,7 +786,7 @@ catch (err){}
        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
        break;
        
-
+       case "reservation.timeout":
        case "reservation.canceled":
        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).once("value", function(snapshot) {
          taskList.child("queue").child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);
