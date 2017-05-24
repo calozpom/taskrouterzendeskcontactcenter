@@ -606,9 +606,9 @@ app.post('/botresponse', function(request, response) {
   var meyaUserID = request.body.user_id.split("@@");
   var smsclienttouse = smsclient;
   //Temporary hack to send facebook messages from a different account
-  if (meyaUserID[0].contains("M@")) {
+  /*if (meyaUserID[0].contains("M@")) {
     smsclienttouse = secondsmsclient;
-  }
+  }*/
 
   smsclienttouse.sendMessage({
 
