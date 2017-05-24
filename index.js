@@ -359,8 +359,8 @@ app.post('/initiatebot', function(request, response) {
             'last': friendlyName_last
           });
           var id = request.body['From'];
-          if (id.substr(0, 10) == "Messenger:") {
-            id = id.replace('Messenger:', '');
+          if (id.substr(0, 10) == "messenger:") {
+            id = id.replace('messenger:', '');
             getFacebookDetails(id, newTaskResponse.sid);
 
           } else {
@@ -446,8 +446,8 @@ function updateConversationPost(taskSid, request, friendlyName_first, friendlyNa
 
   var meyaUserID = {};
   //We munge multiple parameters together to pass all the context to Meya. I had to shorten the Messenger prefix to stay within character count limits.
-  meyaUserID['from'] = request.body['From'].replace("Messenger:", "M@");
-  meyaUserID['to'] = request.body['To'].replace("Messenger:", "M@");
+  meyaUserID['from'] = request.body['From'].replace("messenger:", "M@");
+  meyaUserID['to'] = request.body['To'].replace("messenger:", "M@");
   meyaUserID['sid'] = taskSid;
   meyaUserID_string = meyaUserID['from'] + "@@" + meyaUserID['to'] + "@@" + taskSid;
   console.log("going to use this as meya user ID " + meyaUserID_string);
@@ -612,8 +612,8 @@ app.post('/botresponse', function(request, response) {
 
   smsclienttouse.sendMessage({
 
-    to: meyaUserID[0].replace("M@", "Messenger:"), // Any number Twilio can deliver to
-    from: meyaUserID[1].replace("M@", "Messenger:"), // A number you bought from Twilio and can use for outbound communication
+    to: meyaUserID[0].replace("M@", "messenger:"), // Any number Twilio can deliver to
+    from: meyaUserID[1].replace("M@", "messenger:"), // A number you bought from Twilio and can use for outbound communication
     body: request.body.text, // body of the SMS message
     statusCallback: 'https://twiliozendeskcc.herokuapp.com/messagestatus/'
 
