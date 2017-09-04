@@ -11,6 +11,7 @@ var req = require('request');
 var twilio = require('twilio');
 var taskrouterHelper = require('./jwt/taskrouter/tokenGenerator');
 var twilioClientHelper = require('./jwt/client/tokenGenerator');
+var twilioSyncChatHelper = require('./jwt/sync/tokenGenerator');
 
 // Twilio creds
 var accountSid = process.env.accountSid;
@@ -148,6 +149,10 @@ app.get('/workspacetoken', function(request, response) {
 app.get('/clienttoken',function(request, response) {
   const identity = "al";
   response.send({ token: twilioClientHelper.getClientCapabilityToken(accountSid, authToken, identity) });
+});
+
+app.get('/syncToken', function(request, response) {
+
 });
 
 app.get('/visualize', function(request, response) {

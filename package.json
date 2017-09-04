@@ -23,6 +23,8 @@
     "request": "2.72.0",
     "requests": "0.1.7",
     "twilio": "^3.6.4",
+    "twilio-chat": "^1.1.2",
+    "twilio-sync": "^0.5.10",
     "vuefire": "^1.4.2"
   },
   "repository": {
