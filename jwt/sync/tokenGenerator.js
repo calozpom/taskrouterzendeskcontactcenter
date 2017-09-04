@@ -10,7 +10,7 @@ function getSyncAndChatToken(identity) {
     token.identity = identity;
 
     const chatGrant = new ChatGrant({
-       serviceSid: process.env.chatSegit rviceInstance
+       serviceSid: process.env.chatServiceInstance
     });
     token.addGrant(chatGrant);
 

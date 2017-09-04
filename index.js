@@ -151,8 +151,10 @@ app.get('/clienttoken',function(request, response) {
   response.send({ token: twilioClientHelper.getClientCapabilityToken(accountSid, authToken, identity) });
 });
 
-app.get('/syncToken', function(request, response) {
-
+app.get('/twilioAccessToken', function(request, response) {
+  const identity = "al";
+  const accessToken = twilioSyncChatHelper.getSyncAndChatToken(identity);
+  response.send(accessToken);
 });
 
 app.get('/visualize', function(request, response) {
