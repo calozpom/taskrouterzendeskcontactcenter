@@ -8,6 +8,8 @@ var FirebaseTokenGenerator = require('firebase-token-generator');
 var fs = require('fs')
 var querystring = require("querystring");
 var req = require('request');
+var SyncClient = require('twilio-sync');
+var ChatClient = require('twilio-chat');
 var twilio = require('twilio');
 var taskrouterHelper = require('./jwt/taskrouter/tokenGenerator');
 var twilioClientHelper = require('./jwt/client/tokenGenerator');
@@ -73,14 +75,19 @@ myFirebase.authWithCustomToken(firebaseToken, function(error, authData) {
   if (error) {
     console.log("Firebase Auth Error: " + error);
   } else {
-    console.log("Firebase Auth Status: " + authData);
+    console.log("Firebase Auth Status: ");
+    console.log(authData);
   }
 });
 
-// Twilio setup
+// Twilio node helper lib setup
 var twilioClient = new twilio(accountSid, authToken);
 var secondTwilioClient = new twilio(secondAccountSid, secondAuthToken);
-var syncService = twilioClient.sync.services(syncServiceInstance);
+
+// Twilio Sync JS SDK setup
+var identity = 'al';
+var accessToken = twilioSyncChatHelper.getSyncAndChatToken(identity);
+var syncClient = new SyncClient(accessToken);
 
 // Express setup
 var app = express();
@@ -139,14 +146,15 @@ app.get('/token', function(request, response) {
   response.send({ token: taskrouterHelper.getTaskRouterWorkerCapabilityToken(accountSid, authToken, workspaceSid, workerSid) });
 });
 
-app.get('/workspacetoken', function(request, response) {
+app.get('/workspaceToken', function(request, response) {
   response.send({
-      workspacetoken: taskrouterHelper.getTaskRouterWorkspaceCapabilityToken(accountSid, authToken, workspaceSid, workerSid),
-      token: taskrouterHelper.getTaskRouterWorkerCapabilityToken(accountSid, authToken, workspaceSid, workerSid)
+      workspaceToken: taskrouterHelper.getTaskRouterWorkspaceCapabilityToken(accountSid, authToken, workspaceSid, workerSid),
+      workerToken: taskrouterHelper.getTaskRouterWorkerCapabilityToken(accountSid, authToken, workspaceSid, workerSid),
+      syncToken: twilioSyncChatHelper.getSyncAndChatToken(identity)
   });
 });
 
-app.get('/clienttoken',function(request, response) {
+app.get('/clientToken',function(request, response) {
   const identity = "al";
   response.send({ token: twilioClientHelper.getClientCapabilityToken(accountSid, authToken, identity) });
 });
@@ -460,6 +468,7 @@ function updateTaskAttributes(taskSid, attributesJson) {
 
   twilioClient.workspaces(workspaceSid).tasks(taskSid).fetch(function(err, task) {
     attributes = JSON.parse(task.attributes);
+
     for (var key in attributesJson) {
       attributes[key] = attributesJson[key];
     }
@@ -647,6 +656,181 @@ app.post('/botresponse', function(request, response) {
   response.send('');
 });
 
+app.post('/syncEventStream', function(request, response) {
+    // update the appropriate syncMap when an event is received from TaskRouter eventCallback config
+    if (request.body.TaskSid) {
+        var dataToSet = {};
+
+        switch (request.body.EventType) {
+            case "task.deleted":
+                syncClient.map('EventStream.' + request.body.TaskQueueSid).then(syncMap => {
+                    syncMap.remove(request.body.TaskSid).catch(err => {
+                        console.log('Err deleting SyncMapItem: ' + err);
+                    });
+                });
+                break;
+
+            case "task-queue.entered":
+                dataToSet['attributes'] = request.body.TaskAttributes;
+                dataToSet['sid'] = request.body.TaskSid;
+                dataToSet['status'] = request.body.TaskAssignmentStatus;
+                dataToSet['channel'] = request.body.TaskChannelUniqueName;
+                dataToSet['queue'] = request.body.TaskQueueName;
+
+                syncClient.map('TaskList.Queue').then(syncMap => {
+                    syncMap.set(request.body.TaskSid, dataToSet);
+                });
+
+                syncClient.map('EventStream.' + request.body.TaskQueueSid).then(syncMap => {
+                    syncMap.set(request.body.TaskSid, dataToSet);
+                });
+                break;
+
+            case "task-queue.timeout":
+                syncClient.map('EventStream.' + request.body.TaskQueueSid).then(syncMap => {
+                    syncMap.remove(request.body.TaskSid);
+                });
+                break;
+
+            case "task-queue.moved":
+                syncClient.map('EventStream.' + request.body.TaskQueueSid).then(syncMap => {
+                    syncMap.remove(request.body.TaskSid);
+                });
+                break;
+
+            case "task.canceled":
+                syncClient.map('EventStream.' + request.body.TaskQueueSid).then(syncMap => {
+                    syncMap.remove(request.body.TaskSid);
+                });
+
+                //todo need to update this to support tasks currently reserved too
+                syncClient.map('TaskList.Queue.' + request.body.TaskQueueSid).then(syncMap => {
+                    syncMap.remove(request.body.TaskSid);
+                });
+                break;
+
+            case "task.completed":
+                dataToSet['attributes'] = request.body.TaskAttributes;
+                dataToSet['sid'] = request.body.TaskSid;
+                dataToSet['status'] = request.body.TaskAssignmentStatus;
+
+                syncClient.map('EventStream.' + request.body.TaskQueueSid).then(syncMap => {
+                    syncMap.update(request.body.TaskSid, dataToSet);
+                });
+
+                taskAttributes = JSON.parse(request.body.TaskAttributes);
+
+                syncClient.maps('TaskList.' + taskAttributes['worker']).then(syncMap => {
+                    syncMap.remove(request.body.TaskSid);
+                });
+                break;
+
+            case "task.updated":
+                dataToSet['attributes'] = request.body.TaskAttributes;
+                dataToSet['sid'] = request.body.TaskSid;
+                dataToSet['status'] = request.body.TaskAssignmentStatus;
+
+                if (request.body.TaskAssignmentStatus == "pending") {
+                    syncClient.map('TaskList.Queue').then(syncMap => {
+                        syncMap.update(request.body.TaskSid, dataToSet);
+                    });
+
+                    syncClient.map('EventStream.' + request.body.TaskQueueSid).then(syncMap => {
+                        syncMap.update(request.body.TaskSid, dataToSet);
+                    });
+                } else {
+                    // the task updated event does not include the worker sid, which is the key in the taskList data structure
+                    // so we first get it out of the task attributes, where we have saved it
+                    twilioClient.workspaces(workspaceSid).tasks(request.body.TaskSid).fetch(function(err, task) {
+                        attributes = JSON.parse(task.attributes);
+
+                        syncClient.map('TaskList.' + attributes['worker']).then(syncMap => {
+                            syncMap.update('request.body.TaskSid', dataToSet);
+                        });
+                    });
+                }
+                break;
+
+            case "reservation.created":
+                dataToSet['status'] = request.body.TaskAssignmentStatus;
+                dataToSet['reservationSid'] = request.body.ReservationSid;
+                dataToSet['attributes'] = request.body.TaskAttributes;
+                dataToSet['sid'] = request.body.TaskSid;
+
+                if (request.body.TaskChannelUniqueName) {
+                    dataToSet['channel'] = request.body.TaskChannelUniqueName;
+                } else if (request.body.TaskChannelSid == voiceTaskChannelSid) {
+                    dataToSet['channel'] = "voice";
+                } else if (request.body.TaskChannelSid == chatTaskChannelSid) {
+                    dataToSet['channel'] = "chat";
+                }
+
+                dataToSet['queue'] = request.body.TaskQueueName;
+
+                syncClient.map('TaskList.' + request.body.WorkerSid).then(syncMap => {
+                    syncMap.set(request.body.TaskSid, dataToSet);
+                });
+                syncClient.map('TaskList.Queue').then(syncMap => {
+                    syncMap.remove(request.body.TaskSid);
+                });
+
+                var newAttributes = {'worker' : request.body.WorkerSid};
+                updateTaskAttributes(request.body.TaskSid, newAttributes);
+                var addons = JSON.parse(request.body.TaskAddons);
+
+                dataToSet={};
+                try {
+                    dataToSet['name']=addons.nextcaller_advanced_caller_id.records[0].name;
+                    dataToSet['address']=addons.nextcaller_advanced_caller_id.records[0].address[0].line1 + " " + addons.nextcaller_advanced_caller_id.records[0].address[0].city + " " + addons.nextcaller_advanced_caller_id.records[0].address[0].zip_code;
+                } catch (err) {
+                    attributes=JSON.parse(task.attributes);
+                    dataToSet['name']=attributes.from;
+                }
+
+                dataToSet['profile_pic']="img/unknownavatar.jpeg";
+
+                syncClient.map('TaskList.' + request.body.WorkerSid).then(syncMap => {
+                    syncMap.update(request.body.TaskSid, dataToSet);
+                });
+
+                break;
+
+            case "reservation.timeout":
+                break;
+
+            case "reservation.canceled":
+                syncClient.map('TaskList.' + request.body.WorkerSid).then(syncMap => {
+                    syncMap.remove(request.body.TaskSid);
+                });
+                break;
+            case "reservation.accepted":
+                dataToSet['status'] = request.body.TaskAssignmentStatus;
+                dataToSet['accepted'] = "true";
+
+                syncClient.map('TaskList.' + request.body.WorkerSid).then(syncMap => {
+                    syncMap.update(request.body.TaskSid, dataToSet);
+                });
+
+                var newAttributes = {'worker':request.body.WorkerSid};
+                updateTaskAttributes(request.body.TaskSid, newAttributes);
+                break;
+
+            case "task.wrapup":
+                dataToSet['status'] = request.body.TaskAssignmentStatus;
+
+                twilioClient.workspaces(workspaceSid).tasks(request.body.TaskSid).fetch(function(err, task) {
+                    attributes = JSON.parse(task.attributes);
+
+                    syncClient.map('TaskList.' + attributes['worker']).then(syncMap => {
+                        syncMap.update(request.body.TaskSid, dataToSet);
+                    });
+                });
+                break;
+        }
+    }
+    response.send('');
+});
+
 app.post('/eventstream', function(request, response) {
   // This function consumes the event stream and structures it into firebase data
   // The eventstream firebase structure is then used for real time visualization of queue state
@@ -676,8 +860,8 @@ app.post('/eventstream', function(request, response) {
         dataToSet['status'] = request.body.TaskAssignmentStatus;
         dataToSet['channel'] = request.body.TaskChannelUniqueName;
         dataToSet['queue'] = request.body.TaskQueueName;
-        taskList.child("queue").child(request.body.TaskSid).update(dataToSet)
-        eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
+        taskList.child("queue").child(request.body.TaskSid).update(dataToSet);
+        eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge);
         break;
       case "task-queue.timeout":
         eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();

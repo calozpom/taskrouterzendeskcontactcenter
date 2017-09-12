@@ -6,6 +6,7 @@ const ChatGrant = AccessToken.ChatGrant;
 const SyncGrant = AccessToken.SyncGrant;
 
 function getSyncAndChatToken(identity) {
+
     const token = new AccessToken(process.env.accountSid, process.env.apiKey, process.env.apiSecret);
     token.identity = identity;
 
@@ -19,10 +20,7 @@ function getSyncAndChatToken(identity) {
     });
     token.addGrant(syncGrant);
 
-    return {
-        identity: token.identity,
-        token: token.toJwt()
-    };
+    return token.toJwt();
 }
 
 exports.getSyncAndChatToken = getSyncAndChatToken;
