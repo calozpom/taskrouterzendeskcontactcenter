@@ -1,15 +1,17 @@
+require('dotenv').load();
+
 function changeState(state) {
     console.log("trying to change state to state " + state);
-    var activitySid = "WAbc57093ed33d341e926d9db5e73525ad";
+    var activitySid = process.env.idleActivitySid;
     switch (state) {
         case "Idle":
-            activitySid = "WAbc57093ed33d341e926d9db5e73525ad";
+            activitySid = process.env.idleActivitySid;
             break;
         case "Offline":
-            activitySid = "WA7d69025af6c5acae76faad56da32698e";
+            activitySid = process.env.offlineActivitySid;
             break;
         case "Busy":
-            activitySid = "WA6492c399f88532c2935ca7fcbfe56e9b";
+            activitySid = process.env.busyActivitySid;
             break;
     }
     console.log(activitySid);
@@ -23,7 +25,6 @@ function changeState(state) {
     });
 }
 
-
 function sendSMS(from, to, sid, body) {
     $.ajax({
         url: 'sendSMS',
@@ -34,11 +35,7 @@ function sendSMS(from, to, sid, body) {
 
         }
     });
-
-
 }
-
-
 
 function updateCapacity(number, workerSid) {
     $.ajax({
@@ -64,8 +61,6 @@ function acceptTask(tasksid, reservationsid, channel) {
     });
 }
 
-
-
 function completeTask(sid) {
     console.log("completing task");
     $.ajax({
@@ -82,24 +77,10 @@ function completeTask(sid) {
     var element = $("#taskDiv" + sid);
     element.fadeOut(function() {
         element.remove();
-    })
-
-
+    });
 }
-
-
-
-
-
-
-
-
 
 function setVolumes(inputVolume, outputVolume) {
   micIndicator.setVolume(inputVolume);
   speakerIndicator.setVolume(outputVolume);
 }
-
-
-
-

@@ -11,7 +11,7 @@ function getSyncAndChatToken(identity) {
     token.identity = identity;
 
     const chatGrant = new ChatGrant({
-       serviceSid: process.env.chatServiceInstance
+        serviceSid: process.env.chatServiceInstance,
     });
     token.addGrant(chatGrant);
 

@@ -8,12 +8,12 @@ var FirebaseTokenGenerator = require('firebase-token-generator');
 var fs = require('fs')
 var querystring = require("querystring");
 var req = require('request');
-var SyncClient = require('twilio-sync');
-var ChatClient = require('twilio-chat');
+
 var twilio = require('twilio');
-var taskrouterHelper = require('./jwt/taskrouter/tokenGenerator');
-var twilioClientHelper = require('./jwt/client/tokenGenerator');
-var twilioSyncChatHelper = require('./jwt/sync/tokenGenerator');
+var twilioChatHelper = require('./public/js/twilioChatHelper');
+var taskrouterTokenHelper = require('./jwt/taskrouter/tokenGenerator');
+var twilioClientTokenHelper = require('./jwt/client/tokenGenerator');
+var twilioSyncChatTokenHelper = require('./jwt/sync/tokenGenerator');
 
 // Twilio creds
 var accountSid = process.env.accountSid;
@@ -24,11 +24,11 @@ var workerSid = process.env.workerSid;
 var voiceTaskChannelSid = process.env.voiceTaskChannelSid;
 var chatTaskChannelSid = process.env.chatTaskChannelSid;
 
-var secondAccountSid = process.env.secondAccountSid;
-var secondAuthToken = process.env.secondAuthToken;
-
 var syncServiceInstance = process.env.syncServiceInstance;
 var chatServiceInstance = process.env.chatServiceInstance;
+
+var secondAccountSid = process.env.secondAccountSid;
+var secondAuthToken = process.env.secondAuthToken;
 
 var twilioPhoneNumber = process.env.twilioPhoneNumber;
 var twilioPhoneNumberSkipBot = process.env.twilioPhoneNumberSkipBot;
@@ -82,12 +82,9 @@ myFirebase.authWithCustomToken(firebaseToken, function(error, authData) {
 
 // Twilio node helper lib setup
 var twilioClient = new twilio(accountSid, authToken);
-var secondTwilioClient = new twilio(secondAccountSid, secondAuthToken);
-
-// Twilio Sync JS SDK setup
-var identity = 'al';
-var accessToken = twilioSyncChatHelper.getSyncAndChatToken(identity);
-var syncClient = new SyncClient(accessToken);
+var secondTwilioClient = new twilio(secondAccountSid, secondAuthToken);  // for sending messages to FB; something about Twilio Channels something something
+var syncService = twilioClient.sync.services(syncServiceInstance);
+var chatService = twilioClient.chat.services(chatServiceInstance);
 
 // Express setup
 var app = express();
@@ -143,25 +140,26 @@ app.get('/reservationmodal', function(request, response) {
 });
 
 app.get('/token', function(request, response) {
-  response.send({ token: taskrouterHelper.getTaskRouterWorkerCapabilityToken(accountSid, authToken, workspaceSid, workerSid) });
+  response.send({ token: taskrouterTokenHelper.getTaskRouterWorkerCapabilityToken(accountSid, authToken, workspaceSid, workerSid) });
 });
 
 app.get('/workspaceToken', function(request, response) {
   response.send({
-      workspaceToken: taskrouterHelper.getTaskRouterWorkspaceCapabilityToken(accountSid, authToken, workspaceSid, workerSid),
-      workerToken: taskrouterHelper.getTaskRouterWorkerCapabilityToken(accountSid, authToken, workspaceSid, workerSid),
-      syncToken: twilioSyncChatHelper.getSyncAndChatToken(identity)
+      workspaceToken: taskrouterTokenHelper.getTaskRouterWorkspaceCapabilityToken(accountSid, authToken, workspaceSid, workerSid),
+      workerToken: taskrouterTokenHelper.getTaskRouterWorkerCapabilityToken(accountSid, authToken, workspaceSid, workerSid),
+      syncToken: twilioSyncChatTokenHelper.getSyncAndChatToken(identity)
   });
 });
 
 app.get('/clientToken',function(request, response) {
-  const identity = "al";
-  response.send({ token: twilioClientHelper.getClientCapabilityToken(accountSid, authToken, identity) });
+  const identity = 'al';
+  response.send({ token: twilioClientTokenHelper.getClientCapabilityToken(accountSid, authToken, identity) });
 });
 
 app.get('/twilioAccessToken', function(request, response) {
-  const identity = "al";
-  const accessToken = twilioSyncChatHelper.getSyncAndChatToken(identity);
+  const identity = 'Al Cook';   // realistically this should be the workerSid, request.query.workerSid
+  const deviceId = 'browser';   // this should also be some unique identifier
+  const accessToken = twilioSyncChatTokenHelper.getSyncAndChatToken(identity, deviceId);
   response.send(accessToken);
 });
 
@@ -171,7 +169,7 @@ app.get('/visualize', function(request, response) {
   response.render('pages/visualize');
 });
 
-app.post('/voicenoivr', function(request,response){
+app.post('/voicenoivr', function(request,response){clear
   var textToSpeak = querystring.escape("Please hold while we connect you");
   var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play><Enqueue workflowSid="+workflowSid+"><Task>{\"type\":\"voice\"}</Task></Enqueue></Response>";
     response.send(responseString);
@@ -268,272 +266,291 @@ app.post('/partialresult', function(request,response){
   response.send('');
 });
 
-app.post('/initiatebot', function(request, response) {
-  // desired behavior
-  // - evaluate whether there is already a task from this messenger
-  // if no - create a task and get task sid
-  // if yes, get task sid 
-  // add message to firebase entry for task sid
-  // if task is not bot_qualified
-  //    send message to meya with from set to task SID
+// configured messaging endpoint (via SMS to a Twilio number or FB Messenger)
+app.post('/initiateMessagingBot', function(request, response) {
+    console.log('/initiateMessagingBot');
 
-  console.log("checking for any existing task from this user");
+    // Marketplace Add-On field (aka Caller ID)
+    var friendlyName_first = "";
+    var friendlyName_last = "";
+    var address_street = "";
+    var address_city = "";
 
-  var queryJson = {};
-  var friendlyName_first = "";
-  var friendlyName_last = "";
-  var address_street = "";
-  var address_city = "";
-  queryJson['EvaluateTaskAttributes'] = "(message_from=\"" + request.body['From'] + "\")";
-  var queryString = "{'EvaluateTaskAttributes':'(message_from=\"" + request.body['From'] + "\")'}";
+    // Check if a Task already exists for this 'From'
+        // Why? Need to distinguish if it is the FIRST message from the customer
+        // or if it is a CONTINUATION of a conversation from the customer
+    var queryJSON = {};
+    queryJSON['EvaluateTaskAttributes'] = "(message_from=\"" + request.body['From'] + "\")";
 
-  var foundTask = 0;
-  var taskConversationSid = "";
-  //note the following call is async
-  //Here I am looking up for a current task from this user. I could alternatively cookie the request, but that is time limited.
+    twilioClient.taskrouter.workspaces(workspaceSid).tasks.list(queryJSON).then(tasks => {
+        console.log('Found tasks with this "from"');
+        console.log(tasks);
 
-  twilioClient.taskrouter.workspaces(workspaceSid).tasks.list(queryJson, function(err, data) {
-    if (!err) {
-      data.tasks.forEach(function(task) {
-        myFirebase.child("messageList").child(task.sid).push({
-          'from': request.body['From'],
-          'message': request.body['Body'],
-          'first': friendlyName_first,
-          'last': friendlyName_last
-        });
+        if (tasks.length > 0) {
+            tasks.forEach(task => {
+                console.log('Logging task');
+                console.log(task);
+                // determine if the Task is still active - pending, reserved, assigned (not completed)
+                if (task.assignmentStatus == 'pending' || task.assignmentStatus == 'reserved'
+                    || task.assignmentStatus == 'assigned') {
 
-        if (task.assignmentStatus == "pending" || task.assignmentStatus == "reserved" || task.assignmentStatus == "assigned") {
-          foundTask = 1;
-          console.log("found an existing task from that user which is still active. Trying to list attributes");
-          console.log(task.attributes);
-          taskConversationSid = task.sid;
-          console.log("will use this existing task sid for this conversation " + taskConversationSid);
-          updateConversationPost(taskConversationSid, request, friendlyName_first, friendlyName_last);
-        }
-      });
+                    // first fetch the user's name out of syncMap of UserProfiles
+                    syncService.syncMaps('UserProfiles').syncMapItems(task.sid + '.info').fetch().then(response => {
+                        console.log('Fetched the user profile: ' + response);
 
-      if (!foundTask) {
-        console.log("did not find an existing active task for this messenger");
+                        // send the message to the chatChannel=taskSid as the message sender
+                        var userIdentity = response.data.first_name + ' ' + response.data.last_name;
+                        twilioChatHelper.sendChat(task.sid, request.body['Body'], userIdentity);
+                    });
+                }
+                // else {} if the Task is not in an active state, do nothing. game over.
+            });
+        } else {  // it is the first message from this user in the TaskRouter system; create a Task to represent it and insert the message into chat container
+            console.log('No found Tasks with this "from". Creating Task for this instead.');
 
-        var attributesJson = {};
-        attributesJson['message_from'] = request.body['From'];
-        attributesJson['from'] = request.body['From'];
-        attributesJson['message_body'] = request.body['Body'];
-        attributesJson['message_to'] = request.body['To'];
-        attributesJson['message_sid'] = request.body['MessageSid'];
-        // hard coding in a specific number that skips bot qualification when messaged
-        if (request.body['To'] == twilioPhoneNumberSkipBot) {
-          attributesJson['bot_qualified'] = "true";
+            var attributesJSON = {};
+            attributesJSON['message_from'] = request.body['From'];
+            attributesJSON['from'] = request.body['From'];
+            attributesJSON['message_body'] = request.body['Body'];
+            attributesJSON['message_to'] = request.body['To'];
+            attributesJSON['message_sid'] = request.body['MessageSid'];
 
-        }
-
-        console.log("want to create a new task with these attributes");
-        console.log(attributesJson);
-        var attributesString = JSON.stringify(attributesJson);
-
-        var options = {
-          method: 'POST',
-          url: 'https://taskrouter.twilio.com/v1/Workspaces/' + workspaceSid + '/Tasks',
-          auth: {
-            username: accountSid,
-            password: authToken
-          },
-          form: {
-            WorkflowSid: workflowSid,
-            Attributes: attributesString,
-            TaskChannel: 'chat'
-          }
-        };
-
-        req(options, function(error, response, body) {
-          if (error) {
-            throw new Error(error);
-          }
-          //console.log(body);
-          var newTaskResponse = JSON.parse(body);
-          console.log("created a new tasks with Sid " + newTaskResponse.sid);
-          myFirebase.child("messageList").child(newTaskResponse.sid).push({
-            'from': request.body['From'],
-            'message': request.body['Body'],
-            'first': friendlyName_first,
-            'last': friendlyName_last
-          });
-
-          var id = request.body['From'];
-          if (id.substr(0, 10) == "messenger:") {
-            id = id.replace('messenger:', '');
-            getFacebookDetails(id, newTaskResponse.sid);
-          } else {
-            try {
-              console.log(request.body.AddOns);
-              var addOnsData = JSON.parse(request.body.AddOns);
-              console.log(addOnsData['results']);
-
-              friendlyName_first = addOnsData['results']['nextcaller_advanced_caller_id']['result']['records'][0]['first_name'];
-              friendlyName_last = addOnsData['results']['nextcaller_advanced_caller_id']['result']['records'][0]['last_name'];
-              address_street = addOnsData['results']['nextcaller_advanced_caller_id']['result']['records'][0]['address'][0]['line1'];
-              address_city = x;
-            } catch (err) {
-
+            // hard coding in a specific number that skips bot qualification when messaged
+            if (request.body['To'] == twilioPhoneNumberSkipBot) {
+                attributesJSON['bot_qualified'] = "true";
             }
 
-            myFirebase.child("profiles").child(newTaskResponse.sid).set({
-              'first_name': friendlyName_first,
-              'last_name': friendlyName_last,
-              'address_street': address_street,
-              'address_city': address_city,
-              'message_type': 'sms',
-              'profile_pic': 'img/unknownavatar.jpeg'
-            });
-          }
+            // create the Task
+            twilioClient.taskrouter.workspaces(workspaceSid).tasks.create({
+                workflowSid: workflowSid,
+                attributes: JSON.stringify(attributesJSON),
+                taskChannel: 'chat'
+            }).then((createdTask) => {
+                console.log('Created Task ' + createdTask.sid + ' for SMS from : ' + request.body['From']);
 
-          updateConversationPost(newTaskResponse.sid, request, friendlyName_first, friendlyName_last);
-        });
-      }
-    }
-  });
-  response.send('');
+                // determine if it came from Facebook Messenger
+                // if yes, then we need to fetch the profile details
+                // if no, then we need to fetch caller details with Marketplace Addons
+                var id = request.body['From'];
+                if (id.substr(0, 10) == "messenger:") {
+                    id = id.replace('messenger:', '');
+                    handleInboundFBMessage(id, createdTask.sid, request.body['Body']);
+                } else {
+                    try {
+                        var addOnsData = JSON.parse(createdTask.addons);
+
+                        friendlyName_first = addOnsData['nextcaller_advanced_caller_id']['records'][0]['first_name'];
+                        friendlyName_last = addOnsData['nextcaller_advanced_caller_id']['records'][0]['last_name'];
+                        address_street = addOnsData['nextcaller_advanced_caller_id']['records'][0]['address'][0]['line1'];
+                        address_city = addOnsData['nextcaller_advanced_caller_id']['records'][0]['address'][0]['city'];
+                    } catch (err) {
+                        console.log('No user identification for this inbound user. Using the phone number as the firstname.');
+                        console.log(err);
+                        friendlyName_first = request.body['From'];
+                    }
+
+                    // update our SyncMap UserProfiles to contain user data fetched via AddOns
+                    syncService.syncMaps('UserProfiles').fetch().then(fetchedMap => {
+                        console.log('Fetching SyncMap: UserProfiles ');
+                        // insert syncMapItem
+                        syncService.syncMaps(fetchedMap.uniqueName).syncMapItems.create({
+                            key: createdTask.sid + '.info',
+                            data: {
+                                'first_name': friendlyName_first,
+                                'last_name': friendlyName_last,
+                                'address_street': address_street,
+                                'address_city': address_city,
+                                'message_type': 'sms',
+                                'profile_pic': 'img/unknownavatar.jpeg'
+                            }
+                        }).then(createdMapItem => {
+                            console.log('Created mapItem');
+                            console.log(createdMapItem);
+                            console.log(JSON.parse(createdMapItem));
+                            return friendlyName_first + ' ' + friendlyName_last;
+                        }).catch(err => {
+                            console.log('Failed to insert UserProfile ' + taskSid + ' due to error: ' + err);
+                        });
+                    }).catch(err => {
+                        console.log('Error trying to fetch UserProfiles due to ' + err);
+                        // map didn't exist, create it and then insert syncMapItem
+                        syncService.syncMaps.create({
+                            uniqueName: 'UserProfiles'
+                        }).then(createdMap => {
+                            syncService.syncMaps(createdMap.uniqueName).syncMapItems.create({
+                                key: createdTask.sid + '.info',
+                                data: {
+                                    'first_name': friendlyName_first,
+                                    'last_name': friendlyName_last,
+                                    'address_street': address_street,
+                                    'address_city': address_city,
+                                    'message_type': 'sms',
+                                    'profile_pic': 'img/unknownavatar.jpeg'
+                                }
+                            }).then(createdMapItem => {
+                                return friendlyName_first + ' ' + friendlyName_last;
+                            }).catch(err => {
+                                console.log('Could not create SyncMapItem for UserProfile TaskSid: ' + taskSid + ' due to error: ' + err);
+                            });
+                        }).catch(err => {
+                            console.log('Unable to create SyncMap UserProfiles due to error: ' + err);
+                        });
+                    });
+
+                    // push the message to Chat channel
+                    var userIdentity = friendlyName_first + ' ' + friendlyName_last;
+                    twilioChatHelper.sendChat(createdTask.sid, request.body['Body'], userIdentity);
+                }
+
+                // send to Meya AI bot if necessary
+                var hasBotQualifiedProperty = JSON.parse(createdTask.attributes).hasOwnProperty('bot_qualified');
+                console.log('Is the task on INITIAL creation Bot Qualified ? ' + hasBotQualifiedProperty);
+
+                if (!hasBotQualifiedProperty) {
+                    sendToMeyaBotForInitialQualification(createdTask, request);
+                }
+            }).catch(err => {
+                console.log('Failed to create Task for SMS from : ' + request.body['From'] + ' due to : ' + err);
+            });
+        }
+    });
+    response.send('');
 });
 
-function getFacebookDetails(id, sid) {
-  var results = {};
-  var options = {
-    method: 'GET',
-    url: 'https://graph.facebook.com/v2.6/' + id + '?fields=first_name,last_name,profile_pic&access_token=' + pageAccessToken,
-  };
-  var friendlyName_first = "";
-  var friendlyName_last = "";
+function handleInboundFBMessage(facebookId, taskSid, messageBody) {
+    var results = {};
 
-  req(options, function(error, response, body) {
-    if (error) {
-      throw new Error(error);
-    }
+    var options = {
+        method: 'GET',
+        url: 'https://graph.facebook.com/v2.6/' + facebookId + '?fields=first_name,last_name,profile_pic&access_token=' + pageAccessToken
+    };
 
-    var bodyJSON = JSON.parse(body);
-    results['first_name'] = bodyJSON['first_name'];
-    results['last_name'] = bodyJSON['last_name'];
-    results['full_name'] = bodyJSON['first_name'] + " " + bodyJSON['last_name'];
-    results['profile_pic'] = bodyJSON['profile_pic'];
-    results['message_type'] = "facebook";
-    console.log("response data is " + JSON.stringify(results));
-    myFirebase.child("profiles").child(sid).set({
-      'first_name': results['first_name'],
-      'last_name': results['last_name'],
-      'full_name': results['full_name'],
-      'profile_pic': results['profile_pic'],
-      'message_type': results['message_type']
+    req(options, function(error, response, body) {
+        if (error) {
+            throw new Error(error);
+        }
+
+        var bodyJSON = JSON.parse(body);
+        results['first_name'] = bodyJSON['first_name'];
+        results['last_name'] = bodyJSON['last_name'];
+        results['full_name'] = bodyJSON['first_name'] + " " + bodyJSON['last_name'];
+        results['profile_pic'] = bodyJSON['profile_pic'];
+        results['message_type'] = "facebook";
+
+        console.log("Fetch FB Profile Details for TaskSid: " + taskSid);
+        console.log("Fetched FB Profile Details: " + JSON.stringify(results));
+
+        // update our SyncMap UserProfiles to contain the FB detail (if SMS is via FB channel)
+        syncService.syncMaps('UserProfiles').fetch().then(fetchedMap => {
+            // insert syncMapItem
+            syncService.syncMaps(fetchedMap.uniqueName).syncMapItems.create({
+                key: taskSid + '.info',
+                data: results
+            }).catch(err => {
+                console.log('Failed to insert UserProfile ' + taskSid + ' due to error: ' + err);
+            });
+        }).catch(err => {
+            // map didn't exist, create it and then insert syncMapItem
+            syncService.syncMaps.create({
+                uniqueName: 'UserProfiles'
+            }).then(createdMap => {
+                syncService.syncMaps(createdMap.uniqueName).syncMapItems.create({
+                    key: taskSid + '.info',
+                    data: results
+                }).catch(err => {
+                    console.log('Could not create SyncMapItem for UserProfile TaskSid: ' + taskSid + ' due to error: ' + err);
+                });
+            }).catch(err => {
+                console.log('Unable to create SyncMap UserProfiles due to error: ' + err);
+            });
+        });
+
+        // send the message to the Chat channel
+        var userIdentity = results['first_name'] + ' ' + results['last_name'];
+        twilioChatHelper.sendChat(taskSid, messageBody, userIdentity);
     });
-  });
 }
 
+function sendToMeyaBotForInitialQualification(task, request) {
+    // the given Task has not yet been bot qualified => send to Meya AI first
+    var meyaUserID = {};
 
-function updateConversationPost(taskSid, request, friendlyName_first, friendlyName_last) {
-  myFirebase.child(taskSid).push({
-    'from': request.body['From'],
-    'message': request.body['Body'],
-    'first': friendlyName_first,
-    'last': friendlyName_last
-  });
+    //We munge multiple parameters together to pass all the context to Meya. I had to shorten the Messenger prefix to stay within character count limits.
+    meyaUserID['from'] = request.body['From'].replace("messenger:", "M@");
+    meyaUserID['to'] = request.body['To'].replace("messenger:", "M@");
+    meyaUserID['sid'] = task.sid;
+    meyaUserID_string = meyaUserID['from'] + "@@" + meyaUserID['to'] + "@@" + task.sid;
+    console.log("Meya User ID: " + meyaUserID_string);
 
-  var meyaUserID = {};
-  //We munge multiple parameters together to pass all the context to Meya. I had to shorten the Messenger prefix to stay within character count limits.
-  meyaUserID['from'] = request.body['From'].replace("messenger:", "M@");
-  meyaUserID['to'] = request.body['To'].replace("messenger:", "M@");
-  meyaUserID['sid'] = taskSid;
-  meyaUserID_string = meyaUserID['from'] + "@@" + meyaUserID['to'] + "@@" + taskSid;
-  console.log("going to use this as meya user ID " + meyaUserID_string);
+    // send to Meya AI for initial qualification (this only happens b/c the task does not have a property 'bot_qualified=true')
+    console.log('Sending Task ' + task.sid + ' to Meya for bot qualification');
+    console.log('Send to Meya AI the message body: ' + request.body['Body']);
 
-  twilioClient.workspaces(workspaceSid).tasks(taskSid).fetch(function(err, task) {
-    attr = JSON.parse(task.attributes);
-    console.log(attr['bot_qualified']);
-
-    if (!attr.hasOwnProperty('bot_qualified')) {
-      console.log("this task is not yet bot qualified");
-      console.log("posting to meya with user id " + meyaUserID_string + " and text " + request.body['Body']);
-
-      req.post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({
+    req.post('https://meya.ai/webhook/receive/BCvshMlsyFf').auth(meyaAPIKey).form({
         user_id: meyaUserID_string,
         text: request.body['Body']
-      }).on('response', function(response) {
-        console.log("got response from meya " + response);
-      });
-    } else {
-      console.log("this task is already bot qualified");
-    }
-  });
+    }).on('response', function(response) {
+        console.log('Meya bot qualification response : ' + response);
+    });
 }
 
-function updateTaskAttributes(taskSid, attributesJson) {
-  var attributes = {};
+function updateTaskAttributes(taskSid, sourceTargetAttributes) {
+  twilioClient.taskrouter.workspaces(workspaceSid).tasks(taskSid).fetch().then(task => {
+      var attributes = JSON.parse(task.attributes);
 
-  twilioClient.workspaces(workspaceSid).tasks(taskSid).fetch(function(err, task) {
-    attributes = JSON.parse(task.attributes);
-
-    for (var key in attributesJson) {
-      attributes[key] = attributesJson[key];
-    }
-
-    twilioClient.workspaces(workspaceSid).tasks(taskSid).update({
-      attributes: JSON.stringify(attributes)
-    }, function(err, task) {
-      if (err) {
-        console.log("error");
-        console.log(err);
-      } else {
-
+      for (var key in sourceTargetAttributes) {
+          attributes[key] = sourceTargetAttributes[key];
       }
-    });
+
+      task.update({
+          attributes: JSON.stringify(attributes)
+      }).then(updatedTask => {
+          console.log('Successfully updated Task ' + taskSid);
+          console.log('Updated Task: ' + updatedTask);
+      }).catch(err => {
+         console.log('Failed to update Task with Sid: ' + taskSid);
+         console.log('Task update error: ' + err);
+      });
+
+  }).catch(err => {
+     console.log('Failed to fetch Task with Sid: ' + taskSid + ' for update.');
+     console.log('Task fetch error: ' + err);
   });
 }
 
 app.get('/deletealltasks', function(request, response) {
   //this page purges all TaskRouter and Firebase content in order to reset the demo
 
-  twilioClient.workspaces(workspaceSid).tasks.list(function(err, tasks) {
+  twilioClient.taskrouter.workspaces(workspaceSid).tasks.list(function(err, tasks) {
     if (!err) {
       console.log(tasks);
 
       tasks.forEach(function(task) {
-        twilioClient.workspaces(workspaceSid).tasks(task.sid).remove();
+        twilioClient.taskrouter.workspaces(workspaceSid).tasks(task.sid).remove();
         console.log('deleted task ' + task.sid);
-        //task.delete();
       });
     }
   });
 
   myFirebase.remove();
   response.send('all tasks deleted');
-  //client.workspace.tasks.delete()
 });
 
 app.get('/completeTask', function(request, response) {
-  console.log("received request to complete task ");
-  console.log(request.query.sid);
 
-  //POST /v1/Workspaces/{WorkspaceSid}/Tasks/{TaskSid}
-  var options = {
-    method: 'POST',
-    url: 'https://taskrouter.twilio.com/v1/Workspaces/' + workspaceSid + '/Tasks/' + request.query.sid,
-    auth: {
-      username: accountSid,
-      password: authToken
-    },
-    form: {
-      AssignmentStatus: 'completed'
-    }
-  };
-  console.log(options);
+    twilioClient.taskrouter.workspaces(workspaceSid).tasks(request.query.sid).update({
+        assignmentStatus: 'completed',
+        reason: 'Agent has finished the conversation.'
+    }).then(updatedTask => {
+        console.log('Successfully completed Task: ' + request.query.sid);
+        console.log('Updated Task: ' + updatedTask);
+    }).catch(err => {
+        console.log('Failed to update Task ' + request.query.sid + ' to assignmentStatus: completed');
+        console.log('Task update error: ' + err);
+    });
 
-  req(options, function(error, response, body) {
-    if (error) {
-      throw new Error(error);
-    }
-    //console.log(body);
-    console.log("task moved to completed state " + body);
-  });
-
-  myFirebase.child(request.query.sid).remove();
-  response.send('');
+    myFirebase.child(request.query.sid).remove();
+    response.send('');
 });
 
 app.get('/acceptTask', function(request, response) {
@@ -546,7 +563,7 @@ app.get('/acceptTask', function(request, response) {
 
   try {
     if (request.query.channel == "voice") {
-      twilioClient.workspaces(workspaceSid).tasks(request.query.tasksid).reservations(request.query.reservationsid).update({
+      twilioClient.taskrouter.workspaces(workspaceSid).tasks(request.query.tasksid).reservations(request.query.reservationsid).update({
         instruction: 'conference',
         dequeueFrom: twilioPhoneNumber
       }, function(err, reservation) {
@@ -556,7 +573,7 @@ app.get('/acceptTask', function(request, response) {
     }
 
     if (request.query.channel == "chat") {
-      twilioClient.workspaces(workspaceSid).tasks(request.query.tasksid).reservations(request.query.reservationsid).update({
+      twilioClient.taskrouter.workspaces(workspaceSid).tasks(request.query.tasksid).reservations(request.query.reservationsid).update({
         reservationStatus: 'accepted'
       }, function(err, reservation) {
         console.log(reservation.reservation_status);
@@ -573,87 +590,54 @@ app.get('/getTaskDetails', function(request, response) {
   console.log("received request to get task details");
   console.log(request.query.tasksid);
 
-  twilioClient.workspaces(workspaceSid).tasks(request.query.tasksid).fetch(function(err, task) {
+  twilioClient.taskrouter.workspaces(workspaceSid).tasks(request.query.tasksid).fetch(function(err, task) {
     console.log(task.attributes);
     response.send(task);
   });
 });
 
 app.post('/botresponse', function(request, response) {
-  // desired behavior
-  // - receive bot response
-  // parse task SID out from bot response
-  // add response to firebase index by task SID
-  // lookup from URI from task SID
-  // send response back to customer
-  // 
-  // if yes, get task sid 
-  // add message to firebase entry for task sid
-  // if task is not bot_qualified
-  //    send message to meya with from set to task SID
+    // desired behavior
+    // - receive bot response
+    // parse task SID out from bot response
+    // add response to firebase index by task SID
+    // lookup from URI from task SID
+    // send response back to customer
+    //
+    // if yes, get task sid
+    // add message to firebase entry for task sid
+    // if task is not bot_qualified
+    //    send message to meya with from set to task SID
 
-  console.log("bot replied");
-  console.log("trying to get the details for this task with sid " + request.body.user_id);
-  //var meyaUserID = JSON.parse(request.body.user_id);
-  //console.log("received message from bot originally from" + meyaUserID['from'])
-  var meyaUserID = request.body.user_id.split("@@");
-  var smsclienttouse = smsclient;
-  //Temporary hack to send facebook messages from a different account
-  if (meyaUserID[0].includes("M@")) {
-    smsclienttouse = secondTwilioClient;
-  }
+    console.log("bot replied");
+    console.log("trying to get the details for this task with sid " + request.body.user_id);
 
-  smsclienttouse.messages.create({
-    to: meyaUserID[0].replace("M@", "messenger:"), // Any number Twilio can deliver to
-    from: meyaUserID[1].replace("M@", "messenger:"), // A number you bought from Twilio and can use for outbound communication
-    body: request.body.text, // body of the SMS message
-    statusCallback: 'https://twiliozendeskcc.herokuapp.com/messagestatus/'
+    var meyaUserID = request.body.user_id.split("@@");
+    var smsClientToUse = twilioClient;
 
-
-    /*client.workspace.tasks(request.body.user_id).get(function(err, task) {
-   // var attrib=JSON.parse(task.attributes);
-  
-       smsclient.sendMessage({
-
-    to:attrib.message_from, // Any number Twilio can deliver to
-    from: attrib.message_to, // A number you bought from Twilio and can use for outbound communication
-    body: request.body.text // body of the SMS message
-*/
-  }, function(err, responseData) { //this function is executed when a response is received from Twilio
-
-    if (!err) { // "err" is an error received during the request, if any
-
-      // "responseData" is a JavaScript object containing data received from Twilio.
-      // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
-      // http://www.twilio.com/docs/api/rest/sending-sms#example-1
-
-      console.log(responseData.from); // outputs "+14506667788"
-      console.log(responseData.body); // outputs "word to your mother."
-    } else {
-      console.log("there was an error");
+    // Temporary hack to send facebook messages from a different account
+    if (meyaUserID[0].includes("M@")) {
+        smsClientToUse = secondTwilioClient;
     }
 
-    console.log("trying to update old message list");
-
-    myFirebase.child(meyaUserID[2]).push({
-      'from': 'MeyaBot',
-      'message': request.body.text
+    smsClientToUse.messages.create({
+        to: meyaUserID[0].replace("M@", "messenger:"), // Any number Twilio can deliver to
+        from: meyaUserID[1].replace("M@", "messenger:"), // A number you bought from Twilio and can use for outbound communication
+        body: request.body.text, // body of the SMS message
+        statusCallback: 'https://twiliozendeskcc.herokuapp.com/messagestatus/'
+    }).then(createdMessage => {
+        console.log('Successfully sent Meya Bot response as SMS back to User.');
+        console.log(createdMessage);
+    }).catch(err => {
+        console.log('Failed to send Meya Bot response as SMS back to User due to error: ' + err);
+        console.log('To: ' + meyaUserID[0] + ' From: ' + meyaUserID[1] + ' MessageBody: ' + request.body.text);
     });
 
-    console.log("now trying to update new message list")
-    myFirebase.child("messageList").child(meyaUserID[2]).push({
-      'from': 'MeyaBot',
-      'message': request.body.text
-    });
+    // push the bot response into the Chat Channel, but as the "server" == worker
+    // you know cause bot == worker in this case
+    twilioChatHelper.sendChat(meyaUserID[2], request.body.text, 'Al Cook');
 
-    //});
-  });
-  //Send the response
-
-  console.log(request.body);
-  console.log(request.body.user_id);
-  console.log(request.body.text);
-  response.send('');
+    response.send('');
 });
 
 app.post('/syncEventStream', function(request, response) {
@@ -741,7 +725,7 @@ app.post('/syncEventStream', function(request, response) {
                 } else {
                     // the task updated event does not include the worker sid, which is the key in the taskList data structure
                     // so we first get it out of the task attributes, where we have saved it
-                    twilioClient.workspaces(workspaceSid).tasks(request.body.TaskSid).fetch(function(err, task) {
+                    twilioClient.taskrouter.workspaces(workspaceSid).tasks(request.body.TaskSid).fetch(function(err, task) {
                         attributes = JSON.parse(task.attributes);
 
                         syncClient.map('TaskList.' + attributes['worker']).then(syncMap => {
@@ -818,7 +802,7 @@ app.post('/syncEventStream', function(request, response) {
             case "task.wrapup":
                 dataToSet['status'] = request.body.TaskAssignmentStatus;
 
-                twilioClient.workspaces(workspaceSid).tasks(request.body.TaskSid).fetch(function(err, task) {
+                twilioClient.taskrouter.workspaces(workspaceSid).tasks(request.body.TaskSid).fetch(function(err, task) {
                     attributes = JSON.parse(task.attributes);
 
                     syncClient.map('TaskList.' + attributes['worker']).then(syncMap => {
@@ -831,140 +815,22 @@ app.post('/syncEventStream', function(request, response) {
     response.send('');
 });
 
-app.post('/eventstream', function(request, response) {
-  // This function consumes the event stream and structures it into firebase data
-  // The eventstream firebase structure is then used for real time visualization of queue state
-  // The taskList firebase structure is then used for the agent UI rendering using vue.js
+app.get('/sendSMS', function(request, response) {
+    // send SMS via Twilio Node Helper library
+    twilioClient.messages.create({
+        to: request.query.to,
+        from: request.query.from, // twilio phone number
+        body: request.query.body
+    }).then(message => {
+        console.log('Successfully sent message to: ' + request.query.to);
+    }).catch(err => {
+        console.log('Failed to send message to: ' + request.query.to);
+    });
 
-  var eventstream = myFirebase.child("eventstream");
-  var taskList = myFirebase.child("taskList");
+    // cool, now put this agent message into the chat too
+    twilioChatHelper.sendChat(request.query.sid, request.query.body, 'Al Cook');
 
-  try {
-    console.log("received event " + request.body.EventType);
-  } catch (err) {
-
-  }
-  console.log(request.body);
-
-  if (request.body.TaskSid) {
-    dataToSet = {};
-
-    switch (request.body.EventType) {
-      case "task.deleted":
-        eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
-        //taskList.child(request.body.)
-        break;
-      case "task-queue.entered":
-        dataToSet['attributes'] = request.body.TaskAttributes;
-        dataToSet['sid'] = request.body.TaskSid;
-        dataToSet['status'] = request.body.TaskAssignmentStatus;
-        dataToSet['channel'] = request.body.TaskChannelUniqueName;
-        dataToSet['queue'] = request.body.TaskQueueName;
-        taskList.child("queue").child(request.body.TaskSid).update(dataToSet);
-        eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge);
-        break;
-      case "task-queue.timeout":
-        eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
-        break;
-      case "task-queue.moved":
-        eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).remove();
-        break;
-      case "task.canceled":
-        //todo need to update this to support tasks currently reserved too
-        taskList.child("queue").child(request.body.TaskSid).remove();
-        break;
-      case "task.completed":
-        dataToSet['attributes'] = request.body.TaskAttributes;
-        dataToSet['sid'] = request.body.TaskSid;
-        dataToSet['status'] = request.body.TaskAssignmentStatus;
-        eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
-        //TODO
-        taskAttributes = JSON.parse(request.body.TaskAttributes);
-        taskList.child(taskAttributes['worker']).child(request.body.TaskSid).remove();
-        // taskList.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
-        break;
-      case "task.updated":
-        dataToSet['attributes'] = request.body.TaskAttributes;
-        dataToSet['sid'] = request.body.TaskSid;
-        dataToSet['status'] = request.body.TaskAssignmentStatus;
-        //eventstream.child(request.body.TaskQueueSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge)
-        if (request.body.TaskAssignmentStatus == "pending") {
-          taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
-            console.log("received task updated  event for pending task. firebase before changing anything is");
-            console.log(JSON.stringify(snapshot.val()));
-            taskList.child("queue").child(request.body.TaskSid).update(dataToSet);
-          });
-        } else {
-          // the task updated event does not include the worker sid, which is the key in the taskList data structure
-          // so we first get it out of the task attributes, where we have saved it
-          twilioClient.workspaces(workspaceSid).tasks(request.body.TaskSid).fetch(function(err, task) {
-            attributes = JSON.parse(task.attributes);
-            taskList.child("queue").child(request.body.TaskSid).once("value", function(snapshot) {
-              console.log("received task updated  event for non-pending task. firebase before changing anything is");
-              console.log(JSON.stringify(snapshot.val()));
-              taskList.child(attributes["worker"]).child(request.body.TaskSid).update(dataToSet);
-            });
-          });
-        }
-        break;
-      case "reservation.created":
-        dataToSet['status'] = request.body.TaskAssignmentStatus;
-        dataToSet['reservationSid'] = request.body.ReservationSid;
-        dataToSet['attributes'] = request.body.TaskAttributes;
-        dataToSet['sid'] = request.body.TaskSid;
-
-        if (request.body.TaskChannelUniqueName) {
-          dataToSet['channel'] = request.body.TaskChannelUniqueName;
-        } else if (request.body.TaskChannelSid == voiceTaskChannelSid) {
-          dataToSet['channel'] = "voice";
-        } else if (request.body.TaskChannelSid == chatTaskChannelSid) {
-          dataToSet['channel'] = "chat";
-        }
-
-        dataToSet['queue'] = request.body.TaskQueueName;
-        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).setWithPriority(dataToSet, request.body.TaskAge);
-        taskList.child("queue").child(request.body.TaskSid).remove();
-        var newAttributes = {'worker' : request.body.WorkerSid};
-        updateTaskAttributes(request.body.TaskSid, newAttributes);
-        var addons = JSON.parse(request.body.TaskAddons);
-
-        dataToSet={};
-        try {
-          dataToSet['name']=addons.nextcaller_advanced_caller_id.records[0].name;
-          dataToSet['address']=addons.nextcaller_advanced_caller_id.records[0].address[0].line1 + " " + addons.nextcaller_advanced_caller_id.records[0].address[0].city + " " + addons.nextcaller_advanced_caller_id.records[0].address[0].zip_code;
-        } catch (err) {
-          attributes=JSON.parse(task.attributes);
-          dataToSet['name']=attributes.from;
-        }
-
-        dataToSet['profile_pic']="img/unknownavatar.jpeg"
-        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
-        break;
-      case "reservation.timeout":
-      case "reservation.canceled":
-        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).once("value", function(snapshot) {
-          taskList.child("queue").child(request.body.TaskSid).setWithPriority(snapshot.val(), request.body.TaskAge);
-        });
-        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).remove();
-        break;
-      case "reservation.accepted":
-        dataToSet['status'] = request.body.TaskAssignmentStatus;
-        dataToSet['accepted'] = "true";
-        taskList.child(request.body.WorkerSid).child(request.body.TaskSid).update(dataToSet);
-        var newAttributes = {'worker':request.body.WorkerSid};
-        updateTaskAttributes(request.body.TaskSid, newAttributes);
-        break;
-      case "task.wrapup":
-        dataToSet['status'] = request.body.TaskAssignmentStatus;
-        twilioClient.workspaces(workspaceSid).tasks(request.body.TaskSid).fetch(function(err, task) {
-          attributes = JSON.parse(task.attributes);
-          taskList.child(attributes["worker"]).child(request.body.TaskSid).update(dataToSet);
-        });
-        break;
-    }
-    //eventstream.child(request.body.TaskSid).push({'update':request.body});
-  }
-  response.send('');
+    response.send('');
 });
 
 app.post('/messagestatus', function(request, response) {
@@ -1027,45 +893,11 @@ app.get('/updateCapacity', function(request, response) {
   response.send('');
 });
 
-app.get('/sendsms', function(request, response) {
-  console.log(request.query);
-  console.log(request.query.to);
-  console.log(request.query.from);
-  console.log(request.query.body);
-
-  twilioClient.messages.create({
-    to: request.query.to, // Any number Twilio can deliver to
-    from: request.query.from, // A number you bought from Twilio and can use for outbound communication
-    body: request.query.body // body of the SMS message
-  }, function(err, responseData) { //this function is executed when a response is received from Twilio
-
-    if (!err) { // "err" is an error received during the request, if any
-
-      // "responseData" is a JavaScript object containing data received from Twilio.
-      // A sample response from sending an SMS message is here (click "JSON" to see how the data appears in JavaScript):
-      // http://www.twilio.com/docs/api/rest/sending-sms#example-1
-
-      console.log(responseData.from); // outputs "+14506667788"
-      console.log(responseData.body); // outputs "word to your mother."
-
-    } else {
-      console.log("there was an error");
-    }
-  });
-
-  myFirebase.child(request.query.sid).push({ 'from' : 'me', 'message' : request.query.body });
-  myFirebase.child("messageList").child(request.query.sid).push({
-    'from': 'me',
-    'message': request.query.body
-  });
-  response.send('');
-});
-
 app.post('/voice', function (request, response) {
 
   const twiml = new VoiceResponse();
 
-  if(request.toNumber) {
+  if (request.toNumber) {
     // Wrap the phone number or client name in the appropriate TwiML verb
     // if is a valid phone number
     const attr = isAValidPhoneNumber(request.toNumber) ? 'number' : 'client';
@@ -1127,5 +959,3 @@ polly.synthesizeSpeech(pollyParameters, pollyCallback);
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
-
-
