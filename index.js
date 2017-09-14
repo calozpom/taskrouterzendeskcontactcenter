@@ -10,6 +10,7 @@ var querystring = require("querystring");
 var req = require('request');
 
 var twilio = require('twilio');
+var SyncClient = require('twilio-sync');    // remove this when you fix it to use the node helper lib, not the client side sdk
 var twilioChatHelper = require('./public/js/twilioChatHelper');
 var taskrouterTokenHelper = require('./jwt/taskrouter/tokenGenerator');
 var twilioClientTokenHelper = require('./jwt/client/tokenGenerator');
@@ -25,7 +26,6 @@ var voiceTaskChannelSid = process.env.voiceTaskChannelSid;
 var chatTaskChannelSid = process.env.chatTaskChannelSid;
 
 var syncServiceInstance = process.env.syncServiceInstance;
-var chatServiceInstance = process.env.chatServiceInstance;
 
 var secondAccountSid = process.env.secondAccountSid;
 var secondAuthToken = process.env.secondAuthToken;
@@ -84,7 +84,10 @@ myFirebase.authWithCustomToken(firebaseToken, function(error, authData) {
 var twilioClient = new twilio(accountSid, authToken);
 var secondTwilioClient = new twilio(secondAccountSid, secondAuthToken);  // for sending messages to FB; something about Twilio Channels something something
 var syncService = twilioClient.sync.services(syncServiceInstance);
-var chatService = twilioClient.chat.services(chatServiceInstance);
+
+var identity = 'al';
+var accessToken = twilioSyncChatHelper.getSyncAndChatToken(identity);
+var syncClient = new SyncClient(accessToken);
 
 // Express setup
 var app = express();
