@@ -7,7 +7,7 @@ const SyncGrant = AccessToken.SyncGrant;
 
 function getSyncAndChatToken(identity) {
 
-    const token = new AccessToken(process.env.accountSid, process.env.apiKey, process.env.apiSecret);
+    const token = new AccessToken(process.env.accountSid, process.env.apiKey, process.env.apiSecret, { ttl: 86400 });   // ttl = 24 hrs
     token.identity = identity;
 
     const chatGrant = new ChatGrant({
