@@ -9,7 +9,7 @@ var fs = require('fs')
 var querystring = require("querystring");
 var req = require('request');
 
-var twilio = require('/twilio');
+var twilio = require('twilio');
 // var twilio = require('./node_modules/twilio-node');
 var SyncClient = require('twilio-sync');    // remove this when you fix it to use the node helper lib, not the client side sdk
 var twilioChatHelper = require('./public/js/twilioChatHelper');
