@@ -48,6 +48,10 @@ function getTaskRouterCapabilityToken(accountSid, authToken, workspaceSid, worke
             buildWorkspacePolicy(workspaceSid, { resources: ['Workers', '**'], method: 'POST' }),
             // Worker update capacity
             buildWorkspacePolicy(workspaceSid, { resources: ['Workers', '**'], method: 'GET' }),
+            // Worker Reservation policy
+            buildWorkspacePolicy(workspaceSid, { resources: ['Workers', workerSid, 'Reservations', '**'], method: 'POST' }),
+            // Worker Reservation policy
+            buildWorkspacePolicy(workspaceSid, { resources: ['Workers', workerSid, 'Reservations', '**'], method: 'GET' }),
         ];
     } else {
         var workspacePolicies = [
