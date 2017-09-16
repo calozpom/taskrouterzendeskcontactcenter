@@ -9,12 +9,14 @@ var fs = require('fs')
 var querystring = require("querystring");
 var req = require('request');
 
-var twilio = require('twilio');
+var twilio = require('/twilio');
+// var twilio = require('./node_modules/twilio-node');
 var SyncClient = require('twilio-sync');    // remove this when you fix it to use the node helper lib, not the client side sdk
 var twilioChatHelper = require('./public/js/twilioChatHelper');
 var taskrouterTokenHelper = require('./jwt/taskrouter/tokenGenerator');
 var twilioClientTokenHelper = require('./jwt/client/tokenGenerator');
-var twilioSyncChatTokenHelper = require('./jwt/sync/tokenGenerator');
+var twilioSyncChatHelper = require('./jwt/sync/tokenGenerator');
+var VoiceResponse = twilio.twiml.VoiceResponse;
 
 // Twilio creds
 var accountSid = process.env.accountSid;
@@ -172,26 +174,57 @@ app.get('/visualize', function(request, response) {
   response.render('pages/visualize');
 });
 
-app.post('/voicenoivr', function(request,response){clear
+app.post('/voicenoivr', function(request,response) {
   var textToSpeak = querystring.escape("Please hold while we connect you");
   var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play><Enqueue workflowSid="+workflowSid+"><Task>{\"type\":\"voice\"}</Task></Enqueue></Response>";
     response.send(responseString);
 });
 
-app.post('/initiateivr', function(request,response){
-  var textToSpeak = querystring.escape("Hello and welcome to the best customer experience youve ever had. Thats right. British Customer Service. Please tell us how we can help.");
-  var didNotHear = querystring.escape("Did you say anything?"); 
-  console.log(textToSpeak);
-  var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" timeout=\"2\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio, hate, love, awesome, help, british, marmite, suck, terrible, awful, assistance, exports\"><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play><Pause length=\"10\"/></Gather><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+didNotHear+"</Play><Redirect method=\"POST\">/initiateivr</Redirect></Response>";
-  console.log(responseString);
-  response.send(responseString);
+app.post('/initiateIVR', function(request, response) {
+    var welcomeMessage = querystring.escape("Hello and welcome to the best customer experience youve ever had. Thats right. British Customer Service. Please tell us how we can help.");
+    var didNotHearMessage = querystring.escape("Did you say anything?");
+
+    var voiceResponse = new VoiceResponse();
+    var gather = voiceResponse.gather({
+        input: 'speech',
+        timeout: 2,
+        action: '/finalResult',
+        partialResultCallback: '/partialResult',
+        hints: 'voice, sms, twilio, hate, love, awesome, help, british, marmite, suck, terrible, awful, assistance, exports',
+    });
+
+    gather.play({
+        loop: 1
+    }, 'https://twiliozendeskcc.herokuapp.com/play/Joanna/' + welcomeMessage);
+
+    gather.pause({
+        length: 10
+    });
+
+    voiceResponse.play({
+        loop: 1
+    }, 'https://twiliozendeskcc.herokuapp.com/play/Joanna/' + didNotHearMessage);
+
+    voiceResponse.redirect({
+        method: 'POST'
+    }, '/initiateIVR');
+
+    var responseString = voiceResponse.toString();
+    console.log(responseString);
+
+    response.send(responseString);
+});
+
+app.post('/partialResult', function(request, response) {
+    console.log('/partialResult');
+    // console.log(request);
+    response.send('');
 });
 
 app.post('/finalresult', function(request,res){
-  console.log("final result:");
-  //console.log(request.body);
-  //  console.log("=====");
-  console.log(request.body['SpeechResult']);
+  console.log('/finalResult');
+  console.log('SpeechResult = ' + request.body['SpeechResult']);
+
   var result = querystring.stringify({q: request.body['SpeechResult']});
 
   var headers = {
@@ -215,7 +248,7 @@ app.post('/finalresult', function(request,res){
           textToSpeak = querystring.escape("Great. Glad to hear things are going well. We will go ahead and send you a t-shirt to say thank you. Hold on the line for a second if there is anything else we can do.");
           break;
         case "needs_help":
-          textToSpeak = querystring.escape("OK - let me get a support representative who can help you immediately.")
+          textToSpeak = querystring.escape("OK - let me get a support representative who can help you immediately.");
           break;
         case "problem":
           textToSpeak = querystring.escape("Hmmm. Sounds like a problem. We can help you with that - one moment. I will escalate your case to a technician.");
@@ -227,7 +260,7 @@ app.post('/finalresult', function(request,res){
           textToSpeak = querystring.escape("Robots have feelings too you know. That just seems silly. Let me connect you with a human.");
           break;
         case "service_question":
-          textToSpeak = querystring.escape("Good question. We have a good answer. Stand by.")
+          textToSpeak = querystring.escape("Good question. We have a good answer. Stand by.");
           break;
         default:
           console.log("Could not match " + JSON.parse(body)['entities']['intent'][0]['value'] + " to any switch statement")
@@ -238,16 +271,15 @@ app.post('/finalresult', function(request,res){
     } catch (err) {
       // Failed to extract an intent. Ask the fool again.
       var textToSpeak = querystring.escape("Say what now? Please tell us how we can help, you");
-      var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultsCallback=\"/partialresult\" hints=\"voice, sms, twilio\"><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play></Gather></Response>";
+      var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultCallback=\"/partialResult\" hints=\"voice, sms, twilio\"><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+textToSpeak+"</Play></Gather></Response>";
       res.send(responseString);
     }
   });
 });
 
 app.post('/partialresult', function(request,response){
-  console.log("partial result:");
-  //console.log(request.body);
-  //console.log("=====");
+    console.log('/partialResult');
+
   console.log(request.body['IncrementalSpeechResult']);
   var result = querystring.stringify({q: request.body['IncrementalSpeechResult']});
 
