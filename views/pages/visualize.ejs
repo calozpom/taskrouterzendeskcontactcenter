@@ -168,16 +168,16 @@ methods: {
     {
         // for some reason if you just update this.taskList directly without resetting it to {} first, Vue does not update
         // Probably a me problem, but not sure what. free pony to someone who tells me why. 
-        //var currentTaskList = this.taskList;
-        //currentTaskList[queueSid][taskSid] = {"data":taskData};
-        //this.$set(this.taskList.queueSid, taskSid, {"data":taskData})
-        //this.taskList ={};
-        //this.taskList = currentTaskList;
         var currentTaskList = this.taskList;
-
         currentTaskList[queueSid][taskSid] = {"data":taskData};
+        //this.$set(this.taskList.queueSid, taskSid, {"data":taskData})
+        this.taskList ={};
+        this.taskList = currentTaskList;
+        //var currentTaskList = this.taskList;
 
-        this.taskList=currentTaskList;
+        //currentTaskList[queueSid][taskSid] = {"data":taskData};
+
+        //this.taskList=currentTaskList;
         console.log(JSON.stringify(this.taskList));
 
         //this.taskList[queueSid][taskSid] = {"data":taskData};
@@ -185,9 +185,10 @@ methods: {
     }
     else
     {
-        var currentTaskList ={};
+        var currentTaskList =this.taskList;
         currentTaskList[queueSid] = {[taskSid] : {"data":taskData}}
         //this.$set(this.taskList, queueSid, {[taskSid] : {"data":taskData}})
+        this.taskList ={};
         this.taskList=currentTaskList;
         console.log(JSON.stringify(this.taskList));
 
@@ -202,14 +203,16 @@ methods: {
     var currentTaskList = this.taskList;
 
     currentTaskList[queueSid][taskSid] = {"data":taskData};
-    this.$set(this.taskList, queueSid, currentTaskList)
-    //this.taskList ={};
-    //this.taskList = currentTaskList;
+    //this.$set(this.taskList, queueSid, currentTaskList)
+    this.taskList ={};
+    this.taskList = currentTaskList;
   },
   removeTaskFromQueue: function(queueSid, taskSid) {
     var currentTaskList = this.taskList;
     delete currentTaskList[queueSid][taskSid];
-    this.$set(this.taskList, queueSid, currentTaskList)
+    this.taskList ={};
+    this.taskList = currentTaskList;
+    //this.$set(this.taskList, queueSid, currentTaskList)
   },
   reset: function() {
     this.taskList = {};
