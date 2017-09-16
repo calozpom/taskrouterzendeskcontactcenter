@@ -534,6 +534,23 @@ app.get('/deletealltasks', function(request, response) {
       });
     }
   });
+    //need to figure out how to update this to enumerate all sync maps filtered by those prefixed with EventStream rather than hard coded
+  syncClient.map('EventStream.WQea20678d853cf025b5875126f5c1547a').then(syncMap => {
+                    syncMap.removeMap().catch(err => {
+                        console.log('Err deleting SyncMapItem: ' + err);
+                    });
+                });
+  syncClient.map('EventStream.WQbcc8f236cde1977e4ef5535b4deff820').then(syncMap => {
+                    syncMap.removeMap().catch(err => {
+                        console.log('Err deleting SyncMapItem: ' + err);
+                    });
+                });
+  syncClient.map('EventStream.WQ4fa5d2a1324d7d98d30c591f0f1e7312').then(syncMap => {
+                    console.log(syncMap);
+                    syncMap.removeMap().catch(err => {
+                        console.log('Err deleting SyncMapItem: ' + err);
+                    });
+                });
 
   myFirebase.remove();
   response.send('all tasks deleted');
