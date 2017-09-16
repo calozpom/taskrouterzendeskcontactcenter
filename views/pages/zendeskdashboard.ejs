@@ -130,8 +130,8 @@
   <script src="https://unpkg.com/vuefire/dist/vuefire.js"></script>
   <script src="js/vueAgentComponents.js" type="text/javascript"></script>
   <script type="text/javascript" src="//media.twiliocdn.com/sdk/js/client/v1.4/twilio.min.js"></script>
-
-
+  <script src="https://media.twiliocdn.com/sdk/js/common/v0.1/twilio-common.min.js"></script>
+  <script src="https://media.twiliocdn.com/sdk/js/chat/v1.1/twilio-chat.min.js"></script>
 
   <script>
     function registerTaskRouterCallbacks() {
@@ -142,33 +142,22 @@
         console.log(worker.available);       // false
       });
 
-
-
       worker.on('activity.update', function(worker) {
       });
 
       worker.on("reservation.created", function(reservation) {
         console.log("new reservation")  
-        zendeskClient.invoke('notify','New Task For You!',alert);
-        
-        /*zendeskClient.invoke('instances.create', {
-          location: 'modal',
-          url: 'https://twiliozendeskcc.herokuapp.com/reservationmodal?reservationSid='+reservation.sid+'&taskSid='+reservation.task.sid+'&channel='+reservation.task.taskChannelUniqueName
-        }).then(function(modalContext) {
-          window.modalClient = zendeskClient.instance(modalContext['instances.create'][0].instanceGuid);
-          modalClient.on('modal.close', function() {
-          });
-        });*/
+        zendeskClient.invoke('notify','New Task For You!', alert);
       });
 
 
       worker.on("reservation.accepted", function(reservation) {
-        //zendeskClient.invoke('routeTo', 'ticket', 'new')
         try {
           modalClient.invoke('destroy');
+        }
+        catch (err) {
 
         }
-        catch (err) {}
       });
 
       worker.on("reservation.rejected", function(reservation) {
@@ -185,7 +174,6 @@
     }
 
     function registerClientCallbacks() {
-
       Twilio.Device.ready(function (device) {
         console.log('Twilio.Device Ready!');
       });
@@ -202,25 +190,20 @@
         window.speakerIndicator = new VolumeIndicator();
         document.getElementById('speaker-wrapper').appendChild(speakerIndicator.element);
         conn.on('volume', setVolumes);
-
       });
 
       Twilio.Device.disconnect(function (conn) {
         console.log('Call ended.');
         conn.removeListener('volume', setVolumes);
         setVolumes(0, 0);
-
       });
 
       Twilio.Device.incoming(function (conn) {
         console.log('Incoming connection from ' + conn.parameters.From);
           // accept the incoming connection and start two-way audio
         conn.accept();
-        
       });
-
     }
-    
 
     window.onload = function() {
         // We use jQuery to make an Ajax request to the server to retrieve our 
@@ -232,99 +215,108 @@
           window.zendeskClient = ZAFClient.init();
           zendeskClient.invoke('resize', { width: '100%', height: '600px' });
         });
+
         $.getJSON('/clienttoken', function(data) {
           console.log('Got a token for client.');
           console.log('Token: ' + data.token);
           Twilio.Device.setup(data.token);
 
           registerClientCallbacks();
-
         });
-      }
 
-var config = {
-    apiKey: "AIzaSyDjqMYOFKIVU2z7RkkhxbY9DoLCv82sD1Y",
-    authDomain: "taskrouter.firebaseapp.com",
-    databaseURL: "https://taskrouter.firebaseio.com",
-    projectId: "firebase-taskrouter",
-    storageBucket: "firebase-taskrouter.appspot.com",
-    messagingSenderId: "132789793599"
-  };
+        $.getJSON('/twilioAccessToken', function(accessToken) {
+           console.log('Access Token for Chat: ' + accessToken);
+           window.chatClient = new Twilio.Chat.Client(accessToken);
+        });
+    }
+
+    var config = {
+      apiKey: "AIzaSyDjqMYOFKIVU2z7RkkhxbY9DoLCv82sD1Y",
+      authDomain: "taskrouter.firebaseapp.com",
+      databaseURL: "https://taskrouter.firebaseio.com",
+      projectId: "firebase-taskrouter",
+      storageBucket: "firebase-taskrouter.appspot.com",
+      messagingSenderId: "132789793599"
+    };
+
   firebase.initializeApp(config);
-
-window.myFirebase = firebase.database().ref();
+  window.myFirebase = firebase.database().ref();
 
 
 Vue.component('agentui', {
   template: '#Task',
   data: function() {
-   return {
-   taskList: [],
-   messageText: "",
-   messageList:{}
-
-  }
-
-},
-methods: {
-  add: function() {
-    this.taskList[0].messageList.push({from:'meya', content:'15'});
+     return {
+       taskList: [],
+       messageText: "",
+       messageList:{}
+    };
   },
-  accept: function(sid, reservationSid, channel) {
-    console.log("calling accept method with sid " + sid + " and reservationSid " + reservationSid);
-    acceptTask(sid, reservationSid, channel);
-  },
-  completeTask: function(sid) {
-    console.log("Completing task " + sid);
-    completeTask(sid);
-  },
-  removeTask: function() {
-    this.taskList.pop();
-  },
-  update: function(newTaskList) {
-    console.log("updating vue database");
-    console.log("updating to " + newTaskList);
-    this.taskList = newTaskList;
-    console.log(JSON.stringify(this.taskList));
-  },
-  updateMessages: function(newMessageData) {
-    console.log("Updating message data");
-    console.log("Updating to " + JSON.stringify(newMessageData));
-    this.messageList=newMessageData;
-  },
-  fetchMessagesForTask: function(taskSid) {
-    console.log("Being asked for message data for task " + taskSid);
-    var arr=[]
-    console.log(this.messageList);
-    var msgList = this.messageList;
-    console.log(JSON.stringify(msgList));
-    for (key in msgList[taskSid]) {
-      arr.push(msgList[taskSid][key]);
+  methods: {
+    add: function() {
+      this.taskList[0].messageList.push({from:'meya', content:'15'});
+    },
+    accept: function(sid, reservationSid, channel) {
+      console.log("calling accept method with sid " + sid + " and reservationSid " + reservationSid);
+      acceptTask(sid, reservationSid, channel);
+    },
+    completeTask: function(sid) {
+      console.log("Completing task " + sid);
+      completeTask(sid);
+    },
+    removeTask: function() {
+      this.taskList.pop();
+    },
+    update: function(newTaskList) {
+      console.log("updating vue database");
+      console.log("updating to " + newTaskList);
+      this.taskList = newTaskList;
+      console.log(JSON.stringify(this.taskList));
+    },
+    updateMessages: function(newMessageData) {
+      console.log("Updating message data");
+      console.log("Updating to " + JSON.stringify(newMessageData));
+      this.messageList=newMessageData;
+    },
+    fetchMessagesForTask: function(taskSid) {
+      console.log("Being asked for message data for task " + taskSid);
+      var arr=[]
+      console.log(this.messageList);
+      var msgList = this.messageList;
+      console.log(JSON.stringify(msgList));
+      for (key in msgList[taskSid]) {
+        arr.push(msgList[taskSid][key]);
+      }
+      console.log("Returning " + JSON.stringify(arr));
+      return arr;
+    },
+    fetchHistoricalChatMessagesForTask: function(taskSid) {
+        // fetch all historical messages on the Channel to display
+        chatClient.getChannelByUniqueName(taskSid).then(fetchedChannel => {
+            fetchedChannel.getMessages(30, direction='forward').then(messages => {
+                messages.forEach(message => {
+                    var messageBody = message.body;
+                });
+            });
+        });
+    },
+    reset: function() {
+      this.taskList = [];
+      console.log("reset vue to zero");
+      console.log(JSON.stringify(this.taskList));
+    },
+    sendMessage: function(from, to, sid, body) {
+      console.log("trying to send message " + from + to + sid + body);
+       sendSMS(from, to, sid, body);  // this function will now also push the message to the chat channel server side
+       this.messageText="";
     }
-    console.log("Returning " + JSON.stringify(arr));
-    return arr;
-  },
-  reset: function() {
-    this.taskList = [];
-    console.log("reset vue to zero");
-    console.log(JSON.stringify(this.taskList));
-  },
-  sendMessage: function(from, to, sid, body) {
-    console.log("trying to send message " + from + to + sid + body);
-     sendSMS(from, to, sid, body);
-     this.messageText="";
   }
-
-
-}
-})
+});
 
 
 window.vueMaster = new Vue({
   el: '#agentui'
-  
-
-})
+});
 
 //technically vuefire should do this but it doesn't seem to work reliably and is impossible to debug
 myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('value', function(snapshot) {
@@ -365,12 +357,14 @@ myFirebase.child("messageList").on('value', function(snapshot) {
 });
 
 
+function initChatClient() {
+
+}
 
 
 
 
-
-</script>
+  </script>
 
 
 
