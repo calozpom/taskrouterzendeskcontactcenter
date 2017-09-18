@@ -127,9 +127,12 @@
   <script src="js/VolumeIndicator.js" type="text/javascript"></script>
   <script src="js/al-twilio-helper-funcs.js" type="text/javascript"></script>
   <script src="https://unpkg.com/vue"></script>
-  <script src="https://unpkg.com/vuefire/dist/vuefire.js"></script>
   <script src="js/vueAgentComponents.js" type="text/javascript"></script>
   <script type="text/javascript" src="//media.twiliocdn.com/sdk/js/client/v1.4/twilio.min.js"></script>
+  <script src="https://media.twiliocdn.com/sdk/js/common/v0.1/twilio-common.min.js"></script>
+  <script src="https://media.twiliocdn.com/sdk/js/chat/v1.1/twilio-chat.min.js"></script>
+  <script type="text/javascript" src="https://media.twiliocdn.com/sdk/js/sync/v0.5/twilio-sync.min.js"></script>
+
 
 
 
@@ -148,8 +151,11 @@
       });
 
       worker.on("reservation.created", function(reservation) {
-        console.log("new reservation")  
-        zendeskClient.invoke('notify','New Task For You!',alert);
+        console.log("new reservation") 
+        console.log(reservation);
+        console.log("---");
+        //zendeskClient.invoke('notify','New Task For You!',alert);
+        vueMaster.$refs.agentui.addTaskToList(reservation.task);
         
         /*zendeskClient.invoke('instances.create', {
           location: 'modal',
@@ -225,12 +231,17 @@
     window.onload = function() {
         // We use jQuery to make an Ajax request to the server to retrieve our 
         // Access Token
+
         $.getJSON('/token', function(data) {
           //console.log(data.token);
           window.worker = new Twilio.TaskRouter.Worker(data.token);
           registerTaskRouterCallbacks();
           window.zendeskClient = ZAFClient.init();
           zendeskClient.invoke('resize', { width: '100%', height: '600px' });
+        });
+         $.getJSON('/twilioAccessToken', function(accessToken) {
+           console.log('Access Token for Chat: ' + accessToken);
+           window.chatClient = new Twilio.Chat.Client(accessToken);
         });
         $.getJSON('/clienttoken', function(data) {
           console.log('Got a token for client.');
@@ -287,6 +298,14 @@ methods: {
     this.taskList = newTaskList;
     console.log(JSON.stringify(this.taskList));
   },
+  addTaskToList: function(task) {
+    console.log("adding task to List")
+    var currentTaskList = this.taskList;
+    currentTaskList.push({"data":{"attributes":task.attributes, "channel":task.taskChannelUniqueName}});
+    console.log("HERE")
+    console.log(JSON.stringify(currentTaskList));
+
+  },
   updateMessages: function(newMessageData) {
     console.log("Updating message data");
     console.log("Updating to " + JSON.stringify(newMessageData));
@@ -304,6 +323,16 @@ methods: {
     console.log("Returning " + JSON.stringify(arr));
     return arr;
   },
+  fetchHistoricalChatMessagesForTask: function(taskSid) {
+        // fetch all historical messages on the Channel to display
+        chatClient.getChannelByUniqueName(taskSid).then(fetchedChannel => {
+            fetchedChannel.getMessages(30, direction='forward').then(messages => {
+                messages.forEach(message => {
+                    var messageBody = message.body;
+                });
+            });
+        });
+    },
   reset: function() {
     this.taskList = [];
     console.log("reset vue to zero");
@@ -325,7 +354,27 @@ window.vueMaster = new Vue({
   
 
 })
-
+/*
+  [
+  {
+    "data": {
+      "attributes": {
+        "message_from": "+14152791216",
+        "message_body": "Test",
+        "from": "+14152791216",
+        "message_to": "+18559798881",
+        "bot_qualified": "true",
+        "message_sid": "SM42bf83a98d370d391790fc01d07b4d7a"
+      },
+      "channel": "chat",
+      "queue": "Other Customers",
+      "reservationSid": "WR35cb1acedfb83549876e079be0a0966e",
+      "sid": "WT9eacd27c8b111274d0ff1bd746030a99",
+      "status": "reserved"
+    }
+  }
+]
+*/
 //technically vuefire should do this but it doesn't seem to work reliably and is impossible to debug
 myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('value', function(snapshot) {
   // This function does a bit of normalization on the app data we retrieve from firebase
@@ -347,7 +396,8 @@ myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('val
       dataToReturn.push(tempJson)
     }
       }
-
+  console.log("THIS IS WHAT I NEED TO REPLICATE");
+  console.log(dataToReturn);
   vueMaster.$refs.agentui.update(dataToReturn);
 });
 

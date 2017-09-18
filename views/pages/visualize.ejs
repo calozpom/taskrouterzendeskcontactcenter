@@ -33,10 +33,9 @@ Visualize Workspace
 <ul class="left">
 <li class="divider"></li>
 <li class="has-dropdown">
-<a class="active" href="#">Change Workspace</a>
+<a class="active" href="#">Links</a>
 <ul class="dropdown">
-<li><label>Other workspaces</label></li>
-<li><a href="#" class="">No other workspaces</a></li>
+<li><a href="#" onclick="showContact()">Show Contact</a></li>
 </ul>
 </li>
 <li class="divider"></li>
@@ -47,7 +46,7 @@ Visualize Workspace
 <li class="divider"></li>
 
 <li class="divider"></li>
-<li><a href="#">Logout</a></li>
+<li><a href="#" onclick="sendDetails()">Send Details</a></li>
 <li class="divider"></li>
 </ul>
 </section>
@@ -240,6 +239,14 @@ function registerTaskRouterCallbacks() {
 
     buildTaskRouterGrid();
     });
+}
+
+function sendDetails() {
+console.log("sending details")
+}
+
+function showContact() {
+  console.log("showing contact info")
 }
 
 function buildTaskRouterGrid() {
