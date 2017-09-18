@@ -819,7 +819,7 @@ app.post('/syncEventStream', function(request, response) {
                     dataToSet['name']=addons.nextcaller_advanced_caller_id.records[0].name;
                     dataToSet['address']=addons.nextcaller_advanced_caller_id.records[0].address[0].line1 + " " + addons.nextcaller_advanced_caller_id.records[0].address[0].city + " " + addons.nextcaller_advanced_caller_id.records[0].address[0].zip_code;
                 } catch (err) {
-                    attributes=JSON.parse(task.attributes);
+                    attributes=JSON.parse(request.body.TaskAttributes);
                     dataToSet['name']=attributes.from;
                 }
 
