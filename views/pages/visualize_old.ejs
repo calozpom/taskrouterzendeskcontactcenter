@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
+<html class="no-js" lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>Visualize TaskRouter Workspace</title>
+ 
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/normalize.min.css">
+        <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/css/foundation.min.css">-->
+        <link rel="stylesheet" href="css/foundation.css">
+        <link href='http://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/motion-ui/1.1.1/motion-ui.min.css" />
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    </head>
+
+    <body>
+        <nav class="top-bar" data-topbar>
+            <ul class="title-area">
+                <li class="name">
+                    <h1>
+                        <a href="#">Visualize Workspace</a>
+                    </h1>
+                </li>
+                <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+            </ul>
+            <section class="top-bar-section">
+                <ul class="left">
+                    <li class="divider"></li>
+                    <li class="has-dropdown">
+                        <a class="active" href="#">Change Workspace</a>
+                        <ul class="dropdown">
+                            <li><label>Other workspaces</label></li>
+                            <li><a href="#" class="">No other workspaces</a></li>
+                        </ul>
+                    </li>
+                    <li class="divider"></li>
+                </ul>
+                <ul class="right">
+                    <li class="divider"></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Logout</a></li>
+                    <li class="divider"></li>
+                </ul>
+            </section>
+        </nav>
+        <div class="row" id="spacer" >
+            <div>&nbsp;<br /></div>
+        </div>
+        <div class="row" id="rowone" data-equalizer></div>
+        <footer class="row">
+            <div class="large-12 columns">
+                <hr/>
+                <div class="row">
+                    <div class="large-6 columns">
+                        <p>&copy; Al Cook | @calozpom | Twilio</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/js/foundation.min.js"></script>
+        <script src="js/foundation/foundation.core.js"></script>
+        <script src="js/foundation/foundation.util.motion.js"></script>
+        <script src="js/foundation/foundation.util.mediaQuery.js"></script>
+
+        <script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.10/taskrouter.min.js"></script>
+        <script src="https://cdn.firebase.com/js/client/2.4.2/firebase.js"></script>
+        <script type="text/javascript" src="https://media.twiliocdn.com/sdk/js/sync/v0.5/twilio-sync.min.js"></script>
+
+        <script>
+            $(document).foundation();
+        </script>
+
+        <script>
+            window.onload = function() {
+                // We use jQuery to make an Ajax request to the server to retrieve our
+                // Access Token
+
+                $.getJSON('/workspaceToken', function(data) {
+                    window.worker = new Twilio.TaskRouter.Worker(data.workerToken);
+                    window.workspace = new Twilio.TaskRouter.Workspace(data.workspaceToken);
+                    window.syncClient = new Twilio.Sync.Client(data.syncToken);
+
+                    window.taskrouterGlobals = {};
+                    registerTaskRouterCallbacks();
+                });
+            }
+
+            function registerTaskRouterCallbacks() {
+                workspace.on("ready", function(workspace) {
+                    console.log(workspace.sid)             // 'WSxxx'
+                    console.log(workspace.friendlyName)    // 'British Exports'
+                    buildTaskRouterGrid();
+                });
+            }
+
+            function buildTaskRouterGrid() {
+                console.log("\n\nbuilding taskrouter grid");
+
+                workspace.taskqueues.fetch(function(error, taskQueueList) {
+                    console.log('printing task queues');
+                    console.log(taskQueueList);
+
+                    if (error) {
+                        console.log("Error fetching TaskQueues for Workspace.");
+                        console.log(error.code);
+                        console.log(error.message);
+                        return;
+                    }
+
+                    console.log("Parsing response");
+                    var data = taskQueueList.data;
+
+                    console.log("going to create " + taskQueueList.data.length + " columns");
+                    var width = Math.floor(12/taskQueueList.data.length);
+                    if (width==0) {
+                        console.log("error - cannot create visualization for workspace with more than twelve queues");
+                    }
+
+                    console.log("going to use foundation grid width of " +width);
+                    console.log("going to loop " + data.length + " times");
+
+                    for (i=0; i < data.length; i++) {
+                        console.log(data[i]);
+                        var htmlToAdd = "";
+                        htmlToAdd += "<div class='large-"+width+" columns";
+
+                        if (i == (data.length - 1)) {
+                            htmlToAdd += " end";
+                        }
+
+                        htmlToAdd +="' data-equalizer-watch >";
+                        htmlToAdd += "<div class='box'>";
+                        htmlToAdd += "<div class='box-icon'><img src='img/taskrouter-icon_wb.png'></div>";
+                        htmlToAdd += "<div class='info'>";
+                        htmlToAdd += "<h4 class='text-center'>" + data[i].friendlyName + "</h4>";
+                        htmlToAdd += "<div id='queueColumn"+data[i].sid+"'>"
+                        htmlToAdd += "<br /></div>";
+                        htmlToAdd += "</div></div>";
+
+                        console.log("current inner html is " + $("#rowone").html());
+                        console.log("wanting to add this html " + htmlToAdd);
+                        $("#rowone").html($("#rowone").html() + htmlToAdd);
+
+                        console.log("combined html is now " + $("#rowone").html());
+                        console.log(data[i].friendlyName);
+                        console.log("setting callback for eventstream."+ data[i].sid)
+
+                        syncClient.map('EventStream.' + data[i].sid).then(map => {
+                            map.on('itemAdded', (newMapItem) => {
+                                console.log('item added');
+                                console.log(newMapItem.key);
+                                console.log(newMapItem.value);
+                                updateTasks2(newMapItem.key, newMapItem.value);
+                           });
+
+                           map.on('itemUpdated', (updatedMapItem) => {
+                               console.log('item updated');
+                               console.log(updatedMapItem.key);
+                               console.log(updatedMapItem.value);
+                               updateTasks2(updatedMapItem.key, updatedMapItem.value);
+                           });
+
+                           map.on('itemRemoved', (removedMapItemKey) => {
+                               console.log('removed key = ' + removedMapItemKey);
+//                               updateTasks2(removedMapItemKey, null);
+                           });
+                        });
+
+//                        eventstream.child(data[i].sid).on('value', function(dataSnapshot) {
+//                            console.log("call back fired!! calling for " + this.sid);
+//                            updateTasks(this.sid, dataSnapshot);
+//                        }, { sid : data[i].sid });
+                    }
+                });
+            }
+
+            function updateTasks2(queueSid, mapItemData) {
+                var queueColumn=$("#queueColumn" + queueSid);
+                queueColumn.html("");
+
+                var attr = JSON.parse(mapItemData['attributes']);
+
+
+                var htmlToAdd = "";
+                htmlToAdd += "<div class='header panel'>";
+                htmlToAdd += "<div class='sign'>";
+                htmlToAdd += "<h1>";
+
+                if ('message_from' in attr) {
+                    htmlToAdd += attr['message_from'].replace("Messenger:","Messenger: ");
+                }
+
+                htmlToAdd += "</h1>";
+                htmlToAdd += "</div>";
+                htmlToAdd += "<p><span class='text-center'>" + mapItemData['status'] + "</span><br />";
+
+                for (var key in attr) {
+                    if (attr.hasOwnProperty(key)) {
+                        htmlToAdd += key + ": " + attr[key] +"<br />";
+                    }
+                }
+
+                htmlToAdd += " </p></div>";
+
+                var currentHTML = queueColumn.html();
+                console.log(currentHTML);
+                console.log("wanting to add " + htmlToAdd);
+
+                queueColumn.html(currentHTML + htmlToAdd);
+
+                console.log("new html is " + queueColumn.html());
+            }
+
+
+            function updateTasks(queueSid, snapshot) {
+
+                console.log("update tasks method called for queue " + queueSid + "with snapshot data " + snapshot.val());
+
+                var queueColumn=$("#queueColumn"+queueSid);
+                queueColumn.html("");
+
+                snapshot.forEach(function(childSnapshot) {
+                var childData = childSnapshot.val();
+                var attr = JSON.parse(childData['attributes']);
+                console.log(childData);
+                var htmlToAdd = "";
+                htmlToAdd += "<div class='header panel'>";
+                htmlToAdd += "<div class='sign'>";
+                htmlToAdd += "<h1>";
+                htmlToAdd += attr['message_from'].replace("Messenger:","Messenger: ");
+
+                htmlToAdd += "</h1>";
+                htmlToAdd += "</div>";
+                htmlToAdd += "<p><span class='text-center'>" + childData['status'] + "</span><br />";
+
+                for (var key in attr) {
+                    if (attr.hasOwnProperty(key)) {
+                        htmlToAdd += key + ": " + attr[key] +"<br />";
+                    }
+                }
+
+                htmlToAdd += " </p></div>";
+                console.log("current html is " + queueColumn.html());
+
+                console.log();
+                console.log("wanting to add " + htmlToAdd);
+                queueColumn.html(queueColumn.html() + htmlToAdd);
+                console.log("new html is " + queueColumn.html());
+                });
+            }
+
+            function test(divID) {
+                console.log("attempting to animate");
+                var elem = $("#"+divID);
+                Foundation.Motion.animateOut(elem, fade-out);
+            }
+        </script>
+    </body>
+</html>

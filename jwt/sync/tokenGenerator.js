@@ -4,6 +4,8 @@ const Twilio = require('twilio');
 const AccessToken = Twilio.jwt.AccessToken;
 const ChatGrant = AccessToken.ChatGrant;
 const SyncGrant = AccessToken.SyncGrant;
+const deviceId = 'browser';   // this should also be some unique identifier
+
 
 function getSyncAndChatToken(identity) {
 
@@ -12,6 +14,7 @@ function getSyncAndChatToken(identity) {
 
     const chatGrant = new ChatGrant({
         serviceSid: process.env.chatServiceInstance,
+        endpointId: deviceId,
     });
     token.addGrant(chatGrant);
 

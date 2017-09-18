@@ -30,7 +30,7 @@
 
   <template id="Task" >
     <div>
-      <div class='small-12 columns' v-for="task in taskList">
+      <div class='small-12 columns' v-for="task in taskList" v-if="task.data.status === 'assigned' || task.data.status ==='wrapping' || task.data.status ==='reserved'">
         <div class='custom-panel-heading'>
           <h5 class='white'>
             <div id='titleText'>
@@ -44,6 +44,8 @@
               Status: {{task.data.status}}
               <br />
               Intent: {{task.data.attributes.bot_intent}}
+              <br />
+              TaskSid: {{task.sid}}
             </div>
             <template v-if="task.data.status === 'reserved'">
               <span class='label radius alert right'>Reject</span>&nbsp;
@@ -57,32 +59,39 @@
           </h5>
         </div>
         <div class='custom-panel-details'>
-        <template v-if="task.data.channel ==='chat'">
-          <template v-for="message in fetchMessagesForTask(task.data.sid)">
-            <div class='row'>
-              <div class='message-dashboard'>
-                <div class='small-2 columns'>
-                  <div class='profilePic'>
-                    <img v-bind:src="task.data.profile_pic" alt='profile' />
-                  </div>
-                </div> 
-                <div class='small-10 columns'>
-                  <div class='message-desc'>
-                    <div class='messageName'>
-                      <b>{{message.from}}</b>
+        <div v-if="task.data.channel ==='chat'">
+          <!--DEBUG{{messageList}}-->
+          <br />
+          <div v-for="messagesForTask,key in messageList">
+            <div v-for="message,key2 in messagesForTask">
+            <!--DEBUG <br /> {{message}} <br />{{key}}<br />{{key2}}<br />{{task.sid}}<br />-->
+            <div v-if="key === task.sid">
+              <div class='row'>
+                <div class='message-dashboard'>
+                  <div class='small-2 columns'>
+                    <div class='profilePic'>
+                      <img v-bind:src="task.data.profile_pic" alt='profile' />
                     </div>
-                    {{message.message}}
-                    <span class='right green'>now</span>
+                  </div> 
+                  <div class='small-10 columns'>
+                    <div class='message-desc'>
+                      <div class='messageName'>
+                        <b>{{message.from}}</b>
+                      </div>
+                      {{message.message}}
+                      <span class='right green'>{{message.timestamp}}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-        </template>
-        <template v-if="task.data.accepted==='true'">
+          </div>
+        </div>
+      </div>
+        <div v-if="task.data.accepted==='true'">
           <form><input type='text' v-model="messageText" @keyup.enter="sendMessage(task.data.attributes.message_to, task.data.attributes.message_from, task.data.sid, messageText); return false;" placeholder='Reply...'><a href='#' class='button success radius' @click="sendMessage(task.data.attributes.message_to, task.data.attributes.message_from, task.data.sid, messageText)" onclick="return false" ><i class='fi fi-check'></i>Send</a></form>
-        </template>
-        </template>
-        <template v-if="task.data.channel ==='voice'">
+        </div>
+        </div>
+        <div v-if="task.data.channel ==='voice'">
         <div class='small-6 columns'>
         <label>Mic Volume</label>
          <div class="volume-wrapper" id="mic-wrapper"></div>
@@ -109,7 +118,7 @@
               </div>
 
          </div>
-        </template>
+        </div>
       </div>
     </template>
 
@@ -119,7 +128,6 @@
   <script src="js/foundation/foundation.util.mediaQuery.js"></script>
   <script src="js/menucustom.js" type="text/javascript"></script>
   <script>        $(document).foundation(); </script>
-  <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase.js"></script>
 
 
   <script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.6/taskrouter.min.js"></script>
@@ -127,11 +135,14 @@
   <script src="js/VolumeIndicator.js" type="text/javascript"></script>
   <script src="js/al-twilio-helper-funcs.js" type="text/javascript"></script>
   <script src="https://unpkg.com/vue"></script>
-  <script src="https://unpkg.com/vuefire/dist/vuefire.js"></script>
   <script src="js/vueAgentComponents.js" type="text/javascript"></script>
   <script type="text/javascript" src="//media.twiliocdn.com/sdk/js/client/v1.4/twilio.min.js"></script>
   <script src="https://media.twiliocdn.com/sdk/js/common/v0.1/twilio-common.min.js"></script>
   <script src="https://media.twiliocdn.com/sdk/js/chat/v1.1/twilio-chat.min.js"></script>
+  <script type="text/javascript" src="https://media.twiliocdn.com/sdk/js/sync/v0.5/twilio-sync.min.js"></script>
+
+
+
 
   <script>
     function registerTaskRouterCallbacks() {
@@ -140,24 +151,31 @@
         console.log("Current activity is: " + worker.activityName);
         console.log(worker.sid);             // 'WKxxx'
         console.log(worker.available);       // false
+        
       });
+
+
 
       worker.on('activity.update', function(worker) {
       });
 
       worker.on("reservation.created", function(reservation) {
-        console.log("new reservation")  
-        zendeskClient.invoke('notify','New Task For You!', alert);
+        console.log("new reservation") 
+        console.log(reservation);
+        console.log("---");
+        
+        
+
       });
 
 
       worker.on("reservation.accepted", function(reservation) {
+        //zendeskClient.invoke('routeTo', 'ticket', 'new')
         try {
           modalClient.invoke('destroy');
-        }
-        catch (err) {
 
         }
+        catch (err) {}
       });
 
       worker.on("reservation.rejected", function(reservation) {
@@ -171,9 +189,12 @@
       worker.on("reservation.canceled", function(reservation) {
         console.log("Reservation " + reservation.task.sid + " canceled!");
       });    
+
+      
     }
 
     function registerClientCallbacks() {
+
       Twilio.Device.ready(function (device) {
         console.log('Twilio.Device Ready!');
       });
@@ -190,181 +211,260 @@
         window.speakerIndicator = new VolumeIndicator();
         document.getElementById('speaker-wrapper').appendChild(speakerIndicator.element);
         conn.on('volume', setVolumes);
+
       });
 
       Twilio.Device.disconnect(function (conn) {
         console.log('Call ended.');
         conn.removeListener('volume', setVolumes);
         setVolumes(0, 0);
+
       });
 
       Twilio.Device.incoming(function (conn) {
         console.log('Incoming connection from ' + conn.parameters.From);
           // accept the incoming connection and start two-way audio
         conn.accept();
+        
       });
+
     }
+
+    function setChatCallBack(chatIndex) {
+      console.log("trying to get chat channel indexed as " + chatIndex)
+      chatClient.getChannelByUniqueName(chatIndex).then(fetchedChannel => {
+          console.log("got a chat channel ")
+          fetchedChannel.join().then(channel => {
+            console.log("joined channel")
+          fetchedChannel.getMessages().then(messages => {
+            console.log("got messages")
+          //fetchedChannel.getMessages(30, 0, 'forward').then(messages => {
+            console.log(messages);
+            for (messageKey in messages.items) {
+              console.log("got a message!")
+              console.log(messages.items[messageKey].state.body)
+              console.log(messages.items[messageKey].state.author)
+              console.log(messages.items[messageKey].state.timestamp)
+             vueMaster.$refs.agentui.addMessageToList(chatIndex, messages.items[messageKey].state.author,messages.items[messageKey].state.body, messages.items[messageKey].state.timestamp);
+
+
+            }
+             /* messages.forEach(message => {
+                console.log("got a message!")
+                console.log(message)
+                console.log(message.body);
+                var messageBody = message.body;
+              });*/
+            });
+          channel.on('messageAdded', function(message) {
+            console.log("hey a new message showed up in the chat channel ")
+            console.log(message.body)
+              console.log(message.author)
+              console.log(message.timestamp)
+             vueMaster.$refs.agentui.addMessageToList(chatIndex, message.author,message.body, message.timestamp);
+
+          })
+        });
+        }); 
+    }
+    
 
     window.onload = function() {
         // We use jQuery to make an Ajax request to the server to retrieve our 
         // Access Token
+
         $.getJSON('/token', function(data) {
           //console.log(data.token);
-          window.worker = new Twilio.TaskRouter.Worker(data.token);
+          window.worker = new Twilio.TaskRouter.Worker(data.taskRouterToken);
+          window.syncClient = new Twilio.Sync.Client(data.syncToken);
+          Twilio.Device.setup(data.clientToken);
+          Twilio.Chat.Client.create(data.chatToken).then(client => {
+              window.chatClient = client;
+              console.log("chat client is ready");
+              registerSyncAndChatCallbacks();
+              
+          });
           registerTaskRouterCallbacks();
-          window.zendeskClient = ZAFClient.init();
-          zendeskClient.invoke('resize', { width: '100%', height: '600px' });
-        });
-
-        $.getJSON('/clienttoken', function(data) {
-          console.log('Got a token for client.');
-          console.log('Token: ' + data.token);
-          Twilio.Device.setup(data.token);
-
           registerClientCallbacks();
+          //UNCOMMENT THIS FOR DEMO
+          //window.zendeskClient = ZAFClient.init();
+          //zendeskClient.invoke('resize', { width: '100%', height: '600px' });
         });
+      }
 
-        $.getJSON('/twilioAccessToken', function(accessToken) {
-           console.log('Access Token for Chat: ' + accessToken);
-           window.chatClient = new Twilio.Chat.Client(accessToken);
-        });
-    }
+function registerSyncAndChatCallbacks() {
+  console.log("trying to subscribe to syncmap TaskList.WK3d909c13f46f8e227e32e38d66b19691")
+  syncClient.map('TaskList.WK3d909c13f46f8e227e32e38d66b19691').then(map => {
+                console.log("got the map");
+                map.getItems().then(function(page) {
+                    if (page.items.length) {
+                        for (i in page.items) {
+                           vueMaster.$refs.agentui.addTaskToList(page.items[i].key, page.items[i].value);
+                           setChatCallBack(page.items[i].key)
+                        }
+                    }
+                  });
 
-    var config = {
-      apiKey: "AIzaSyDjqMYOFKIVU2z7RkkhxbY9DoLCv82sD1Y",
-      authDomain: "taskrouter.firebaseapp.com",
-      databaseURL: "https://taskrouter.firebaseio.com",
-      projectId: "firebase-taskrouter",
-      storageBucket: "firebase-taskrouter.appspot.com",
-      messagingSenderId: "132789793599"
-    };
-
-  firebase.initializeApp(config);
-  window.myFirebase = firebase.database().ref();
+                map.on('itemAdded', (newMapItem) => {
+                    console.log('item added');
+                    console.log(map.uniqueName);
+                    console.log(newMapItem.key);
+                    console.log(newMapItem.value);
+                    if (newMapItem.value.channel == 'chat') {
+                      setChatCallBack(newMapItem.key)
+                    }
+                    vueMaster.$refs.agentui.addTaskToList(newMapItem.key, newMapItem.value);
+               });
+               map.on('itemUpdated', (updatedMapItem) => {
+                   console.log("updated map item " + updatedMapItem.key + JSON.stringify(updatedMapItem.value))
+                   vueMaster.$refs.agentui.updateTaskInList(updatedMapItem.key, updatedMapItem.value);
+               });
+               map.on('itemRemoved', (removedMapItemKey) => {
+                   console.log('removed key = ' + removedMapItemKey);
+                   vueMaster.$refs.agentui.removeTaskFromList(removedMapItemKey);
+               });
+            });
+}
 
 
 Vue.component('agentui', {
   template: '#Task',
   data: function() {
-     return {
-       taskList: [],
-       messageText: "",
-       messageList:{}
-    };
-  },
-  methods: {
-    add: function() {
-      this.taskList[0].messageList.push({from:'meya', content:'15'});
-    },
-    accept: function(sid, reservationSid, channel) {
-      console.log("calling accept method with sid " + sid + " and reservationSid " + reservationSid);
-      acceptTask(sid, reservationSid, channel);
-    },
-    completeTask: function(sid) {
-      console.log("Completing task " + sid);
-      completeTask(sid);
-    },
-    removeTask: function() {
-      this.taskList.pop();
-    },
-    update: function(newTaskList) {
-      console.log("updating vue database");
-      console.log("updating to " + newTaskList);
-      this.taskList = newTaskList;
-      console.log(JSON.stringify(this.taskList));
-    },
-    updateMessages: function(newMessageData) {
-      console.log("Updating message data");
-      console.log("Updating to " + JSON.stringify(newMessageData));
-      this.messageList=newMessageData;
-    },
-    fetchMessagesForTask: function(taskSid) {
-      console.log("Being asked for message data for task " + taskSid);
-      var arr=[]
-      console.log(this.messageList);
-      var msgList = this.messageList;
-      console.log(JSON.stringify(msgList));
-      for (key in msgList[taskSid]) {
-        arr.push(msgList[taskSid][key]);
-      }
-      console.log("Returning " + JSON.stringify(arr));
-      return arr;
-    },
-    fetchHistoricalChatMessagesForTask: function(taskSid) {
-        // fetch all historical messages on the Channel to display
-        chatClient.getChannelByUniqueName(taskSid).then(fetchedChannel => {
-            fetchedChannel.getMessages(30, direction='forward').then(messages => {
-                messages.forEach(message => {
-                    var messageBody = message.body;
-                });
-            });
-        });
-    },
-    reset: function() {
-      this.taskList = [];
-      console.log("reset vue to zero");
-      console.log(JSON.stringify(this.taskList));
-    },
-    sendMessage: function(from, to, sid, body) {
-      console.log("trying to send message " + from + to + sid + body);
-       sendSMS(from, to, sid, body);  // this function will now also push the message to the chat channel server side
-       this.messageText="";
-    }
+   return {
+   taskList: [],
+   messageText: "",
+   messageList:{}
+
   }
-});
+
+},
+methods: {
+  add: function() {
+    this.taskList[0].messageList.push({from:'meya', content:'15'});
+  },
+  accept: function(sid, reservationSid, channel) {
+    console.log("calling accept method with sid " + sid + " and reservationSid " + reservationSid);
+    acceptTask(sid, reservationSid, channel);
+  },
+  completeTask: function(sid) {
+    console.log("Completing task " + sid);
+    completeTask(sid);
+  },
+  removeTask: function() {
+    this.taskList.pop();
+  },
+  update: function(newTaskList) {
+    console.log("updating vue database");
+    console.log("updating to " + newTaskList);
+    this.taskList = newTaskList;
+    console.log(JSON.stringify(this.taskList));
+  },
+  /*addTaskToList: function(taskData) {
+    console.log("adding task to List")
+    console.log(JSON.stringify(taskData));
+    var currentTaskList = this.taskList;
+    currentTaskList.push(taskData);
+    console.log("HERE")
+    console.log(JSON.stringify(currentTaskList));
+
+  },*/
+  addTaskToList: function(sid, taskData) {
+    console.log("adding task to list");
+    console.log(sid);
+    //console.log(taskData);
+    taskData.attributes = JSON.parse(taskData.attributes)
+    var dataToSet={"sid":taskData.sid,"data":taskData}
+    //console.log(dataToSet)
+    //{"attributes":taskData.attributes, "queue":taskData.queue,"sid":taskData.sid, "status":taskData.status, "channel":taskData.channel}};
+    var currentTaskList = this.taskList
+    currentTaskList.push(dataToSet);
+    this.taskList={}
+    this.taskList = currentTaskList;
+    console.log(this.taskList)
+  },
+  updateTaskInList: function(sid, taskData) {
+    console.log("updating task in list");
+    console.log(sid);
+    taskData.attributes = JSON.parse(taskData.attributes)
+    //console.log(taskData);
+    var currentTaskList = this.taskList
+    for (key in currentTaskList) {
+      if (currentTaskList[key]["sid"]==sid) {
+            //var dataToSet={"sid":taskData.sid,"data":{"attributes":taskData.attributes, "queue":taskData.queue,"sid":taskData.sid, "status":taskData.status, "channel":taskData.channel}};
+            currentTaskList[key] = {"sid":taskData.sid,"data":taskData};
+
+      }
+    }
+    //console.log(currentTaskList)
+    this.taskList = {};
+    this.taskList = currentTaskList
+    console.log(this.taskList)
+
+  },
+  removeTaskFromList: function(sid, taskData) {
+    console.log("removing task from list");
+    console.log(sid);
+    console.log(taskData);
+    var currentTaskList = this.taskList
+    for (key in currentTaskList) {
+      if (currentTaskList[key]["sid"]==sid) {
+            currentTaskList.splice(key, 1);
+
+      }
+    }
+    this.taskList = {}
+    this.taskList = currentTaskList
+
+
+  },
+  addMessageToList: function(taskSid, author, message,timestamp) {
+    console.log("Adding message to vue state");
+    var currentMessageList = this.messageList;
+    if (currentMessageList[taskSid]) {
+      currentMessageList[taskSid].push({"from":author,"message":message, "timestamp":timestamp})
+    }
+    else {
+      currentMessageList[taskSid] = [{"from":author,"message":message, "timestamp":timestamp}]
+    }
+    //console.log("new message list is " + JSON.stringify(currentMessageList))
+    this.MessageList = currentMessageList;
+    // for some reason i don't understand, you need to toggle tasklist to get vue to wake up and re-render
+    // toggling messagelist doesn't do it.
+    var tempTaskList = this.taskList;
+    this.taskList={}
+    this.taskList=tempTaskList
+
+  }, 
+  updateMessages: function(newMessageData) {
+    console.log("Updating message data");
+    console.log("Updating to " + JSON.stringify(newMessageData));
+    this.messageList=newMessageData;
+  },
+  reset: function() {
+    this.taskList = [];
+    console.log("reset vue to zero");
+    console.log(JSON.stringify(this.taskList));
+  },
+  sendMessage: function(from, to, sid, body) {
+    console.log("trying to send message " + from + to + sid + body);
+     sendSMS(from, to, sid, body);
+     this.messageText="";
+  }
+
+
+}
+})
 
 
 window.vueMaster = new Vue({
   el: '#agentui'
-});
+  
 
-//technically vuefire should do this but it doesn't seem to work reliably and is impossible to debug
-myFirebase.child("taskList").child("WKc9fb44a68905d751dded01581d3fe50c").on('value', function(snapshot) {
-  // This function does a bit of normalization on the app data we retrieve from firebase
-  // the data is structured in JSON under task SID, but it's easier in vue to not need to know the task sid
-  // so we replace it with "Data"
-  // we also parse the JSON attributes which are escaped string into actual JSON
-  console.log('task List structure changed');
-  console.log(JSON.stringify(snapshot.val()));
-  var taskListData = snapshot.val();
-  var dataToReturn = [];
-  if (taskListData != null){
-    for (var key in taskListData) {
-      var tempJson = {};
-      tempJson["data"]=taskListData[key];
-      console.log("wanting to parse task attributes:");
-      console.log(tempJson["data"]["attributes"]);
-      tempJson["data"]["attributes"]=JSON.parse(tempJson["data"]["attributes"]);
-
-      dataToReturn.push(tempJson)
-    }
-      }
-
-  vueMaster.$refs.agentui.update(dataToReturn);
-});
-
-myFirebase.child("messageList").on('value', function(snapshot) {
-
-  console.log('message structure changed');
-  console.log(JSON.stringify(snapshot.val()));
-  var messageListData = snapshot.val();
-  var dataToReturn = {};
-  if (messageListData != null){
-    dataToReturn = messageListData;
-  }
-
-  vueMaster.$refs.agentui.updateMessages(dataToReturn);
-});
-
-
-function initChatClient() {
-
-}
+})
 
 
 
-
-  </script>
+</script>
 
 
 

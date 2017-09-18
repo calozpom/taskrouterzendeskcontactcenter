@@ -1,4 +1,3 @@
-require('dotenv').load();
 
 function changeState(state) {
     console.log("trying to change state to state " + state);
@@ -55,7 +54,7 @@ function acceptTask(tasksid, reservationsid, channel) {
         data: { 'tasksid': tasksid, 'reservationsid': reservationsid, 'channel':channel },
         type: 'get',
         success: function(output) {
-            console.log("received OK to accept task");
+            console.log("received OK to accept task" + output);
 
         }
     });
