@@ -46,11 +46,28 @@ Visualize Workspace
 <li class="divider"></li>
 
 <li class="divider"></li>
+<li><a href="#" data-reveal-id="numberModal">Show Numbers</a></li>
 <li><a href="#" onclick="sendDetails()">Send Details</a></li>
+<li><a href="#" data-reveal-id="myModal">Click Me For A Modal</a><li>
 <li class="divider"></li>
 </ul>
 </section>
 </nav>
+
+
+<div id="myModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+  <h2 id="modalTitle">Awesome. I have it.</h2>
+  <p class="lead">Your couch.  It is mine.</p>
+  <p>I'm a cool paragraph that lives inside of an even cooler modal. Wins!</p>
+  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
+
+
+<div id="numberModal" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+  <h2 id="modalTitle">Text, Facebook or Call in</h2>
+  <p class="lead">888-123-456</p>
+  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>
  <div class="row" id="spacer" ><div>&nbsp;<br /></div></div>
  
 <div class="row" id="visualizer" data-equalizer>
@@ -103,18 +120,24 @@ Visualize Workspace
 </div>
 </footer>
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/js/foundation.min.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/5.5.3/js/foundation.min.js"></script>
 <script src="js/foundation/foundation.core.js"></script>
 <script src="js/foundation/foundation.util.motion.js"></script>
 <script src="js/foundation/foundation.util.mediaQuery.js"></script>
+<script src="js/foundation.util.keyboard.js" type="text/javascript"></script>
+<script src="js/foundation.util.box.js" type="text/javascript"></script>
+<script src="js/foundation.util.triggers.js" type="text/javascript"></script>
+
+<script src="js/foundation/foundation.reveal.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/js/foundation.min.js"></script>
 <script src="https://unpkg.com/vue"></script>
 <script type="text/javascript" src="//media.twiliocdn.com/taskrouter/js/v1.4/taskrouter.min.js"></script>
 <script type="text/javascript" src="https://media.twiliocdn.com/sdk/js/sync/v0.5/twilio-sync.min.js"></script>
 
-
+<!--
 <script>
       $(document).foundation();
-    </script>
+    </script>-->
 <script>
 window.onload = function() {
      // We use jQuery to make an Ajax request to the server to retrieve our 
@@ -230,6 +253,7 @@ window.vueMaster = new Vue({
   
 
 })
+$(document).foundation();
 
 
 function registerTaskRouterCallbacks() {
@@ -242,7 +266,8 @@ function registerTaskRouterCallbacks() {
 }
 
 function sendDetails() {
-console.log("sending details")
+    console.log("sending details")
+    sendMessageToAttendees();
 }
 
 function showContact() {

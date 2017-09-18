@@ -232,7 +232,7 @@ app.post('/finalResult', function(request, response) {
 
         voiceResponse.play({
             loop: 1,
-        }, 'https://twiliozendeskcc.herokuapp.com/play/Joanna/' + understandQueryResult.message);
+        }, 'https://taskrouterzendesksync.herokuapp.com/play/Amy/' + understandQueryResult.message);
 
         voiceResponse.enqueueTask({
             workflowSid: workflowSid
@@ -251,7 +251,7 @@ app.post('/finalResult', function(request, response) {
 
         gather.play({
             loop: 1
-        }, 'https://twiliozendeskcc.herokuapp.com/play/Joanna/' + understandQueryResult.message);
+        }, 'https://taskrouterzendesksync.herokuapp.com/play/Amy/' + understandQueryResult.message);
 
         response.send(voiceResponse.toString());
     }
@@ -684,6 +684,7 @@ app.get('/acceptTask', function(request, response) {
         instruction: 'conference',
         dequeueFrom: twilioPhoneNumber
       }, function(err, reservation) {
+        console.log(err);
         console.log(reservation.reservation_status);
         console.log(reservation.worker_name);
       });
@@ -861,7 +862,7 @@ app.post('/syncEventStream', function(request, response) {
                     dataToSet['name']=addons.nextcaller_advanced_caller_id.records[0].name;
                     dataToSet['address']=addons.nextcaller_advanced_caller_id.records[0].address[0].line1 + " " + addons.nextcaller_advanced_caller_id.records[0].address[0].city + " " + addons.nextcaller_advanced_caller_id.records[0].address[0].zip_code;
                 } catch (err) {
-                    attributes=JSON.parse(task.attributes);
+                    attributes=JSON.parse(request.body.TaskAttributes);
                     dataToSet['name']=attributes.from;
                 }
 
