@@ -84,7 +84,7 @@
    $.getJSON('/token', function(data) {
 
     console.log(data.token);
-    window.worker = new Twilio.TaskRouter.Worker(data.token);
+    window.worker = new Twilio.TaskRouter.Worker(data.taskRouterToken);
     registerTaskRouterCallbacks();
     window.zendeskClient = ZAFClient.init();
     zendeskClient.invoke('resize', { width: '250px', height: '240px' });
@@ -122,7 +122,7 @@
     this.worker=sid;
   },
   shownumbers: function() {
-    var msg = '<p style="font-size:20px">SMS: <strong>855-222-6811</strong><br/>Voice: <strong>855-222-6811</strong><br/>Facebook: <strong>britishexports</strong><br/></p>';
+    var msg = '<p style="font-size:20px">SMS: <strong>' + process.env.twilioPhoneNumber+ '</strong><br/>Voice: <strong>' + process.env.twilioPhoneNumber+ '</strong><br/>Facebook: <strong>britishexports</strong><br/></p>';
       zendeskClient.invoke('notify',msg,alert,{sticky: true});
   },
   resetdemo: function() {
@@ -145,16 +145,16 @@
 
  function changeState(state) {
   console.log("trying to change state to state " + state);
-  var activitySid="WAbc57093ed33d341e926d9db5e73525ad";
+  var activitySid=process.env.idleActivitySid;
   switch (state) {
     case "Idle":
-    activitySid="WAbc57093ed33d341e926d9db5e73525ad";
+    activitySid=process.env.idleActivitySid;
     break;
     case "Offline":
-    activitySid="WA7d69025af6c5acae76faad56da32698e";
+    activitySid=process.env.offlineActivitySid;
     break;
     case "Busy":
-    activitySid="WA6492c399f88532c2935ca7fcbfe56e9b";
+    activitySid=process.env.busyActivitySid;
     break;                
   }
   console.log(activitySid);
