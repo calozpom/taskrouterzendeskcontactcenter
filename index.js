@@ -642,6 +642,7 @@ app.get('/acceptTask', function(request, response) {
         instruction: 'conference',
         dequeueFrom: twilioPhoneNumber
       }, function(err, reservation) {
+        console.log(err);
         console.log(reservation.reservation_status);
         console.log(reservation.worker_name);
       });
