@@ -9,9 +9,9 @@
   "private": true,
   "location": {
     "support": {
-      "ticket_sidebar": "https://twiliozendeskcc.herokuapp.com/zendeskdashboard",
-      "new_ticket_sidebar" : "https://twiliozendeskcc.herokuapp.com/zendeskdashboard",
-      "top_bar":"https://twiliozendeskcc.herokuapp.com/agentcontrols"
+      "ticket_sidebar": "https://taskrouterzendesksync.herokuapp.com/zendeskdashboard",
+      "new_ticket_sidebar" : "https://taskrouterzendesksync.herokuapp.com/zendeskdashboard",
+      "top_bar":"https://taskrouterzendesksync.herokuapp.com/agentcontrols"
     }
   },
   "version": "1.0",

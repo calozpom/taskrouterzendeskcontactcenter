@@ -195,13 +195,14 @@ app.post('/finalresult', function(request,res){
 
   var result = querystring.stringify({q: request.body['SpeechResult']});
   getResponseBasedOnSentiment(request.body['SpeechResult'], function(sentimentResponse) {
+    console.log("got a response with sentiment " + JSON.stringify(sentimentResponse));
     var reply = querystring.escape(sentimentResponse.reply);
   //should update these to use the nice voice response method like above
   if (sentimentResponse.intent != "fail") {
-      var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://twiliozendeskcc.herokuapp.com/play/Amy/"+reply+"</Play><Enqueue workflowSid="+workflowSid+"><Task>{\"bot_intent\":\""+JSON.parse(body)['entities']['intent'][0]['value']+"\", \"type\":\"voice\", \"asrtext\":\""+reply+"\"}</Task></Enqueue></Response>";
+      var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://twiliozendeskcc.herokuapp.com/play/Amy/"+reply+"</Play><Enqueue workflowSid=\""+workflowSid+"\"><Task>{\"bot_intent\":\""+sentimentResponse.intent+"\", \"type\":\"voice\", \"asrtext\":\""+reply+"\"}</Task></Enqueue></Response>";
   }
   else {
-      var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultCallback=\"/partialResult\" hints=\"voice, sms, twilio\"><Play>https://twiliozendeskcc.herokuapp.com/play/Amy/"+reply+"</Play></Gather></Response>";
+      var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultCallback=\"/partialResult\" hints=\"voice, sms, twilio\"><Play>https://taskrouterzendesksync.herokuapp.com/play/Amy/"+reply+"</Play></Gather></Response>";
   }
   res.send(responseString);
   });
@@ -218,6 +219,8 @@ function getResponseBasedOnSentiment(message, fn) {
     url: 'https://api.wit.ai/message?v=20170430&'+messageQS,
     headers: headers
   };
+  //set intent default
+  var intent="fail"
   console.log("+++TRYING TO GET SENTIMENT+++") 
   req(options, function(error, response, body) {
     console.log("response " + response)
@@ -226,10 +229,11 @@ function getResponseBasedOnSentiment(message, fn) {
     try {
       //Works if Wit extracted an intent. 
       console.log(JSON.parse(body)['entities']['intent'][0]['value']);
+      intent = JSON.parse(body)['entities']['intent'][0]['value'];
       // set a default reply
       var textToSpeak = querystring.escape("OK. Got it. Please stand by while I connect you to the best possible agent.");
 
-      switch (JSON.parse(body)['entities']['intent'][0]['value']) {
+      switch (intent) {
         case "greeting":
           var replyOptions = ["Hi :)", "Hello, there!", "Howdy!", "Bonjour."]
           textToSpeak = replyOptions[Math.floor(Math.random() * replyOptions.length)];
@@ -253,14 +257,14 @@ function getResponseBasedOnSentiment(message, fn) {
           textToSpeak = "Good question. We have a good answer. Stand by.";
           break;
         default:
-          console.log("Could not match " + JSON.parse(body)['entities']['intent'][0]['value'] + " to any switch statement")
+          console.log("Could not match " + intent + " to any switch statement")
       }
-
-      fn({"intent":JSON.parse(body)['entities']['intent'][0]['value'],"reply":textToSpeak});
+      fn({"intent":intent,"reply":textToSpeak});
 
       
     } catch (err) {
-      fn({"intent":"fail","reply":"Say what now? Please tell us how we can help, you"});
+      console.log("caught an error!" + err)
+      fn({"intent":"fail","reply":"Say what now? Please tell us how we can help you"});
       // Failed to extract an intent. Ask the fool again.
     }
   });
