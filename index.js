@@ -163,7 +163,7 @@ app.post('/initiateIVR', function(request, response) {
 
     gather.play({
         loop: 1
-    }, 'https://twiliozendeskcc.herokuapp.com/play/Joanna/' + welcomeMessage);
+    }, 'https://twiliozendeskcc.herokuapp.com/play/Amy/' + welcomeMessage);
 
     gather.pause({
         length: 10
@@ -171,7 +171,7 @@ app.post('/initiateIVR', function(request, response) {
 
     voiceResponse.play({
         loop: 1
-    }, 'https://twiliozendeskcc.herokuapp.com/play/Joanna/' + didNotHearMessage);
+    }, 'https://twiliozendeskcc.herokuapp.com/play/Amy/' + didNotHearMessage);
 
     voiceResponse.redirect({
         method: 'POST'
@@ -194,14 +194,14 @@ app.post('/finalresult', function(request,res){
   console.log('SpeechResult = ' + request.body['SpeechResult']);
 
   var result = querystring.stringify({q: request.body['SpeechResult']});
-  getResponseBasedOnSentiment(result, function(sentimentResponse) {
+  getResponseBasedOnSentiment(request.body['SpeechResult'], function(sentimentResponse) {
     var reply = querystring.escape(sentimentResponse.reply);
   //should update these to use the nice voice response method like above
-  if (sentimentResponse.intent != fail) {
-      var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+reply+"</Play><Enqueue workflowSid="+workflowSid+"><Task>{\"bot_intent\":\""+JSON.parse(body)['entities']['intent'][0]['value']+"\", \"type\":\"voice\", \"asrtext\":\""+reply+"\"}</Task></Enqueue></Response>";
+  if (sentimentResponse.intent != "fail") {
+      var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Play>https://twiliozendeskcc.herokuapp.com/play/Amy/"+reply+"</Play><Enqueue workflowSid="+workflowSid+"><Task>{\"bot_intent\":\""+JSON.parse(body)['entities']['intent'][0]['value']+"\", \"type\":\"voice\", \"asrtext\":\""+reply+"\"}</Task></Enqueue></Response>";
   }
   else {
-      var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultCallback=\"/partialResult\" hints=\"voice, sms, twilio\"><Play>https://twiliozendeskcc.herokuapp.com/play/Joanna/"+reply+"</Play></Gather></Response>";
+      var responseString="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Response><Gather input=\"speech\" action=\"/finalresult\" partialResultCallback=\"/partialResult\" hints=\"voice, sms, twilio\"><Play>https://twiliozendeskcc.herokuapp.com/play/Amy/"+reply+"</Play></Gather></Response>";
   }
   res.send(responseString);
   });
