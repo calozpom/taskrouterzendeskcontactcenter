@@ -562,7 +562,7 @@ function automateReply(task, request) {
         method: 'POST',
         url: 'https://preview.twilio.com/understand/Services/' + understandServiceInstance + '/Queries',
         auth: {
-            username: accountSid, password: authToken
+            username: understandAccountSid, password: understandAuthToken
         },
         form: {
             Language: 'en-us', Query: request.body['Body'], ModelBuild: understandModelBuildSid
