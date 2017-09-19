@@ -374,6 +374,8 @@ app.post('/initiateMessagingBot', function(request, response) {
 
                         // send the message to the chatChannel=taskSid as the message sender
                         var userIdentity = response.data.first_name + ' ' + response.data.last_name;
+
+                        console.log('User Identity = ' + userIdentity);
                         twilioChatHelper.sendChat(task.sid, request.body['Body'], userIdentity);
                     });
                 }
@@ -491,6 +493,8 @@ app.post('/initiateMessagingBot', function(request, response) {
 });
 
 function handleInboundFBMessage(facebookId, createdTask, messageBody) {
+    console.log('/handleInboundFBMessage');
+
     var results = {};
 
     var options = {
@@ -504,6 +508,8 @@ function handleInboundFBMessage(facebookId, createdTask, messageBody) {
         }
 
         var bodyJSON = JSON.parse(body);
+        console.log(bodyJSON);
+
         results['first_name'] = bodyJSON['first_name'];
         results['last_name'] = bodyJSON['last_name'];
         results['full_name'] = bodyJSON['first_name'] + " " + bodyJSON['last_name'];
@@ -540,6 +546,7 @@ function handleInboundFBMessage(facebookId, createdTask, messageBody) {
 
         // send the message to the Chat channel
         var userIdentity = results['first_name'] + ' ' + results['last_name'];
+        console.log('FB User Identity = ' + userIdentity);
         twilioChatHelper.sendChat(createdTask.sid, messageBody, userIdentity);
     });
 }
