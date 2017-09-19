@@ -556,7 +556,7 @@ function sendMessageToBotLogicIfNeeded(task, request) {
 function automateReply(task, request) {
     // the given Task has not yet been bot qualified => so we will use Understand to determine the intent
     // and then automate our replies
-    console.log('Sending Task ' + task.sid + ' to Wit.ai for analysis');
+    console.log('Sending Task ' + task.sid + ' to Understand to  analyze the message ' + request.body['Body']);
 
     var options = {
         method: 'POST',
