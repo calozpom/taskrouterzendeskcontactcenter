@@ -357,26 +357,20 @@ app.post('/initiateMessagingBot', function(request, response) {
     // Check if a Task already exists for this 'From'
         // Why? Need to distinguish if it is the FIRST message from the customer
         // or if it is a CONTINUATION of a conversation from the customer
-    var queryJSON = {};
     var considerAsNewInteraction = 1;
-    queryJSON['EvaluateTaskAttributes'] = "(message_from=\"" + request.body['From'] + "\")";
 
-    twilioClient.taskrouter.workspaces(workspaceSid).tasks.list(queryJSON).then(tasks => {
-        console.log(tasks.length);
+    twilioClient.taskrouter.workspaces(workspaceSid).tasks.list().then(tasks => {
 
-        if (tasks.length > 0) {
-          console.log("WTF");
+        tasks.forEach(task => {
 
-            tasks.forEach(task => {
-                console.log('Found tasks with this "from" ' +task.sid + " " + task.assignmentStatus);
+            var attributesJSON = JSON.parse(task.attributes);
 
-                //console.log('Logging task');
-                //console.log(task);
-                // determine if the Task is still active - pending, reserved, assigned (not completed)
-                if (task.assignmentStatus == 'pending' || task.assignmentStatus == 'reserved'
-                    || task.assignmentStatus == 'assigned') {
-                  sendMessageToBotLogicIfNeeded(task, request);
-                  considerAsNewInteraction = 0;
+            if (attributesJSON.hasOwnProperty("message_from") && attributesJSON.message_from == request.body['From']) {
+                console.log('Found tasks with this "from" ' + task.sid + " " + task.assignmentStatus);
+
+                if (task.assignmentStatus == 'pending' || task.assignmentStatus == 'reserved' || task.assignmentStatus == 'assigned') {
+                    sendMessageToBotLogicIfNeeded(task, request);
+                    considerAsNewInteraction = 0;
 
                     // first fetch the user's name out of syncMap of UserProfiles
                     syncService.syncMaps('UserProfiles').syncMapItems(task.sid + '.info').fetch().then(response => {
@@ -389,9 +383,9 @@ app.post('/initiateMessagingBot', function(request, response) {
                         twilioChatHelper.sendChat(task.sid, request.body['Body'], userIdentity);
                     });
                 }
-                // if it's not this, the task is complete but has not been deleted yet - so we need to consider it as a new interaction 
-            });
-        }
+            }
+        });
+
 
         if (considerAsNewInteraction) {  // it is the first message from this user in the TaskRouter system; create a Task to represent it and insert the message into chat container
             console.log('No active Tasks found with this "from". Creating Task for this instead.');
