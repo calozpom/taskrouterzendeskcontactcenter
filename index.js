@@ -8,7 +8,6 @@ var querystring = require("querystring");
 var req = require('request');
 
 // var twilio = require('twilio');
-var twilio = require('./node_modules/twilio-node-understand');
 var AccessManager = require('twilio-common').AccessManager;
 var SyncClient = require('twilio-sync');    // remove this when you fix it to use the node helper lib, not the client side sdk
 var twilioChatHelper = require('./public/js/twilioChatHelper');
@@ -22,8 +21,8 @@ var accountSid = process.env.accountSid;
 var authToken = process.env.authToken;
 
 // For Twilio Understand usage only
-var understandAccountSid = process.env.understandAccountSid;
-var understandAuthToken = process.env.understandAuthToken;
+//var understandAccountSid = process.env.understandAccountSid;
+//var understandAuthToken = process.env.understandAuthToken;
 
 var workspaceSid = process.env.workspaceSid;
 var workflowSid = process.env.workflowSid;
@@ -63,7 +62,7 @@ if (!fs.existsSync('/tmp')) {
 
 // Twilio node helper lib setup
 var twilioClient = new twilio(accountSid, authToken);
-var twilioClientForUnderstand = new twilio(understandAccountSid, understandAuthToken);
+//var twilioClientForUnderstand = new twilio(understandAccountSid, understandAuthToken);
 var syncService = twilioClient.sync.services(syncServiceInstance);
 
 var identity = 'al';
