@@ -86,7 +86,7 @@ Visualize Workspace
                             <div v-for="task,key in queueDetail">
                                 <div class='header panel' :key=key>
                                     <div class='sign'>
-                                        <h1>{{task.data.attributes.message_from}}</h1>
+                                        <h1>{{task.data.parsedAttributes.message_from}}</h1>
                                     </div>
                                     <p>
                                         <span class='text-center'>{{task.data.status}}</span>
@@ -185,6 +185,7 @@ methods: {
     // {"WQea20678d853cf025b5875126f5c1547a":{"WTc27d7877778874faf8f71ddb52964261":{"data":{"attributes":"{}","sid":"WTc27d7877778874faf8f71ddb52964261","status":"pending","channel":"default","queue":"Waiting for Bot"}}}}
     console.log("adding task to queue " +queueSid);
     //https://vuejs.org/v2/guide/reactivity.html#Change-Detection-Caveats
+    taskData["parsedAttributes"]=JSON.parse(taskData.attributes)
     if (this.taskList[queueSid])
     {
         // for some reason if you just update this.taskList directly without resetting it to {} first, Vue does not update
