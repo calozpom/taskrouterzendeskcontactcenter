@@ -194,7 +194,8 @@ app.post('/voicenoivr', function(request,response) {
 
 app.post('/initiateIVR', function(request, response) {
     console.log('/initiateIVR');
-    console.log(request);
+
+    participantContactNumbers.push(request.body['From']);
 
     //var welcomeMessage = querystring.escape("Hello and welcome to the best customer experience youve ever had. Thats right. British Customer Service. Please tell us how we can help.");
     var welcomeMessage = querystring.escape("Hello. I take it you have finally got fed up of American Chocolate. We are so glad you found the light. Please tell us how we can help.");
