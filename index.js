@@ -144,7 +144,7 @@ app.get('/visualize', function(request, response) {
   response.render('pages/visualize');
 });
 
-app.post('/sendMessageToAttendees', function(request, response) {
+app.get('/sendMessageToAttendees', function(request, response) {
     var message = 'Thanks for coming to our presentation at SIGNAL London 2017!' +
         ' Visit https://www.twilio.com/docs/api/contact-center-blueprint to lean more about Contact Centers.' +
         ' And our github is available at https://github.com/calozpom/taskrouterzendeskcontactcenter' +

@@ -87,7 +87,7 @@ Visualize Workspace
                             <div v-for="task,key in queueDetail">
                                 <div class='header panel' :key=key>
                                     <div class='sign'>
-                                        <h1>{{key}}</h1>
+                                        <h1>{{task.data.attributes.message_from}}</h1>
                                     </div>
                                     <p>
                                         <span class='text-center'>{{task.data.status}}</span>
@@ -267,8 +267,16 @@ function registerTaskRouterCallbacks() {
 
 function sendDetails() {
     console.log("sending details")
-    sendMessageToAttendees();
-}
+    $.ajax({ 
+        url: 'sendMessageToAttendees',
+        type: 'get',
+        success: function(output) {
+          console.log("sent a message!");
+          console.log(output);
+
+        }
+      });
+  }
 
 function showContact() {
   console.log("showing contact info")
