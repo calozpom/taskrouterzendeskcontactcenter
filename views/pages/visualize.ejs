@@ -223,6 +223,7 @@ methods: {
     console.log("updating task in queue " +queueSid);
     //this.$set(this.taskList, queueSid.taskSid, {"data":taskData})
     var currentTaskList = this.taskList;
+    taskData["parsedAttributes"]=JSON.parse(taskData.attributes)
 
     currentTaskList[queueSid][taskSid] = {"data":taskData};
     //this.$set(this.taskList, queueSid, currentTaskList)
