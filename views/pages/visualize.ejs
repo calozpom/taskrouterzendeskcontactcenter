@@ -47,7 +47,7 @@ Visualize Workspace
 
 <li class="divider"></li>
 <li><a href="#" data-reveal-id="numberModal">Show Numbers</a></li>
-<li><a href="#" onclick="sendDetails()">Send Details</a></li>
+<li><a href="#" onclick="sendDetails()" id="sendDetails">Send Details</a></li>
 <li class="divider"></li>
 </ul>
 </section>
@@ -272,6 +272,7 @@ function sendDetails() {
         success: function(output) {
           console.log("sent a message!");
           console.log(output);
+          $('a#sendDetails').text('SENT!!');
 
         }
       });
