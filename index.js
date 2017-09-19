@@ -493,7 +493,6 @@ app.post('/initiateMessagingBot', function(request, response) {
 });
 
 function handleInboundFBMessage(facebookId, createdTask, messageBody) {
-    console.log('/handleInboundFBMessage');
 
     var results = {};
 
@@ -508,7 +507,7 @@ function handleInboundFBMessage(facebookId, createdTask, messageBody) {
         }
 
         var bodyJSON = JSON.parse(body);
-        console.log('/handleInboundFBMessage Body = ' + bodyJSON);
+        console.log('/handleInboundFBMessage Body = ' + body);
 
         results['first_name'] = bodyJSON['first_name'];
         results['last_name'] = bodyJSON['last_name'];
