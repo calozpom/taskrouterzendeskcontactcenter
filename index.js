@@ -33,6 +33,8 @@ var chatTaskChannelSid = process.env.chatTaskChannelSid;
 var syncServiceInstance = process.env.syncServiceInstance;
 var understandServiceInstance = process.env.understandServiceInstance;
 var understandModelBuildSid = process.env.understandModelBuildSid;
+var understandAccountSid = process.env.understandAccountSid;
+var understandAuthToken = process.env.understandAuthToken;
 
 var participantContactNumbers = [];
 
@@ -218,7 +220,7 @@ app.post('/finalResult', function(request, response) {
         method: 'POST',
         url: 'https://preview.twilio.com/understand/Services/' + understandServiceInstance + '/Queries',
         auth: {
-            username: accountSid, password: authToken
+            username: understandAccountSid, password: understandAuthToken
         },
         form: {
             Language: 'en-us', Query: speechResult, ModelBuild: understandModelBuildSid
