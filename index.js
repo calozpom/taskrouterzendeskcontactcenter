@@ -7,8 +7,7 @@ var fs = require('fs')
 var querystring = require("querystring");
 var req = require('request');
 
-// var twilio = require('twilio');
-var twilio = require('./node_modules/twilio-node-understand');
+var twilio = require('twilio');
 var AccessManager = require('twilio-common').AccessManager;
 var SyncClient = require('twilio-sync');    // remove this when you fix it to use the node helper lib, not the client side sdk
 var twilioChatHelper = require('./public/js/twilioChatHelper');
@@ -224,91 +223,90 @@ app.post('/finalResult', function(request, response) {
     //result of <Gather> verb
     var speechResult = request.body['SpeechResult'];
 
-    var understandQueryResult = getResponseBasedOnSentiment(speechResult);
-
-    if (understandQueryResult.intent != 'fail') {
-
-        var voiceResponse = new VoiceResponse();
-
-        voiceResponse.play({
-            loop: 1,
-        }, 'https://taskrouterzendesksync.herokuapp.com/play/Amy/' + understandQueryResult.message);
-
-        voiceResponse.enqueueTask({
-            workflowSid: workflowSid
-        }).task({}, '{"bot_intent": "' + understandQueryResult.sentiment + '", "type": "voice", "asrtext": "' + speechResult + '"}');
-
-        response.send(voiceResponse.toString());
-
-    } else {
-        var voiceResponse = new VoiceResponse();
-        var gather = voiceResponse.gather({
-            input: 'speech',
-            action: '/finalResult',
-            partialResultCallback: '/partialResult',
-            hints: 'voice, sms, twilio'
-        });
-
-        gather.play({
-            loop: 1
-        }, 'https://taskrouterzendesksync.herokuapp.com/play/Amy/' + understandQueryResult.message);
-
-        response.send(voiceResponse.toString());
-    }
-});
-
-function getResponseBasedOnSentiment(queryMessage) {
-    var opts = {
-        language: 'en-us',
-        query: queryMessage,
-        modelBuild: understandModelBuildSid
+    var options = {
+        method: 'POST',
+        url: 'https://preview.twilio.com/understand/Services/' + understandServiceInstance + '/Queries',
+        auth: {
+            username: accountSid, password: authToken
+        },
+        form: {
+            Language: 'en-us', Query: speechResult, ModelBuild: understandModelBuildSid
+        }
     };
 
-    // get the intent
-    twilioClientForUnderstand.preview.understand.services(understandServiceInstance).queries.create(opts).then(classifiedIntent => {
-        console.log(classifiedIntent);
+    var responseMessage = '';
+    var sentiment = '';
 
-        var sentiment = classifiedIntent['results'].intent;
-        console.log('understand(sentiment) = ' + sentiment);
-        switch (sentiment) {
-            case 'greeting':
-                var replyOptions = ["Hi :)", "Hello, there!", "Howdy!", "Hey there"];
-                responseMessage = replyOptions[Math.floor(Math.random() * replyOptions.length)];
-                break;
-            case 'happy':
-                responseMessage = querystring.escape("Great. Glad to hear things are going well. We will go ahead and send you a t-shirt to say thank you. Hold on the line for a second if there is anything else we can do.");
-                break;
-            case 'needs_help':
-                responseMessage = querystring.escape("OK - let me get a support representative who can help you immediately.");
-                break;
-            case 'problem':
-                responseMessage = querystring.escape("Hmmm. Sounds like a problem. We can help you with that - one moment. I will escalate your case to a technician.");
-                break;
-            case 'angry':
-                responseMessage = querystring.escape("Oh no. We hate to hear you upset. Let me connect you directly with someone who has authority to make changes to your account");
-                break;
-            case 'silly':
-                responseMessage = querystring.escape("Robots have feelings too you know. That just seems silly. Let me connect you with a human.");
-                break;
-            case 'service_question':
-                responseMessage = querystring.escape("Good question. We have a good answer. Stand by.");
-                break;
-            default:
-                sentiment = "service_question"; // if understand returns sentiment=null, this will be the default choice
-                responseMessage = querystring.escape("OK. Got it. Please stand by while I connect you to the best possible agent."); // default message
-                console.log('Failed to get a sentiment value, using the default statement.');
+    req(options, function (error, response, body) {
+        if (error) {
+            responseMessage = querystring.escape("Say what now? Please tell us how we can help you");
+            sentiment = 'fail';
+        } else {
+            var understandResults = JSON.parse(body);
+            sentiment = understandResults.results.intent;
+            console.log('understand(sentiment) = ' + sentiment);
+
+            switch (sentiment) {
+                case 'greeting':
+                    var replyOptions = ["Hi :)", "Hello, there!", "Howdy!", "Hey there"];
+                    responseMessage = replyOptions[Math.floor(Math.random() * replyOptions.length)];
+                    break;
+                case 'happy':
+                    responseMessage = querystring.escape("Great. Glad to hear things are going well. We will go ahead and send you a t-shirt to say thank you. Hold on the line for a second if there is anything else we can do.");
+                    break;
+                case 'needs_help':
+                    responseMessage = querystring.escape("OK - let me get a support representative who can help you immediately.");
+                    break;
+                case 'problem':
+                    responseMessage = querystring.escape("Hmmm. Sounds like a problem. We can help you with that - one moment. I will escalate your case to a technician.");
+                    break;
+                case 'angry':
+                    responseMessage = querystring.escape("Oh no. We hate to hear you upset. Let me connect you directly with someone who has authority to make changes to your account");
+                    break;
+                case 'silly':
+                    responseMessage = querystring.escape("Robots have feelings too you know. That just seems silly. Let me connect you with a human.");
+                    break;
+                case 'service_question':
+                    responseMessage = querystring.escape("Good question. We have a good answer. Stand by.");
+                    break;
+                default:
+                    sentiment = "service_question"; // if understand returns sentiment=null, this will be the default choice
+                    responseMessage = querystring.escape("OK. Got it. Please stand by while I connect you to the best possible agent."); // default message
+                    console.log('Failed to get a sentiment value, using the default statement.');
+            }
         }
-    }).catch(err => {
-        // failed to classify
-        console.log('Error getting intent from Understand. Error: ' + err);
 
-        // ask again
-        responseMessage = querystring.escape("Say what now? Please tell us how we can help you");
-        sentiment = 'fail';
+        if (sentiment != 'fail') {
+
+            var voiceResponse = new VoiceResponse();
+
+            voiceResponse.play({
+                loop: 1,
+            }, 'https://taskrouterzendesksync.herokuapp.com/play/Amy/' + responseMessage);
+
+            voiceResponse.enqueueTask({
+                workflowSid: workflowSid
+            }).task({}, '{"bot_intent": "' + sentiment + '", "type": "voice", "asrtext": "' + speechResult + '"}');
+
+            response.send(voiceResponse.toString());
+
+        } else {
+            var voiceResponse = new VoiceResponse();
+            var gather = voiceResponse.gather({
+                input: 'speech',
+                action: '/finalResult',
+                partialResultCallback: '/partialResult',
+                hints: 'voice, sms, twilio'
+            });
+
+            gather.play({
+                loop: 1
+            }, 'https://taskrouterzendesksync.herokuapp.com/play/Amy/' + responseMessage);
+
+            response.send(voiceResponse.toString());
+        }
     });
-
-    return { sentiment: sentiment, message: responseMessage };
-}
+});
 
 //Not currently using this:
 app.post('/partialresult', function(request,response){
@@ -559,31 +557,82 @@ function automateReply(task, request) {
     // and then automate our replies
     console.log('Sending Task ' + task.sid + ' to Wit.ai for analysis');
 
+    var options = {
+        method: 'POST',
+        url: 'https://preview.twilio.com/understand/Services/' + understandServiceInstance + '/Queries',
+        auth: {
+            username: accountSid, password: authToken
+        },
+        form: {
+            Language: 'en-us', Query: queryMessage, ModelBuild: understandModelBuildSid
+        }
+    };
 
-    getResponseBasedOnSentiment(request.body['Body'], sentimentResponse => {
-      console.log("Result of analyzing " + request.body['Body'] + " is " + JSON.stringify(sentimentResponse.sentiment));
-      var smsClientToUse = twilioClient;
+    var responseMessage = '';
+    var sentiment = '';
 
-       
-      if (sentimentResponse.sentiment != "fail" && sentimentResponse.sentiment != "greeting") {
-        updateTaskAttributes(task.sid, {"bot_qualified":"true", "bot_intent":sentimentResponse.sentiment})
-      }
-      smsClientToUse.messages.create({
-          to: request.body['From'], // Any number Twilio can deliver to
-          from: request.body['To'], // A number you bought from Twilio and can use for outbound communication
-          body: sentimentResponse.message, // body of the SMS message
-          statusCallback: 'https://twiliozendeskcc.herokuapp.com/messagestatus/'
-      }).then(createdMessage => {
-          console.log('Successfully sent response as SMS back to User.');
-          console.log(createdMessage);
-      }).catch(err => {
-          console.log('Failed to send response as SMS back to User due to error: ' + err);
-      });
+    req(options, function (error, response, body) {
+        if (error) {
+            responseMessage = querystring.escape("Say what now? Please tell us how we can help you");
+            sentiment = 'fail';
+        } else {
+            var understandResults = JSON.parse(body);
+            sentiment = understandResults.results.intent;
+            console.log('understand(sentiment) = ' + sentiment);
 
-      // push the bot response into the Chat Channel, but as the "server" == worker
-      // you know cause bot == worker in this case
-      twilioChatHelper.sendChat(task.sid, sentimentResponse.message, 'Al Cook');
-    });  
+            switch (sentiment) {
+                case 'greeting':
+                    var replyOptions = ["Hi :)", "Hello, there!", "Howdy!", "Hey there"];
+                    responseMessage = replyOptions[Math.floor(Math.random() * replyOptions.length)];
+                    break;
+                case 'happy':
+                    responseMessage = querystring.escape("Great. Glad to hear things are going well. We will go ahead and send you a t-shirt to say thank you. Hold on the line for a second if there is anything else we can do.");
+                    break;
+                case 'needs_help':
+                    responseMessage = querystring.escape("OK - let me get a support representative who can help you immediately.");
+                    break;
+                case 'problem':
+                    responseMessage = querystring.escape("Hmmm. Sounds like a problem. We can help you with that - one moment. I will escalate your case to a technician.");
+                    break;
+                case 'angry':
+                    responseMessage = querystring.escape("Oh no. We hate to hear you upset. Let me connect you directly with someone who has authority to make changes to your account");
+                    break;
+                case 'silly':
+                    responseMessage = querystring.escape("Robots have feelings too you know. That just seems silly. Let me connect you with a human.");
+                    break;
+                case 'service_question':
+                    responseMessage = querystring.escape("Good question. We have a good answer. Stand by.");
+                    break;
+                default:
+                    sentiment = "service_question"; // if understand returns sentiment=null, this will be the default choice
+                    responseMessage = querystring.escape("OK. Got it. Please stand by while I connect you to the best possible agent."); // default message
+                    console.log('Failed to get a sentiment value, using the default statement.');
+                    break;
+            }
+        }
+
+        console.log("Result of analyzing " + request.body['Body'] + " is " + JSON.stringify(sentimentResponse.sentiment));
+
+        if (sentiment != "fail" && sentiment != "greeting") {
+            updateTaskAttributes(task.sid, {"bot_qualified": "true", "bot_intent": sentiment})
+        }
+
+        twilioClient.messages.create({
+            to: request.body['From'], // Any number Twilio can deliver to
+            from: request.body['To'], // A number you bought from Twilio and can use for outbound communication
+            body: sentimentResponse.message, // body of the SMS message
+            statusCallback: 'https://twiliozendeskcc.herokuapp.com/messagestatus/'
+        }).then(createdMessage => {
+            console.log('Successfully sent response as SMS back to User.');
+            console.log(createdMessage);
+        }).catch(err => {
+            console.log('Failed to send response as SMS back to User due to error: ' + err);
+        });
+
+        // push the bot response into the Chat Channel, but as the "server" == worker
+        // you know cause bot == worker in this case
+        twilioChatHelper.sendChat(task.sid, sentimentResponse.message, 'Al Cook');
+    });
 }
 
 function updateTaskAttributes(taskSid, sourceTargetAttributes) {
