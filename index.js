@@ -158,7 +158,7 @@ app.get('/sendMessageToAttendees', function(request, response) {
         var fromNumber = twilioPhoneNumber;
 
         if (audiencePhoneNumber.substring(0, 2) == "+1") {
-            fromNumber = +18448767643;  // if the inbound is a US number, return with a Twilio phonenumber
+            fromNumber = '+18448767643';  // if the inbound is a US number, return with a Twilio phonenumber
         }
 
         try {
