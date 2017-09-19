@@ -624,7 +624,7 @@ function automateReply(task, request) {
                     break;
                 default:
                     sentiment = "service_question"; // if understand returns sentiment=null, this will be the default choice
-                    responseMessage = querystring.escape("OK. Got it. Please stand by while I connect you to the best possible agent."); // default message
+                    responseMessage = "OK. Got it. Please stand by while I connect you to the best possible agent."; // default message
                     console.log('Failed to get a sentiment value, using the default statement.');
                     break;
             }
