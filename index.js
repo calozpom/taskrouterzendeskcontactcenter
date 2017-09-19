@@ -229,8 +229,8 @@ app.post('/finalResult', function(request, response) {
         }
     };
 
-    var responseMessage = '';
-    var sentiment = '';
+    var responseMessage = "OK. Got it. Please stand by while I connect you to the best possible agent.";
+    var sentiment = 'service_question';
 
     req(options, function (error, resp, body) {
         if (error) {
@@ -238,8 +238,14 @@ app.post('/finalResult', function(request, response) {
             sentiment = 'fail';
         } else {
             var understandResults = JSON.parse(body);
+            onsole.log('understand(sentiment) = ' + understandResults);
+
+            try {
+                sentiment = understandResults.results.intent;
+            } catch(err) {
+
+            }
             sentiment = understandResults.results.intent;
-            console.log('understand(sentiment) = ' + sentiment);
 
             switch (sentiment) {
                 case 'greeting':
