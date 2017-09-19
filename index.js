@@ -175,7 +175,9 @@ app.post('/voicenoivr', function(request,response) {
 });
 
 app.post('/initiateIVR', function(request, response) {
-    var welcomeMessage = querystring.escape("Hello and welcome to the best customer experience youve ever had. Thats right. British Customer Service. Please tell us how we can help.");
+    //var welcomeMessage = querystring.escape("Hello and welcome to the best customer experience youve ever had. Thats right. British Customer Service. Please tell us how we can help.");
+    var welcomeMessage = querystring.escape("Hello. I take it you have finally got fed up of American Chocolate. We are so glad you found the light. Please tell us how we can help.");
+  
     var didNotHearMessage = querystring.escape("Did you say anything?");
 
     var voiceResponse = new VoiceResponse();
@@ -184,7 +186,7 @@ app.post('/initiateIVR', function(request, response) {
         timeout: 2,
         action: '/finalResult',
         partialResultCallback: '/partialResult',
-        hints: 'voice, sms, twilio, hate, love, awesome, help, british, marmite, suck, terrible, awful, assistance, exports',
+        hints: 'voice, sms, twilio, hate, love, awesome, help, british, cadbury, hershey, marmite, suck, terrible, awful, assistance, exports',
     });
 
     gather.play({
