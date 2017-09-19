@@ -540,7 +540,7 @@ function handleInboundFBMessage(facebookId, createdTask, messageBody) {
 
         // send the message to the Chat channel
         var userIdentity = results['first_name'] + ' ' + results['last_name'];
-        twilioChatHelper.sendChat(taskSid, messageBody, userIdentity);
+        twilioChatHelper.sendChat(createdTask.sid, messageBody, userIdentity);
     });
 }
 
