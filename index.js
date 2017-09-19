@@ -43,7 +43,7 @@ var twilioPhoneNumberSkipBot = process.env.twilioPhoneNumberSkipBot;
 var alsPhoneNumber = process.env.alsPhoneNumber;
 
 // Facebook  creds
-var pageAccessToken = process.env.pageAccessToken; //facebook
+var pageAccessToken = process.env.facebookPageAccessToken; //facebook
 
 // Server side setup
 
