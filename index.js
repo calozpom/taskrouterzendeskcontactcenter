@@ -565,7 +565,7 @@ function automateReply(task, request) {
             username: accountSid, password: authToken
         },
         form: {
-            Language: 'en-us', Query: queryMessage, ModelBuild: understandModelBuildSid
+            Language: 'en-us', Query: request.body['Body'], ModelBuild: understandModelBuildSid
         }
     };
 
