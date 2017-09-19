@@ -508,7 +508,7 @@ function handleInboundFBMessage(facebookId, createdTask, messageBody) {
         }
 
         var bodyJSON = JSON.parse(body);
-        console.log(bodyJSON);
+        console.log('/handleInboundFBMessage Body = ' + bodyJSON);
 
         results['first_name'] = bodyJSON['first_name'];
         results['last_name'] = bodyJSON['last_name'];
