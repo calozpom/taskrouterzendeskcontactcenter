@@ -238,7 +238,7 @@ app.post('/finalResult', function(request, response) {
             sentiment = 'fail';
         } else {
             var understandResults = JSON.parse(body);
-            onsole.log('understand(sentiment) = ' + understandResults);
+            console.log('understand(sentiment) = ' + understandResults);
 
             try {
                 sentiment = understandResults.results.intent;
