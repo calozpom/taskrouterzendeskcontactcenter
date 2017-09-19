@@ -569,8 +569,8 @@ function automateReply(task, request) {
         }
     };
 
-    var responseMessage = '';
-    var sentiment = '';
+    var responseMessage = "OK. Got it. Please stand by while I connect you to the best possible agent.";
+    var sentiment = 'service_question';
 
     req(options, function (error, response, body) {
         if (error) {
@@ -578,7 +578,13 @@ function automateReply(task, request) {
             sentiment = 'fail';
         } else {
             var understandResults = JSON.parse(body);
-            sentiment = understandResults.results.intent;
+          
+            try {
+                sentiment = understandResults.results.intent;
+            } catch (err) {
+              
+            }
+            
             console.log('understand(sentiment) = ' + sentiment);
 
             switch (sentiment) {
