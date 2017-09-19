@@ -634,6 +634,22 @@ app.get('/deletealltasks', function(request, response) {
                         console.log('Err deleting SyncMapItem: ' + err);
                     });
                 });
+   syncClient.map('EventStream.WQ96d95f1d60f14921bdab67a1ef1c6266').then(syncMap => {
+                    syncMap.removeMap().catch(err => {
+                        console.log('Err deleting SyncMapItem: ' + err);
+                    });
+                });
+  syncClient.map('EventStream.WQ99f2acb77fce64fcb7bf784cdbda82b2').then(syncMap => {
+                    syncMap.removeMap().catch(err => {
+                        console.log('Err deleting SyncMapItem: ' + err);
+                    });
+                });
+  syncClient.map('EventStream.WQ65d738992b8473b612884d5da35bcee2').then(syncMap => {
+                    console.log(syncMap);
+                    syncMap.removeMap().catch(err => {
+                        console.log('Err deleting SyncMapItem: ' + err);
+                    });
+                });
   syncClient.map('TaskList.WK3d909c13f46f8e227e32e38d66b19691').then(syncMap => {
                     console.log(syncMap);
                     syncMap.removeMap().catch(err => {
