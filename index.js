@@ -155,13 +155,23 @@ app.get('/sendMessageToAttendees', function(request, response) {
     // texters
     participantContactNumbers.forEach(audiencePhoneNumber => {
         // send SMS
+        var fromNumber  = twilioPhoneNumber
+        try {
+            console.log(audiencePhoneNumber.substring(0,3));
+            if (audiencePhoneNumber.substring(0,3) == "mess") {
+                fromNumber = "messenger:1711588162460298"
+            }
+        }
+        catch (err) {
+            console.log("issue figuring out " + audiencePhoneNumber);
+        }
         twilioClient.messages.create({
             to: audiencePhoneNumber, from: twilioPhoneNumber, // twilio phone number
             body: message
         }).then(message => {
-            console.log('Successfully sent message to: ' + request.query.to);
+            console.log('Successfully sent message to: ' + audiencePhoneNumber);
         }).catch(err => {
-            console.log('Failed to send message to: ' + request.query.to);
+            console.log('Failed to send message to: ' + audiencePhoneNumber);
         });
 
         response.send('');
