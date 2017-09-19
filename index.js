@@ -650,6 +650,7 @@ function automateReply(task, request) {
 
         // push the bot response into the Chat Channel, but as the "server" == worker
         // you know cause bot == worker in this case
+        console.log('Sending bot response to Chat Channel for Task ' + task.sid);
         twilioChatHelper.sendChat(task.sid, responseMessage, 'Al Cook');
 
 
@@ -670,6 +671,7 @@ function automateReply(task, request) {
 
             // push the bot response into the Chat Channel, but as the "server" == worker
             // you know cause bot == worker in this case
+            console.log('Sending bot follow up message for greeting to Chat Channel for Task '  + task.sid);
             twilioChatHelper.sendChat(task.sid, followUpMessage, 'Al Cook');
         }
     });
