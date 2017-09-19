@@ -166,7 +166,7 @@ app.get('/sendMessageToAttendees', function(request, response) {
             console.log("issue figuring out " + audiencePhoneNumber);
         }
         twilioClient.messages.create({
-            to: audiencePhoneNumber, from: twilioPhoneNumber, // twilio phone number
+            to: audiencePhoneNumber, from: fromNumber, // twilio phone number
             body: message
         }).then(message => {
             console.log('Successfully sent message to: ' + audiencePhoneNumber);
