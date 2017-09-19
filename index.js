@@ -574,7 +574,7 @@ function automateReply(task, request) {
 
     req(options, function (error, response, body) {
         if (error) {
-            responseMessage = querystring.escape("Say what now? Please tell us how we can help you");
+            responseMessage = "Say what now? Please tell us how we can help you";
             sentiment = 'fail';
         } else {
             var understandResults = JSON.parse(body);
@@ -593,22 +593,22 @@ function automateReply(task, request) {
                     responseMessage = replyOptions[Math.floor(Math.random() * replyOptions.length)];
                     break;
                 case 'happy':
-                    responseMessage = querystring.escape("Great. Glad to hear things are going well. We will go ahead and send you a t-shirt to say thank you. Hold on the line for a second if there is anything else we can do.");
+                    responseMessage = "Great. Glad to hear things are going well. We will go ahead and send you a t-shirt to say thank you. Hold on the line for a second if there is anything else we can do.";
                     break;
                 case 'needs_help':
-                    responseMessage = querystring.escape("OK - let me get a support representative who can help you immediately.");
+                    responseMessage = "OK - let me get a support representative who can help you immediately.";
                     break;
                 case 'problem':
-                    responseMessage = querystring.escape("Hmmm. Sounds like a problem. We can help you with that - one moment. I will escalate your case to a technician.");
+                    responseMessage = "Hmmm. Sounds like a problem. We can help you with that - one moment. I will escalate your case to a technician.";
                     break;
                 case 'angry':
-                    responseMessage = querystring.escape("Oh no. We hate to hear you upset. Let me connect you directly with someone who has authority to make changes to your account");
+                    responseMessage = "Oh no. We hate to hear you upset. Let me connect you directly with someone who has authority to make changes to your account";
                     break;
                 case 'silly':
-                    responseMessage = querystring.escape("Robots have feelings too you know. That just seems silly. Let me connect you with a human.");
+                    responseMessage = "Robots have feelings too you know. That just seems silly. Let me connect you with a human.";
                     break;
                 case 'service_question':
-                    responseMessage = querystring.escape("Good question. We have a good answer. Stand by.");
+                    responseMessage = "Good question. We have a good answer. Stand by.";
                     break;
                 default:
                     sentiment = "service_question"; // if understand returns sentiment=null, this will be the default choice
@@ -639,6 +639,27 @@ function automateReply(task, request) {
         // push the bot response into the Chat Channel, but as the "server" == worker
         // you know cause bot == worker in this case
         twilioChatHelper.sendChat(task.sid, responseMessage, 'Al Cook');
+
+
+        if (sentiment == "greeting") {
+                var followUpMessage = "How can I help you with British Exports?";
+
+            twilioClient.messages.create({
+                to: request.body['From'], // Any number Twilio can deliver to
+                from: request.body['To'], // A number you bought from Twilio and can use for outbound communication
+                body: followUpMessage, // body of the SMS message
+                statusCallback: 'https://twiliozendeskcc.herokuapp.com/messagestatus/'
+            }).then(createdMessage => {
+                console.log('Successfully sent follow up as SMS back to User.');
+                console.log(createdMessage);
+            }).catch(err => {
+                console.log('Failed to send response as SMS back to User due to error: ' + err);
+            });
+
+            // push the bot response into the Chat Channel, but as the "server" == worker
+            // you know cause bot == worker in this case
+            twilioChatHelper.sendChat(task.sid, followUpMessage, 'Al Cook');
+        }
     });
 }
 
