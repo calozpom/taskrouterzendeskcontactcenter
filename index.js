@@ -173,9 +173,8 @@ app.get('/sendMessageToAttendees', function(request, response) {
         }).catch(err => {
             console.log('Failed to send message to: ' + audiencePhoneNumber);
         });
-
-        response.send('');
     });
+    response.send('');
 });
 
 app.post('/voicenoivr', function(request,response) {
