@@ -155,7 +155,8 @@ app.get('/sendMessageToAttendees', function(request, response) {
     // texters
     participantContactNumbers.forEach(audiencePhoneNumber => {
         // send SMS
-        var fromNumber  = twilioPhoneNumber
+        var fromNumber  = twilioPhoneNumber;
+
         try {
             console.log(audiencePhoneNumber.substring(0,4));
             if (audiencePhoneNumber.substring(0,4) == "mess") {
@@ -166,14 +167,17 @@ app.get('/sendMessageToAttendees', function(request, response) {
             console.log("issue figuring out " + audiencePhoneNumber);
         }
         twilioClient.messages.create({
-            to: audiencePhoneNumber, from: fromNumber, // twilio phone number
+            to: audiencePhoneNumber,
+            from: fromNumber, // twilio phone number
             body: message
         }).then(message => {
             console.log('Successfully sent message to: ' + audiencePhoneNumber);
         }).catch(err => {
             console.log('Failed to send message to: ' + audiencePhoneNumber);
+            console.log(err);
         });
     });
+
     response.send('');
 });
 
@@ -1033,6 +1037,7 @@ app.get('/sendSMS', function(request, response) {
         console.log('Successfully sent message to: ' + request.query.to);
     }).catch(err => {
         console.log('Failed to send message to: ' + request.query.to);
+        console.log(err);
     });
 
     // cool, now put this agent message into the chat too
