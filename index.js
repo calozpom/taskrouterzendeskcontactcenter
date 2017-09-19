@@ -504,9 +504,11 @@ function handleInboundFBMessage(facebookId, createdTask, messageBody) {
     req(options, function(error, response, body) {
         if (error) {
             throw new Error(error);
+
         }
 
         var bodyJSON = JSON.parse(body);
+        console.log("queried id " + facebookId + " with token " + pageAccessToken)
         console.log('/handleInboundFBMessage Body = ' + body);
 
         results['first_name'] = bodyJSON['first_name'];
