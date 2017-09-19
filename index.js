@@ -230,7 +230,7 @@ app.post('/finalResult', function(request, response) {
     var responseMessage = '';
     var sentiment = '';
 
-    req(options, function (error, response, body) {
+    req(options, function (error, resp, body) {
         if (error) {
             responseMessage = querystring.escape("Say what now? Please tell us how we can help you");
             sentiment = 'fail';
