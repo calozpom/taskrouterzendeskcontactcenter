@@ -24,6 +24,7 @@
     "requests": "0.1.7",
     "twilio": "^3.6.4",
     "twilio-chat": "^1.1.2",
+    "twilio-common": "^0.1.7",
     "twilio-sync": "^0.5.10",
     "vuefire": "^1.4.2",
     "xmlbuilder": "^9.0.4"
