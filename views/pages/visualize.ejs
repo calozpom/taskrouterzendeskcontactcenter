@@ -21,7 +21,7 @@
  
 <li class="name">
 <h1>
-<a href="#">
+<a href="#" id="visualizeTitle">
 Visualize Workspace
 </a>
 </h1>
@@ -46,7 +46,7 @@ Visualize Workspace
 <li class="divider"></li>
 
 <li class="divider"></li>
-<li><a href="#" data-reveal-id="numberModal">Show Numbers</a></li>
+<li><a href="#" onclick="showContact()">Show Numbers</a></li>
 <li><a href="#" onclick="sendDetails()" id="sendDetails">Send Details</a></li>
 <li class="divider"></li>
 </ul>
@@ -280,6 +280,8 @@ function sendDetails() {
 
 function showContact() {
   console.log("showing contact info")
+  $('a#visualizeTitle').text('+447400092118');
+  
 }
 
 function buildTaskRouterGrid() {
