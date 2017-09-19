@@ -899,7 +899,7 @@ app.post('/syncEventStream', function(request, response) {
 
                 taskAttributes = JSON.parse(request.body.TaskAttributes);
 
-                syncClient.maps('TaskList.' + taskAttributes['worker']).then(syncMap => {
+                syncClient.map('TaskList.' + taskAttributes['worker']).then(syncMap => {
                     syncMap.remove(request.body.TaskSid);
                 });
                 break;
