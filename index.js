@@ -157,8 +157,8 @@ app.get('/sendMessageToAttendees', function(request, response) {
         // send SMS
         var fromNumber  = twilioPhoneNumber
         try {
-            console.log(audiencePhoneNumber.substring(0,3));
-            if (audiencePhoneNumber.substring(0,3) == "mess") {
+            console.log(audiencePhoneNumber.substring(0,4));
+            if (audiencePhoneNumber.substring(0,4) == "mess") {
                 fromNumber = "messenger:1711588162460298"
             }
         }
