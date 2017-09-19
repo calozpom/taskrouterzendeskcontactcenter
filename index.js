@@ -618,7 +618,7 @@ function automateReply(task, request) {
             }
         }
 
-        console.log("Result of analyzing " + request.body['Body'] + " is " + JSON.stringify(sentimentResponse.sentiment));
+        console.log("Result of analyzing " + request.body['Body'] + " is " + sentiment);
 
         if (sentiment != "fail" && sentiment != "greeting") {
             updateTaskAttributes(task.sid, {"bot_qualified": "true", "bot_intent": sentiment})
@@ -627,7 +627,7 @@ function automateReply(task, request) {
         twilioClient.messages.create({
             to: request.body['From'], // Any number Twilio can deliver to
             from: request.body['To'], // A number you bought from Twilio and can use for outbound communication
-            body: sentimentResponse.message, // body of the SMS message
+            body: responseMessage, // body of the SMS message
             statusCallback: 'https://twiliozendeskcc.herokuapp.com/messagestatus/'
         }).then(createdMessage => {
             console.log('Successfully sent response as SMS back to User.');
@@ -638,7 +638,7 @@ function automateReply(task, request) {
 
         // push the bot response into the Chat Channel, but as the "server" == worker
         // you know cause bot == worker in this case
-        twilioChatHelper.sendChat(task.sid, sentimentResponse.message, 'Al Cook');
+        twilioChatHelper.sendChat(task.sid, responseMessage, 'Al Cook');
     });
 }
 
