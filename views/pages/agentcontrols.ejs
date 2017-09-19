@@ -122,7 +122,7 @@
     this.worker=sid;
   },
   shownumbers: function() {
-    var msg = '<p style="font-size:20px">SMS: <strong>' + process.env.twilioPhoneNumber+ '</strong><br/>Voice: <strong>' + process.env.twilioPhoneNumber+ '</strong><br/>Facebook: <strong>britishexports</strong><br/></p>';
+    var msg = '<p style="font-size:20px">SMS: <strong>+18448767643</strong><br/>Voice: <strong>+18448767643</strong><br/>Facebook: <strong>britishexports</strong><br/></p>';
       zendeskClient.invoke('notify',msg,alert,{sticky: true});
   },
   resetdemo: function() {
@@ -145,16 +145,16 @@
 
  function changeState(state) {
   console.log("trying to change state to state " + state);
-  var activitySid=process.env.idleActivitySid;
+  var activitySid="WA55d97625061109ac8599b6a5536fab9f";
   switch (state) {
     case "Idle":
-    activitySid=process.env.idleActivitySid;
+    activitySid="WA55d97625061109ac8599b6a5536fab9f"
     break;
     case "Offline":
-    activitySid=process.env.offlineActivitySid;
+    activitySid="WA0f6938a57e78dcc211a22ad910b35f70"
     break;
     case "Busy":
-    activitySid=process.env.busyActivitySid;
+    activitySid="WA7622939913a13e07402a758c1e7cf98d"
     break;                
   }
   console.log(activitySid);

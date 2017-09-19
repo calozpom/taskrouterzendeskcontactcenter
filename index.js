@@ -91,12 +91,7 @@ app.set('view engine', 'ejs');
 app.disable('view cache');
 
 app.get('/', function(request, response) {
-  response.render('pages/index');
-});
-
-app.get('/dashboard', function(request, response) {
-  // dashboard is the main page for the demo
-  response.render('pages/dashboard');
+  response.render('pages/zendeskdashboard');
 });
 
 app.get('/zendeskdashboard', function(request, response) {
@@ -109,10 +104,6 @@ app.get('/agentcontrols', function(request, response) {
   response.render('pages/agentcontrols');
 });
 
-app.get('/grr', function(request, response) {
-  // dashboard is the main page for the demo
-  response.render('pages/whywontyouwork');
-});
 
 app.get('/reservationmodal', function(request, response) {
   // dashboard is the main page for the demo
@@ -157,7 +148,7 @@ app.post('/sendMessageToAttendees', function(request, response) {
     var message = 'Thanks for coming to our presentation at SIGNAL London 2017!' +
         ' Visit https://www.twilio.com/docs/api/contact-center-blueprint to lean more about Contact Centers.' +
         ' And our github is available at https://github.com/calozpom/taskrouterzendeskcontactcenter' +
-        ' Feel free to contact us at al@twilio.com and wli@twilio.com. We\'d appreciate your feedback, forms are in the back of the room. See you at $bash!';
+        ' Feel free to contact us at al@twilio.com and wli@twilio.com. And check out the Ytica demo booth! We\'d appreciate your feedback, forms are in the back of the room. See you at $bash!';
 
     // texters
     participantContactNumbers.forEach(audiencePhoneNumber => {
