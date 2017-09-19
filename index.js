@@ -155,7 +155,11 @@ app.get('/sendMessageToAttendees', function(request, response) {
     // texters
     participantContactNumbers.forEach(audiencePhoneNumber => {
         // send SMS
-        var fromNumber  = twilioPhoneNumber;
+        var fromNumber = twilioPhoneNumber;
+
+        if (audiencePhoneNumber.substring(0, 2) == "+1") {
+            fromNumber = +18448767643;  // if the inbound is a US number, return with a Twilio phonenumber
+        }
 
         try {
             console.log(audiencePhoneNumber.substring(0,4));
@@ -166,6 +170,7 @@ app.get('/sendMessageToAttendees', function(request, response) {
         catch (err) {
             console.log("issue figuring out " + audiencePhoneNumber);
         }
+
         twilioClient.messages.create({
             to: audiencePhoneNumber,
             from: fromNumber, // twilio phone number
