@@ -813,8 +813,8 @@ app.get('/acceptTask', function(request, response) {
       twilioClient.taskrouter.workspaces(workspaceSid).tasks(request.query.tasksid).reservations(request.query.reservationsid).update({
         reservationStatus: 'accepted'
       }, function(err, reservation) {
-        console.log(reservation.reservation_status);
-        console.log(reservation.worker_name);
+        //console.log(reservation.reservation_status);
+        //console.log(reservation.worker_name);
       });
     }
   } catch (err) {
